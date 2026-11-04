@@ -15,8 +15,8 @@
 
 | Ciclo | Módulo / Sección | Estado | Spec Asociada | Commit |
 | :---: | :--- | :---: | :--- | :---: |
-| **01** | Scaffolding Limpio, Tailwind, Assets y Git Base | ⏳ EN PROCESO | `specs/01-scaffolding/` | Pendiente |
-| **02** | Canvas de Pétalos Flotantes (Física y Delta-Time a 60 FPS) | ⏸ PENDIENTE | `specs/02-petal-canvas/` | Pendiente |
+| **01** | Scaffolding Limpio, Tailwind, Assets y Git Base | ✅ COMPLETADO | `specs/01-scaffolding/` | `4c3c66e` |
+| **02** | Canvas de Pétalos Flotantes (Física y Delta-Time a 60 FPS) | ⏳ EN PROCESO | `specs/02-petal-canvas/` | Pendiente |
 | **03** | Suelo Dinámico y Acumulación Orgánica de Pétalos | ⏸ PENDIENTE | `specs/03-floor-pile/` | Pendiente |
 | **04** | Puntero Katana y Detección de Velocidad Vectorial | ⏸ PENDIENTE | `specs/04-katana-cursor/` | Pendiente |
 | **05** | Ventarrón Caótico al Cortar ("Wind Slash") | ⏸ PENDIENTE | `specs/05-wind-slash/` | Pendiente |
@@ -33,9 +33,9 @@
 ### Ciclo 01: Scaffolding Limpio, Tailwind, Assets y Git Base
 - **Objetivo:** Dejar el entorno ejecutable, tipado y listo sin código residual.
 - **Micro-tareas:**
-  - [ ] 1.1 Inicializar Vite con React + TypeScript en la carpeta actual sin alterar archivos institucionales.
-  - [ ] 1.2 Configurar Tailwind CSS y archivo de estilos globales limpios.
-  - [ ] 1.3 Copiar y ubicar `imagen-fondo.webp` en `public/assets/`.
-  - [ ] 1.4 Configurar `.gitignore` robusto y crear repositorio Git local con commit inicial.
-- **Resultado de Verificación:** *Pendiente de ejecución*
-- **Commit:** *Pendiente*
+  - [x] 1.1 Inicializar Vite con React + TypeScript en la carpeta actual sin alterar archivos institucionales.
+  - [x] 1.2 Configurar Tailwind CSS y archivo de estilos globales limpios.
+  - [x] 1.3 Copiar y ubicar `imagen-fondo.webp` en `public/assets/`.
+  - [x] 1.4 Configurar `.gitignore` robusto y crear repositorio Git local con commit inicial.
+- **Resultado de Verificación:** `npm run build` ejecutado en 195ms con 0 errores y bundle comprimido en 68.85 KB.
+- **Commit:** `4c3c66e` (`chore: initial scaffolding with vite, react, ts and tailwind`)
