@@ -49,7 +49,7 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
         <img
           src="/assets/imagen-fondo.webp"
           alt="Árbol de Cerezo Sakura Milenario"
-          className="h-auto w-full max-h-[85vh] object-cover object-center filter brightness-100 contrast-100 pointer-events-none transition-transform duration-700 group-hover:scale-[1.01]"
+          className="h-auto w-full max-h-[85vh] object-cover object-center filter brightness-100 contrast-100 pointer-events-none"
           loading="eager"
         />
         {/* Máscara de fundido inferior suave con el color pergamino washi (#f4eee5) */}

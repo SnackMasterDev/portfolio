@@ -94,9 +94,14 @@ export function recyclePetal(
   petal.color = colors.includes(pair.face) ? pair.face : colors[Math.floor(Math.random() * colors.length)];
   petal.backColor = pair.back;
 
-  if (config.treeBounds) {
+  const isTreeInView =
+    config.treeBounds &&
+    config.treeBounds.y > -200 &&
+    config.treeBounds.y < (dimensions.height || 600);
+
+  if (isTreeInView && config.treeBounds) {
     petal.x = config.treeBounds.x + Math.random() * config.treeBounds.width;
-    petal.y = config.treeBounds.y + Math.random() * (config.treeBounds.height * 0.5);
+    petal.y = Math.max(config.treeBounds.y, 0) + Math.random() * (config.treeBounds.height * 0.5);
   } else {
     petal.x = Math.random() * (dimensions.width || 800);
     petal.y = -petal.size - Math.random() * 40;

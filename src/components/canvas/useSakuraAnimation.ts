@@ -10,7 +10,7 @@ import {
 } from '../../engine/sakura/PetalSimulation';
 
 export const DEFAULT_SAKURA_CONFIG: SakuraConfig = {
-  petalCount: 55,
+  petalCount: 75,
   minSpeedY: 60,
   maxSpeedY: 110,
   minSize: 10,
