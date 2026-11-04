@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
   createPetal,
+  createBurstPetal,
   updatePetal,
   recyclePetal,
   drawPetal,
@@ -21,7 +22,7 @@ describe('PetalSimulation', () => {
   };
 
   describe('createPetal', () => {
-    it('creates a petal within config boundaries', () => {
+    it('creates a petal within config boundaries and assigns dual-sided backColor', () => {
       const petal = createPetal(dimensions, config);
 
       expect(petal.id).toBeDefined();
@@ -30,11 +31,25 @@ describe('PetalSimulation', () => {
       expect(petal.speedY).toBeGreaterThanOrEqual(config.minSpeedY);
       expect(petal.speedY).toBeLessThanOrEqual(config.maxSpeedY);
       expect(config.colors).toContain(petal.color);
+      expect(petal.backColor).toBeDefined();
+      expect(typeof petal.backColor).toBe('string');
       expect(petal.opacity).toBeGreaterThan(0);
       expect(petal.opacity).toBeLessThanOrEqual(1);
     });
 
-    it('positions petal above screen when initialProgress is not provided', () => {
+    it('spawns petal within treeBounds when configured', () => {
+      const treeConfig: SakuraConfig = {
+        ...config,
+        treeBounds: { x: 200, y: 150, width: 300, height: 250 },
+      };
+      const petal = createPetal(dimensions, treeConfig);
+      expect(petal.x).toBeGreaterThanOrEqual(200);
+      expect(petal.x).toBeLessThanOrEqual(500);
+      expect(petal.y).toBeGreaterThanOrEqual(150);
+      expect(petal.y).toBeLessThanOrEqual(150 + 250 * 0.5);
+    });
+
+    it('positions petal above screen when initialProgress is not provided and no treeBounds', () => {
       const petal = createPetal(dimensions, config);
       expect(petal.y).toBeLessThanOrEqual(0);
     });
@@ -43,6 +58,15 @@ describe('PetalSimulation', () => {
       const petal = createPetal(dimensions, config, 0.5);
       expect(petal.y).toBeGreaterThanOrEqual(0);
       expect(petal.y).toBeLessThanOrEqual(dimensions.height);
+    });
+  });
+
+  describe('createBurstPetal', () => {
+    it('creates an energetic burst petal marked as isBurst', () => {
+      const burst = createBurstPetal(400, 300, config);
+      expect(burst.isBurst).toBe(true);
+      expect(Math.abs(burst.x - 400)).toBeLessThanOrEqual(80);
+      expect(burst.flipSpeed).toBeGreaterThan(3);
     });
   });
 

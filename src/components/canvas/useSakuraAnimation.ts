@@ -1,6 +1,12 @@
 import { useEffect, type RefObject } from 'react';
 import type { SakuraConfig, Petal, CanvasDimensions } from '../../engine/types';
-import { createPetal, updatePetal, drawPetal, SAKURA_PALETTE } from '../../engine/sakura/PetalSimulation';
+import {
+  createPetal,
+  createBurstPetal,
+  updatePetal,
+  drawPetal,
+  SAKURA_PALETTE,
+} from '../../engine/sakura/PetalSimulation';
 
 export const DEFAULT_SAKURA_CONFIG: SakuraConfig = {
   petalCount: 55,
@@ -47,6 +53,21 @@ export function setupSakuraCanvas(
 
   const dimensions: CanvasDimensions = { ...initialDims };
 
+  const updateTreeBounds = () => {
+    if (typeof document === 'undefined') return;
+    const treeEl = document.getElementById('sakura-tree');
+    if (treeEl) {
+      const rect = treeEl.getBoundingClientRect();
+      config.treeBounds = {
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height,
+      };
+    }
+  };
+  updateTreeBounds();
+
   // Pre-populate petals throughout vertical height
   const petals: Petal[] = Array.from({ length: config.petalCount }, (_, i) =>
     createPetal(dimensions, config, (i + Math.random()) / config.petalCount)
@@ -60,16 +81,33 @@ export function setupSakuraCanvas(
 
   let animationFrameId: number;
   let lastTime = performance.now();
+  let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
 
   const render = (currentTime: number) => {
     const dt = Math.min((currentTime - lastTime) / 1000, 0.05);
     lastTime = currentTime;
 
+    // Full page depth scroll tracking
+    const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    const deltaScrollY = currentScrollY - lastScrollY;
+    lastScrollY = currentScrollY;
+
+    if (deltaScrollY !== 0) {
+      for (let i = 0; i < petals.length; i++) {
+        petals[i].y -= deltaScrollY * 0.85;
+      }
+    }
+
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
-    for (let i = 0; i < petals.length; i++) {
+    for (let i = petals.length - 1; i >= 0; i--) {
       updatePetal(petals[i], dt, dimensions, config);
       drawPetal(ctx, petals[i]);
+
+      // Gently clean up burst flurry petals after they leave screen
+      if (petals[i].isBurst && petals[i].y > dimensions.height + 40) {
+        petals.splice(i, 1);
+      }
     }
 
     animationFrameId = requestAnimationFrame(render);
@@ -111,8 +149,27 @@ export function setupSakuraCanvas(
     }
   };
 
+  const handleTreeStrike = (e: Event) => {
+    const customEvent = e as CustomEvent<{ x?: number; y?: number; count?: number }>;
+    const treeEl = typeof document !== 'undefined' ? document.getElementById('sakura-tree') : null;
+    const rect = treeEl?.getBoundingClientRect();
+    const originX = customEvent.detail?.x ?? (rect ? rect.left + rect.width * 0.5 : dimensions.width * 0.5);
+    const originY = customEvent.detail?.y ?? (rect ? rect.top + rect.height * 0.35 : dimensions.height * 0.25);
+    const count = customEvent.detail?.count ?? 45;
+
+    for (let i = 0; i < count; i++) {
+      petals.push(createBurstPetal(originX, originY, config));
+    }
+
+    if (petals.length > config.petalCount + 100) {
+      petals.splice(config.petalCount, petals.length - (config.petalCount + 100));
+    }
+  };
+
   if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
     window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('scroll', updateTreeBounds, { passive: true });
+    window.addEventListener('sakura-tree-strike', handleTreeStrike);
   }
 
   let resizeObserver: ResizeObserver | null = null;
@@ -135,6 +192,8 @@ export function setupSakuraCanvas(
     cancelAnimationFrame(animationFrameId);
     if (typeof window !== 'undefined' && typeof window.removeEventListener === 'function') {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', updateTreeBounds);
+      window.removeEventListener('sakura-tree-strike', handleTreeStrike);
     }
     resizeObserver?.disconnect();
     motionQuery?.removeEventListener?.('change', handleMotionChange);

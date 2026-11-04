@@ -20,8 +20,8 @@
 | **03** | Suelo Dinámico y Acumulación Orgánica de Pétalos | ⏸ PENDIENTE | `specs/03-floor-pile/` | Pendiente |
 | **04** | Puntero Katana y Detección de Velocidad Vectorial | ✅ COMPLETADO | `specs/04-katana-cursor/` | `466ba0a` |
 | **05** | Ventarrón Caótico al Cortar ("Wind Slash") | ⏸ PENDIENTE | `specs/05-wind-slash/` | Pendiente |
-| **06** | Árbol de Cerezo, Brisa en Ramas y Emisión desde Copas | ⏸ PENDIENTE | `specs/06-cherry-tree/` | Pendiente |
-| **07** | Colisión de Katana con Árbol (Recoil Elástico y Chispas) | ⏸ PENDIENTE | `specs/07-tree-collision/` | Pendiente |
+| **06** | Árbol de Cerezo, Brisa en Ramas y Emisión desde Copas | ✅ COMPLETADO | `specs/06-cherry-tree/` | En curso |
+| **07** | Colisión de Katana con Árbol (Recoil Elástico y Flurry de Pétalos) | ✅ COMPLETADO | `specs/07-tree-collision/` | En curso |
 | **08** | Interfaz de Usuario y Showcase de Proyectos (<100 líneas) | ✅ COMPLETADO | `specs/08-portfolio-ui/` | `15e3fe8` |
 | **09** | Formulario de Contacto Seguro Antispam (Honeypot + Zod) | ✅ COMPLETADO | `specs/09-contact-form/` | `f200fba` |
 | **10** | Auditoría Hostil The-Critic, GitHub Push y Deploy Vercel | ⏸ PENDIENTE | `specs/10-deploy/` | Pendiente |

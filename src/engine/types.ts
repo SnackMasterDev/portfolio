@@ -23,6 +23,16 @@ export interface Petal {
   oscillationSpeed: number;
   opacity: number;
   color: string;
+  backColor?: string;
+  airResistance?: number;
+  isBurst?: boolean;
+}
+
+export interface TreeBounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 export interface SakuraConfig {
@@ -35,4 +45,5 @@ export interface SakuraConfig {
   colors: string[];
   maxDeltaTime: number;
   prefersReducedMotion?: boolean;
+  treeBounds?: TreeBounds;
 }

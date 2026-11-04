@@ -1,5 +1,6 @@
 import React from 'react';
 import { PORTFOLIO_PROFILE, type Profile } from '../../data/portfolioData';
+import { SakuraTree } from '../tree/SakuraTree';
 
 interface HeroSectionProps {
   profile?: Profile;
@@ -11,7 +12,7 @@ export function HeroSection({
   return (
     <section
       data-testid="hero-section"
-      className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center flex flex-col items-center space-y-6"
+      className="relative z-10 max-w-4xl mx-auto px-6 pt-16 pb-12 text-center flex flex-col items-center space-y-6"
     >
       <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#3c3b3d] bg-[#262628]/80 text-xs text-[#f3a4c2] font-mono tracking-wide backdrop-blur-sm">
         <span className="h-1.5 w-1.5 rounded-full bg-[#f3a4c2] animate-pulse" />
@@ -25,6 +26,9 @@ export function HeroSection({
       <p className="text-lg md:text-xl text-[#aaa7a3] max-w-2xl font-normal leading-relaxed">
         {profile.title}
       </p>
+
+      {/* Árbol de Cerezo interactivo con desprendimiento físico de pétalos */}
+      <SakuraTree className="my-4" />
 
       <p className="text-sm md:text-base text-[#aaa7a3]/80 max-w-xl leading-relaxed">
         {profile.bio}
@@ -56,6 +60,6 @@ export function HeroSection({
       </div>
     </section>
   );
-};
+}
 
 export default HeroSection;
