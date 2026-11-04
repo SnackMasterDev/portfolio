@@ -53,10 +53,10 @@ export function setupSakuraCanvas(
   );
 
   const motionQuery =
-    typeof window !== 'undefined' && window.matchMedia
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
       ? window.matchMedia('(prefers-reduced-motion: reduce)')
       : null;
-  let isReducedMotion = motionQuery ? motionQuery.matches : false;
+  let isReducedMotion = config.prefersReducedMotion ?? (motionQuery ? motionQuery.matches : false);
 
   let animationFrameId: number;
   let lastTime = performance.now();

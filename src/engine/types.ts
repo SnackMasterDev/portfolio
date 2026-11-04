@@ -34,4 +34,5 @@ export interface SakuraConfig {
   wind: Vector2D;
   colors: string[];
   maxDeltaTime: number;
+  prefersReducedMotion?: boolean;
 }

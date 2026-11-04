@@ -116,6 +116,8 @@ export function drawPetal(ctx: CanvasRenderingContext2D, petal: Petal): void {
 
   ctx.fillStyle = petal.color;
   ctx.globalAlpha = petal.opacity;
+  ctx.shadowColor = 'rgba(243, 164, 194, 0.4)';
+  ctx.shadowBlur = 4;
 
   // Organic sakura petal with curved notch and soft body
   const s = petal.size;

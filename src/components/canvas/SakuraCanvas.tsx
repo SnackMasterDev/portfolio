@@ -14,7 +14,16 @@ export const SakuraCanvas: React.FC<SakuraCanvasProps> = ({ className, config })
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? 'pointer-events-none absolute inset-0 h-full w-full'}
+      className={className ?? 'pointer-events-none fixed inset-0 z-20 h-full w-full'}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none',
+        zIndex: 20,
+      }}
       aria-hidden="true"
     />
   );

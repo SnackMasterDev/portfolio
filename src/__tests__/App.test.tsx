@@ -20,6 +20,6 @@ describe('App', () => {
     expect(canvasElement.props.className).toContain('pointer-events-none');
     expect(canvasElement.props.className).toContain('fixed');
     expect(canvasElement.props.className).toContain('inset-0');
-    expect(canvasElement.props.className).toContain('z-0');
+    expect(canvasElement.props.className).toContain('z-20');
   });
 });
