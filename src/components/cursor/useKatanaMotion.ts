@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { CursorState, KatanaMotionConfig } from '../../engine/cursor/types';
+import type { CursorState, CursorVariant, KatanaMotionConfig } from '../../engine/cursor/types';
 import {
   calculateAngleDegrees,
   calculateSpeed,
@@ -28,8 +28,35 @@ export function setupKatanaMotionListener(
   let lastTime = 0;
   let currentAngle = 0;
   let currentSpeed = 0;
+  let currentVariant: CursorVariant = 'default';
+  let isClicking = false;
   let rafId: number | null = null;
   let pendingEvent: { clientX: number; clientY: number } | null = null;
+
+  const detectVariant = (target: EventTarget | null): CursorVariant => {
+    if (isClicking) return 'clicking';
+    const el = target as Element | null;
+    if (!el || typeof el.closest !== 'function') return 'default';
+
+    if (el.closest('input:not([type="submit"]):not([type="button"]), textarea, [contenteditable="true"]')) {
+      return 'text';
+    }
+    if (el.closest('a, button, [role="button"], input[type="submit"], input[type="button"], .cursor-pointer')) {
+      return 'pointer';
+    }
+    return 'default';
+  };
+
+  const notifyState = (x: number, y: number, angle: number, speed: number, isVisible: boolean) => {
+    onUpdate({
+      x,
+      y,
+      angle,
+      speed,
+      isVisible,
+      variant: isClicking ? 'clicking' : currentVariant,
+    });
+  };
 
   const processMotion = () => {
     rafId = null;
@@ -43,13 +70,7 @@ export function setupKatanaMotionListener(
       lastX = clientX;
       lastY = clientY;
       lastTime = now;
-      onUpdate({
-        x: lastX,
-        y: lastY,
-        angle: isReducedMotion ? 0 : currentAngle,
-        speed: 0,
-        isVisible: true,
-      });
+      notifyState(lastX, lastY, isReducedMotion ? 0 : currentAngle, 0, true);
       return;
     }
 
@@ -72,20 +93,26 @@ export function setupKatanaMotionListener(
     lastY = clientY;
     lastTime = now;
 
-    onUpdate({
-      x: lastX,
-      y: lastY,
-      angle: isReducedMotion ? 0 : currentAngle,
-      speed: currentSpeed,
-      isVisible: true,
-    });
+    notifyState(lastX, lastY, isReducedMotion ? 0 : currentAngle, currentSpeed, true);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
+    currentVariant = detectVariant(e.target);
     pendingEvent = { clientX: e.clientX, clientY: e.clientY };
     if (rafId === null) {
       rafId = window.requestAnimationFrame(processMotion);
     }
+  };
+
+  const handleMouseDown = () => {
+    isClicking = true;
+    notifyState(lastX, lastY, currentAngle, currentSpeed, true);
+  };
+
+  const handleMouseUp = (e: MouseEvent) => {
+    isClicking = false;
+    currentVariant = detectVariant(e.target);
+    notifyState(lastX, lastY, currentAngle, currentSpeed, true);
   };
 
   const handleMouseLeave = () => {
@@ -95,27 +122,17 @@ export function setupKatanaMotionListener(
     }
     pendingEvent = null;
     isFirstMove = true;
-    currentSpeed = 0;
-    onUpdate({
-      x: lastX,
-      y: lastY,
-      angle: isReducedMotion ? 0 : currentAngle,
-      speed: 0,
-      isVisible: false,
-    });
+    notifyState(lastX, lastY, currentAngle, 0, false);
   };
 
   const handleMouseEnter = () => {
-    onUpdate({
-      x: lastX,
-      y: lastY,
-      angle: isReducedMotion ? 0 : currentAngle,
-      speed: currentSpeed,
-      isVisible: true,
-    });
+    isFirstMove = true;
+    notifyState(lastX, lastY, isReducedMotion ? 0 : currentAngle, currentSpeed, true);
   };
 
   window.addEventListener('mousemove', handleMouseMove);
+  window.addEventListener('mousedown', handleMouseDown);
+  window.addEventListener('mouseup', handleMouseUp);
   window.addEventListener('mouseleave', handleMouseLeave);
   window.addEventListener('mouseenter', handleMouseEnter);
 
@@ -129,6 +146,8 @@ export function setupKatanaMotionListener(
     }
     pendingEvent = null;
     window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mousedown', handleMouseDown);
+    window.removeEventListener('mouseup', handleMouseUp);
     window.removeEventListener('mouseleave', handleMouseLeave);
     window.removeEventListener('mouseenter', handleMouseEnter);
   };
@@ -141,6 +160,7 @@ export function useKatanaMotion(config?: KatanaMotionConfig): CursorState {
     angle: 0,
     speed: 0,
     isVisible: false,
+    variant: 'default',
   });
 
   const lerpFactor = config?.lerpFactor;

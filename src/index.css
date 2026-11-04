@@ -18,6 +18,11 @@
   box-sizing: border-box;
 }
 
+/* Ocultar completamente todos los punteros nativos en cualquier elemento interactivo */
+html, body, a, button, input, textarea, select, [role="button"], label, * {
+  cursor: none !important;
+}
+
 html {
   scroll-behavior: smooth;
   background-color: var(--background);
