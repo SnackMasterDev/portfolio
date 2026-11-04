@@ -116,16 +116,19 @@ export function recyclePetal(
 }
 
 /**
- * Applies directional aerodynamic blast from katana slash to nearby petals.
+ * Applies directional aerodynamic wake from katana slash to clear path and part petals like water.
  */
 export function applyWindSlash(
   petals: Petal[],
   detail: SlashEventDetail,
-  radius = 220
+  radius = 240
 ): void {
   const rad = (detail.angle * Math.PI) / 180;
-  const dirX = Math.cos(rad);
-  const dirY = Math.sin(rad);
+  const fwdX = Math.cos(rad);
+  const fwdY = Math.sin(rad);
+  const normX = -fwdY;
+  const normY = fwdX;
+  const speedFactor = Math.min(Math.max(detail.speed / 200, 1), 4.5);
 
   for (let i = 0; i < petals.length; i++) {
     const p = petals[i];
@@ -134,8 +137,16 @@ export function applyWindSlash(
     const dist = Math.hypot(dx, dy);
 
     if (dist < radius) {
-      const proximity = 1 - dist / radius;
-      const force = proximity * Math.min(detail.speed * 0.65, 380);
+      const proximity = Math.pow(1 - dist / radius, 1.4);
+      const intensity = proximity * (190 * speedFactor);
+      const side = dx * normX + dy * normY;
+      const sideSign = side >= 0 ? 1 : -1;
+
+      // Part petals outward to sides like a speedboat bow wave
+      const wakeX = normX * sideSign * intensity * 1.5;
+      const wakeY = normY * sideSign * intensity * 1.5;
+      const radialX = dist > 0 ? (dx / dist) * intensity * 0.9 : 0;
+      const radialY = dist > 0 ? (dy / dist) * intensity * 0.9 : 0;
 
       if (p.isResting) {
         p.isResting = false;
@@ -143,10 +154,10 @@ export function applyWindSlash(
         p.speedY = 40 + Math.random() * 40;
       }
 
-      p.slashImpulseX = (p.slashImpulseX ?? 0) + dirX * force + (Math.random() - 0.5) * 50;
-      p.slashImpulseY = (p.slashImpulseY ?? 0) + dirY * force - 35;
-      p.flipSpeed = 3 + Math.random() * 3;
-      p.rotationSpeed = (Math.random() - 0.5) * 5;
+      p.slashImpulseX = (p.slashImpulseX ?? 0) + wakeX + radialX;
+      p.slashImpulseY = (p.slashImpulseY ?? 0) + wakeY + radialY - 25;
+      p.flipSpeed = 4.5 + Math.random() * 4;
+      p.rotationSpeed = (Math.random() - 0.5) * 12;
     }
   }
 }
@@ -191,13 +202,36 @@ export function updatePetal(
   const flatness = Math.abs(normalZ);
 
   const dragFactor = 0.55 + 0.45 * (1 - flatness);
-  const effectiveSpeedY = petal.speedY * dragFactor;
+  let effectiveSpeedY = petal.speedY * dragFactor;
   const glideLift = Math.sin(petal.rotation) * (flatness * 30);
 
   const phase = petal.oscillationPhase;
   const microTurbulence = Math.sin(phase * 0.8) * 15 + Math.cos(phase * 1.7 + petal.y * 0.003) * 8;
 
   petal.x += (petal.speedX + config.wind.x + glideLift + microTurbulence) * clampedDt;
+
+  // Ground approach & gentle flat landing
+  const groundY = config.groundY ?? dimensions.height;
+  if (config.groundY !== undefined) {
+    const distToGround = groundY - petal.y;
+    if (distToGround <= 30 && distToGround > 0) {
+      effectiveSpeedY *= Math.max(distToGround / 30, 0.15);
+      petal.flipSpeed *= 0.85;
+      petal.rotationSpeed *= 0.85;
+    } else if (distToGround <= 0) {
+      petal.y = groundY;
+      petal.isResting = true;
+      petal.restingLife = 0;
+      petal.speedX = 0;
+      petal.speedY = 0;
+      petal.rotationSpeed = 0;
+      petal.flipSpeed = 0;
+      petal.flip = 0;
+      petal.rotation = Math.sin(petal.id) * 0.25;
+      return;
+    }
+  }
+
   petal.y += (effectiveSpeedY + config.wind.y) * clampedDt;
 
   const dynamicFlipRate = petal.flipSpeed * (0.8 + 0.4 * flatness);
@@ -211,17 +245,6 @@ export function updatePetal(
     petal.x > dimensions.width + lateralMargin
   ) {
     recyclePetal(petal, dimensions, config);
-    return;
-  }
-
-  if (config.groundY !== undefined && petal.y >= config.groundY - petal.size * 0.8) {
-    petal.y = config.groundY - petal.size * 0.4 + (Math.random() - 0.5) * 6;
-    petal.isResting = true;
-    petal.restingLife = 0;
-    petal.speedX = 0;
-    petal.speedY = 0;
-    petal.rotationSpeed = 0;
-    return;
   }
 }
 
@@ -233,15 +256,15 @@ export function drawPetal(ctx: CanvasRenderingContext2D, petal: Petal): void {
   ctx.translate(petal.x, petal.y);
   ctx.rotate(petal.rotation);
 
-  const normalZ = Math.cos(petal.flip);
+  const normalZ = petal.isResting ? 1.0 : Math.cos(petal.flip);
   const isFront = normalZ >= 0;
-  const flipScale = Math.max(Math.abs(normalZ), 0.15);
+  const flipScale = petal.isResting ? 1.0 : Math.max(Math.abs(normalZ), 0.15);
   ctx.scale(flipScale, 1);
 
   ctx.fillStyle = isFront ? petal.color : (petal.backColor || '#ec4899');
   ctx.globalAlpha = petal.opacity * (isFront ? 1.0 : 0.9);
   ctx.shadowColor = isFront ? 'rgba(252, 231, 243, 0.45)' : 'rgba(236, 72, 153, 0.35)';
-  ctx.shadowBlur = isFront ? 4 : 2;
+  ctx.shadowBlur = petal.isResting ? 1 : (isFront ? 4 : 2);
 
   const s = petal.size;
   ctx.beginPath();

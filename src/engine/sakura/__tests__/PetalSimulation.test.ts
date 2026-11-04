@@ -119,7 +119,7 @@ describe('PetalSimulation', () => {
       const petal: Petal = {
         id: 2,
         x: 300,
-        y: 695,
+        y: 700,
         size: 10,
         speedY: 50,
         speedX: 0,

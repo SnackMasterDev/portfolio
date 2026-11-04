@@ -87,7 +87,7 @@ export function setupKatanaMotionListener(
         currentAngle = 0;
       }
       currentSpeed = calculateSpeed(dx, dy, dtSeconds);
-      if (currentSpeed > 750 && typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      if (currentSpeed > 100 && typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
         const slashEvent = new CustomEvent('katana-slash', {
           detail: {
             x: clientX,
