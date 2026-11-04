@@ -1,21 +1,20 @@
 import { useEffect, type RefObject } from 'react';
 import type { SakuraConfig, Petal, CanvasDimensions } from '../../engine/types';
-import { createPetal, updatePetal, drawPetal } from '../../engine/sakura/PetalSimulation';
+import { createPetal, updatePetal, drawPetal, SAKURA_PALETTE } from '../../engine/sakura/PetalSimulation';
 
 export const DEFAULT_SAKURA_CONFIG: SakuraConfig = {
-  petalCount: 35,
-  minSpeedY: 30,
-  maxSpeedY: 70,
-  minSize: 8,
-  maxSize: 18,
-  wind: { x: 15, y: 0 },
-  colors: ['#ffd1dc', '#ffb7c5', '#ffc0cb', '#f8b9d4', '#fff0f5'],
+  petalCount: 55,
+  minSpeedY: 60,
+  maxSpeedY: 110,
+  minSize: 10,
+  maxSize: 20,
+  wind: { x: 16, y: 0 },
+  colors: SAKURA_PALETTE,
   maxDeltaTime: 0.05,
 };
 
 /**
  * Initializes and orchestrates the canvas animation loop outside React's lifecycle.
- * Manages ResizeObserver, prefers-reduced-motion, and cleanup.
  */
 export function setupSakuraCanvas(
   canvas: HTMLCanvasElement,
@@ -26,13 +25,31 @@ export function setupSakuraCanvas(
 
   const config: SakuraConfig = { ...DEFAULT_SAKURA_CONFIG, ...customConfig };
 
-  const dimensions: CanvasDimensions = {
-    width: (canvas.width = canvas.clientWidth || 800),
-    height: (canvas.height = canvas.clientHeight || 600),
+  const getViewportDimensions = (): CanvasDimensions => {
+    const hasWindow = typeof window !== 'undefined';
+    const hasDoc = typeof document !== 'undefined';
+    const width =
+      (hasWindow ? window.innerWidth : 0) ||
+      (hasDoc ? document.documentElement?.clientWidth : 0) ||
+      canvas.clientWidth ||
+      800;
+    const height =
+      (hasWindow ? window.innerHeight : 0) ||
+      (hasDoc ? document.documentElement?.clientHeight : 0) ||
+      canvas.clientHeight ||
+      600;
+    return { width, height };
   };
 
-  const petals: Petal[] = Array.from({ length: config.petalCount }, () =>
-    createPetal(dimensions, config, Math.random())
+  const initialDims = getViewportDimensions();
+  canvas.width = initialDims.width;
+  canvas.height = initialDims.height;
+
+  const dimensions: CanvasDimensions = { ...initialDims };
+
+  // Pre-populate petals throughout vertical height
+  const petals: Petal[] = Array.from({ length: config.petalCount }, (_, i) =>
+    createPetal(dimensions, config, (i + Math.random()) / config.petalCount)
   );
 
   const motionQuery =
@@ -45,7 +62,7 @@ export function setupSakuraCanvas(
   let lastTime = performance.now();
 
   const render = (currentTime: number) => {
-    const dt = (currentTime - lastTime) / 1000;
+    const dt = Math.min((currentTime - lastTime) / 1000, 0.05);
     lastTime = currentTime;
 
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
@@ -84,23 +101,42 @@ export function setupSakuraCanvas(
 
   motionQuery?.addEventListener?.('change', handleMotionChange);
 
-  const resizeObserver = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      const { width, height } = entry.contentRect;
-      if (width > 0 && height > 0) {
-        canvas.width = width;
-        canvas.height = height;
-        dimensions.width = width;
-        dimensions.height = height;
-      }
+  const handleResize = () => {
+    const { width, height } = getViewportDimensions();
+    if (width > 0 && height > 0) {
+      canvas.width = width;
+      canvas.height = height;
+      dimensions.width = width;
+      dimensions.height = height;
     }
-  });
+  };
 
-  resizeObserver.observe(canvas);
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('resize', handleResize, { passive: true });
+  }
+
+  let resizeObserver: ResizeObserver | null = null;
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width > 0 && height > 0 && (canvas.width !== width || canvas.height !== height)) {
+          canvas.width = width;
+          canvas.height = height;
+          dimensions.width = width;
+          dimensions.height = height;
+        }
+      }
+    });
+    resizeObserver.observe(canvas);
+  }
 
   return () => {
     cancelAnimationFrame(animationFrameId);
-    resizeObserver.disconnect();
+    if (typeof window !== 'undefined' && typeof window.removeEventListener === 'function') {
+      window.removeEventListener('resize', handleResize);
+    }
+    resizeObserver?.disconnect();
     motionQuery?.removeEventListener?.('change', handleMotionChange);
   };
 }

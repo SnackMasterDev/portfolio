@@ -6,7 +6,7 @@ import { ContactSection } from './components/contact/ContactSection';
 export default function App() {
   return (
     <div className="relative min-h-screen bg-[#1c1c1e] text-[#f2f0ed] selection:bg-[#f3a4c2] selection:text-[#1c1c1e]">
-      {/* Canvas interactivo de petalos de fondo */}
+      {/* Canvas interactivo de petalos de fondo a 60/120 FPS */}
       <SakuraCanvas className="pointer-events-none fixed inset-0 z-0 h-full w-full" />
 
       {/* Puntero Katana estilizado */}

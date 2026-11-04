@@ -2,6 +2,15 @@ import type { CanvasDimensions, SakuraConfig, Petal } from '../types';
 
 let nextPetalId = 1;
 
+export const SAKURA_PALETTE = [
+  '#f7b8d0',
+  '#ee91b8',
+  '#f6a9c7',
+  '#d96d9b',
+  '#fad0df',
+  '#ff85a2',
+];
+
 /**
  * Creates a new petal instance initialized with random properties within config boundaries.
  */
@@ -11,24 +20,25 @@ export function createPetal(
   initialProgress?: number
 ): Petal {
   const size = config.minSize + Math.random() * (config.maxSize - config.minSize);
-  const color = config.colors[Math.floor(Math.random() * config.colors.length)] || '#ffd1dc';
+  const colors = config.colors?.length ? config.colors : SAKURA_PALETTE;
+  const color = colors[Math.floor(Math.random() * colors.length)];
 
   const petal: Petal = {
     id: nextPetalId++,
-    x: Math.random() * (dimensions.width + 40) - 20,
+    x: Math.random() * (dimensions.width || 800),
     y: initialProgress !== undefined
-      ? initialProgress * dimensions.height
-      : -size - Math.random() * 40,
+      ? initialProgress * (dimensions.height || 600)
+      : -size - Math.random() * 50,
     size,
     speedY: config.minSpeedY + Math.random() * (config.maxSpeedY - config.minSpeedY),
-    speedX: (Math.random() - 0.5) * 15,
-    rotation: Math.random() * Math.PI * 2,
-    rotationSpeed: (Math.random() - 0.5) * 1.2,
+    speedX: (Math.random() - 0.5) * 20,
+    rotation: (Math.random() - 0.5) * Math.PI,
+    rotationSpeed: (Math.random() - 0.5) * 1.5,
     flip: Math.random() * Math.PI * 2,
-    flipSpeed: 1 + Math.random() * 2,
+    flipSpeed: 1.5 + Math.random() * 2.5,
     oscillationPhase: Math.random() * Math.PI * 2,
-    oscillationSpeed: 1.2 + Math.random() * 1.8,
-    opacity: 0.6 + Math.random() * 0.35,
+    oscillationSpeed: 1.5 + Math.random() * 2,
+    opacity: 0.85 + Math.random() * 0.15,
     color,
   };
 
@@ -43,23 +53,21 @@ export function recyclePetal(
   dimensions: CanvasDimensions,
   config: SakuraConfig
 ): void {
+  const colors = config.colors?.length ? config.colors : SAKURA_PALETTE;
   petal.size = config.minSize + Math.random() * (config.maxSize - config.minSize);
-  petal.x = Math.random() * (dimensions.width + 60) - 30;
-  petal.y = -petal.size - Math.random() * 30;
+  petal.x = Math.random() * (dimensions.width || 800);
+  petal.y = -petal.size - Math.random() * 40;
   petal.speedY = config.minSpeedY + Math.random() * (config.maxSpeedY - config.minSpeedY);
-  petal.speedX = (Math.random() - 0.5) * 15;
-  petal.rotation = Math.random() * Math.PI * 2;
-  petal.rotationSpeed = (Math.random() - 0.5) * 1.2;
+  petal.speedX = (Math.random() - 0.5) * 20;
+  petal.rotation = (Math.random() - 0.5) * Math.PI;
+  petal.rotationSpeed = (Math.random() - 0.5) * 1.5;
   petal.flip = Math.random() * Math.PI * 2;
-  petal.flipSpeed = 1 + Math.random() * 2;
-  petal.oscillationPhase = Math.random() * Math.PI * 2;
-  petal.oscillationSpeed = 1.2 + Math.random() * 1.8;
-  petal.opacity = 0.6 + Math.random() * 0.35;
-  petal.color = config.colors[Math.floor(Math.random() * config.colors.length)] || '#ffd1dc';
+  petal.color = colors[Math.floor(Math.random() * colors.length)];
+  petal.opacity = 0.85 + Math.random() * 0.15;
 }
 
 /**
- * Updates physics, dual harmonic sway, 3D flip, and boundary recycling for a petal.
+ * Advances physical simulation of a petal by delta-time in seconds.
  */
 export function updatePetal(
   petal: Petal,
@@ -67,23 +75,24 @@ export function updatePetal(
   dimensions: CanvasDimensions,
   config: SakuraConfig
 ): void {
-  const maxDt = config.maxDeltaTime > 0 ? config.maxDeltaTime : 0.05;
+  const maxDt = config.maxDeltaTime ?? 0.05;
   const clampedDt = Math.min(Math.max(dt, 0), maxDt);
 
-  // Dual sinusoidal oscillation in X axis for natural breeze sway
   petal.oscillationPhase += petal.oscillationSpeed * clampedDt;
-  const primarySway = Math.sin(petal.oscillationPhase) * 22;
-  const secondarySway = Math.sin(petal.oscillationPhase * 0.5) * 9;
+
+  // Dual harmonic sway
+  const primarySway = Math.sin(petal.oscillationPhase) * 24;
+  const secondarySway = Math.sin(petal.oscillationPhase * 0.6) * 12;
   const totalSway = primarySway + secondarySway;
 
-  petal.x += (petal.speedX + config.wind.x + totalSway) * clampedDt;
+  petal.x += (petal.speedX + config.wind.x + totalSway * 0.8) * clampedDt;
   petal.y += (petal.speedY + config.wind.y) * clampedDt;
 
   petal.rotation += petal.rotationSpeed * clampedDt;
   petal.flip += petal.flipSpeed * clampedDt;
 
   // Boundary check: recycle when petal drifts beyond bottom or far off lateral edges
-  const lateralMargin = petal.size * 3;
+  const lateralMargin = petal.size * 4;
   if (
     petal.y > dimensions.height + petal.size ||
     petal.x < -lateralMargin ||
@@ -101,23 +110,20 @@ export function drawPetal(ctx: CanvasRenderingContext2D, petal: Petal): void {
   ctx.translate(petal.x, petal.y);
   ctx.rotate(petal.rotation);
 
-  // Simulated 3D flip around Y axis via horizontal scale
-  const flipScale = Math.cos(petal.flip);
+  // Smooth 3D flip between 0.4 and 1.0 to preserve visible petal mass
+  const flipScale = 0.45 + Math.abs(Math.cos(petal.flip)) * 0.55;
   ctx.scale(flipScale, 1);
 
   ctx.fillStyle = petal.color;
   ctx.globalAlpha = petal.opacity;
 
-  // Organic sakura petal drawn with dual bezier curves and slight tip notch
+  // Organic sakura petal with curved notch and soft body
   const s = petal.size;
   ctx.beginPath();
-  ctx.moveTo(0, -s);
-  ctx.bezierCurveTo(s * 0.65, -s * 0.75, s * 0.75, -s * 0.1, s * 0.35, s * 0.65);
-  ctx.bezierCurveTo(s * 0.15, s * 0.9, 0, s, 0, s);
-  ctx.bezierCurveTo(0, s, -s * 0.15, s * 0.9, -s * 0.35, s * 0.65);
-  ctx.bezierCurveTo(-s * 0.75, -s * 0.1, -s * 0.65, -s * 0.75, 0, -s);
-  ctx.closePath();
-
+  ctx.moveTo(-s * 0.5, 0);
+  ctx.bezierCurveTo(-s * 0.25, -s * 0.65, s * 0.55, -s * 0.4, s * 0.5, 0);
+  ctx.bezierCurveTo(s * 0.25, s * 0.45, -s * 0.25, s * 0.38, -s * 0.5, 0);
   ctx.fill();
+
   ctx.restore();
 }
