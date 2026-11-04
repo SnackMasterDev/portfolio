@@ -9,7 +9,7 @@ export default function App() {
     <div className="relative min-h-screen bg-[#f4eee5] text-[#1c1c1e] selection:bg-[#fbcfe8] selection:text-[#1c1c1e]">
       {/* Canvas interactivo de petalos flotando en primer plano (z-20) con click-through */}
       <SakuraCanvas
-        config={{ prefersReducedMotion: false, petalCount: 75, minSpeedY: 65, maxSpeedY: 125 }}
+        config={{ prefersReducedMotion: false, petalCount: 110, minSpeedY: 65, maxSpeedY: 125 }}
         className="pointer-events-none fixed inset-0 z-20 h-full w-full"
       />
 

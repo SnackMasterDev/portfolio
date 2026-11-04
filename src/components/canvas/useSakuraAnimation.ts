@@ -54,14 +54,30 @@ export function setupSakuraCanvas(
 
   const dimensions: CanvasDimensions = { ...initialDims };
 
+  const getDocHeight = (): number => {
+    if (typeof document === 'undefined') return 2500;
+    return Math.max(
+      document.documentElement?.scrollHeight || 0,
+      document.body?.scrollHeight || 0,
+      (typeof window !== 'undefined' ? window.innerHeight : 0) || 800
+    );
+  };
+
+  const pageDimensions: CanvasDimensions = {
+    width: dimensions.width,
+    height: getDocHeight(),
+  };
+
   const updateEnvironment = () => {
     if (typeof document === 'undefined') return;
+    pageDimensions.height = getDocHeight();
+    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
     const treeEl = document.getElementById('sakura-tree');
     if (treeEl) {
       const rect = treeEl.getBoundingClientRect();
       config.treeBounds = {
         x: rect.left,
-        y: rect.top,
+        y: rect.top + scrollY,
         width: rect.width,
         height: rect.height,
       };
@@ -69,16 +85,16 @@ export function setupSakuraCanvas(
     const groundEl = document.getElementById('ground') || document.querySelector('footer');
     if (groundEl) {
       const gRect = groundEl.getBoundingClientRect();
-      config.groundY = gRect.top + 30;
+      config.groundY = gRect.top + scrollY + 30;
     } else {
-      config.groundY = dimensions.height - 15;
+      config.groundY = pageDimensions.height - 20;
     }
   };
   updateEnvironment();
 
-  // Pre-populate petals throughout vertical height
+  // Pre-populate petals throughout the full document height (not just viewport)
   const petals: Petal[] = Array.from({ length: config.petalCount }, (_, i) =>
-    createPetal(dimensions, config, (i + Math.random()) / config.petalCount)
+    createPetal(pageDimensions, config, (i + Math.random()) / config.petalCount)
   );
 
   const motionQuery =
@@ -89,31 +105,24 @@ export function setupSakuraCanvas(
 
   let animationFrameId: number;
   let lastTime = performance.now();
-  let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
 
   const render = (currentTime: number) => {
     const dt = Math.min((currentTime - lastTime) / 1000, 0.05);
     lastTime = currentTime;
 
-    // Full page depth scroll tracking
     const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-    const deltaScrollY = currentScrollY - lastScrollY;
-    lastScrollY = currentScrollY;
-
-    if (deltaScrollY !== 0) {
-      for (let i = 0; i < petals.length; i++) {
-        petals[i].y -= deltaScrollY * 0.85;
-      }
-    }
 
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
     for (let i = petals.length - 1; i >= 0; i--) {
-      updatePetal(petals[i], dt, dimensions, config);
-      drawPetal(ctx, petals[i]);
+      updatePetal(petals[i], dt, pageDimensions, config);
 
-      // Gently clean up burst flurry petals after they leave screen
-      if (petals[i].isBurst && petals[i].y > dimensions.height + 40) {
+      const screenY = petals[i].y - currentScrollY;
+      if (screenY >= -petals[i].size * 2 && screenY <= dimensions.height + petals[i].size * 2) {
+        drawPetal(ctx, petals[i], screenY);
+      }
+
+      if (petals[i].isBurst && screenY > dimensions.height + 40) {
         petals.splice(i, 1);
       }
     }
@@ -123,8 +132,12 @@ export function setupSakuraCanvas(
 
   const renderStaticFrame = () => {
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
     for (let i = 0; i < petals.length; i++) {
-      drawPetal(ctx, petals[i]);
+      const screenY = petals[i].y - scrollY;
+      if (screenY >= -petals[i].size * 2 && screenY <= dimensions.height + petals[i].size * 2) {
+        drawPetal(ctx, petals[i], screenY);
+      }
     }
   };
 
@@ -161,8 +174,9 @@ export function setupSakuraCanvas(
     const customEvent = e as CustomEvent<{ x?: number; y?: number; count?: number }>;
     const treeEl = typeof document !== 'undefined' ? document.getElementById('sakura-tree') : null;
     const rect = treeEl?.getBoundingClientRect();
+    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
     const originX = customEvent.detail?.x ?? (rect ? rect.left + rect.width * 0.5 : dimensions.width * 0.5);
-    const originY = customEvent.detail?.y ?? (rect ? rect.top + rect.height * 0.35 : dimensions.height * 0.25);
+    const originY = (customEvent.detail?.y ?? (rect ? rect.top + rect.height * 0.35 : dimensions.height * 0.25)) + scrollY;
     const count = customEvent.detail?.count ?? 45;
 
     for (let i = 0; i < count; i++) {
@@ -177,7 +191,8 @@ export function setupSakuraCanvas(
   const handleSlash = (e: Event) => {
     const customEvent = e as CustomEvent<SlashEventDetail>;
     if (customEvent.detail) {
-      applyWindSlash(petals, customEvent.detail);
+      const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+      applyWindSlash(petals, customEvent.detail, scrollY);
     }
   };
 

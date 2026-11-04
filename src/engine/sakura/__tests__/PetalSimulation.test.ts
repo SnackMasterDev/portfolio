@@ -151,7 +151,7 @@ describe('PetalSimulation', () => {
       p2.x = 900;
       p2.y = 900; // Outside radius
 
-      applyWindSlash([p1, p2], { x: 210, y: 210, angle: 45, speed: 900 }, 150);
+      applyWindSlash([p1, p2], { x: 210, y: 210, angle: 45, speed: 900 }, 0);
 
       expect(p1.slashImpulseX).toBeDefined();
       expect(p1.slashImpulseX).not.toBe(0);

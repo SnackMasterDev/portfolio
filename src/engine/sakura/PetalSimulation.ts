@@ -121,48 +121,57 @@ export function recyclePetal(
 }
 
 /**
- * Applies directional aerodynamic wake from katana slash to clear path and part petals like water.
+ * Applies triangular aerodynamic wake behind the katana blade.
+ * The triangle apex is at the sword tip (x, y) and widens backward like a boat wake.
  */
 export function applyWindSlash(
   petals: Petal[],
   detail: SlashEventDetail,
-  radius = 240
+  scrollY: number = 0,
+  length = 260,
+  halfWidth = 120
 ): void {
   const rad = (detail.angle * Math.PI) / 180;
   const fwdX = Math.cos(rad);
   const fwdY = Math.sin(rad);
   const normX = -fwdY;
   const normY = fwdX;
-  const speedFactor = Math.min(Math.max(detail.speed / 200, 1), 4.5);
+  const speedFactor = Math.min(Math.max(detail.speed / 300, 1), 4);
 
   for (let i = 0; i < petals.length; i++) {
     const p = petals[i];
+    const screenY = p.y - scrollY;
     const dx = p.x - detail.x;
-    const dy = p.y - detail.y;
-    const dist = Math.hypot(dx, dy);
+    const dy = screenY - detail.y;
 
-    if (dist < radius) {
-      const proximity = Math.pow(1 - dist / radius, 1.4);
-      const intensity = proximity * (190 * speedFactor);
-      const side = dx * normX + dy * normY;
-      const sideSign = side >= 0 ? 1 : -1;
+    const dBack = -(dx * fwdX + dy * fwdY);
+    const dSide = dx * normX + dy * normY;
 
-      // Part petals outward to sides like a speedboat bow wave
-      const wakeX = normX * sideSign * intensity * 1.5;
-      const wakeY = normY * sideSign * intensity * 1.5;
-      const radialX = dist > 0 ? (dx / dist) * intensity * 0.9 : 0;
-      const radialY = dist > 0 ? (dy / dist) * intensity * 0.9 : 0;
+    if (dBack >= -25 && dBack <= length) {
+      const progress = (dBack + 25) / (length + 25);
+      const localHalfWidth = halfWidth * Math.max(progress, 0.25);
 
-      if (p.isResting) {
-        p.isResting = false;
-        p.opacity = 0.9;
-        p.speedY = 40 + Math.random() * 40;
+      if (Math.abs(dSide) <= localHalfWidth) {
+        const sideSign = dSide >= 0 ? 1 : -1;
+        const proximity = 1 - Math.abs(dSide) / localHalfWidth;
+        const force = (0.5 + 0.5 * proximity) * (180 * speedFactor);
+
+        const wakeX = normX * sideSign * force * 1.6;
+        const wakeY = normY * sideSign * force * 1.6;
+        const dragX = -fwdX * force * 0.35;
+        const dragY = -fwdY * force * 0.35;
+
+        if (p.isResting) {
+          p.isResting = false;
+          p.opacity = 0.9;
+          p.speedY = 40 + Math.random() * 40;
+        }
+
+        p.slashImpulseX = (p.slashImpulseX ?? 0) + wakeX + dragX;
+        p.slashImpulseY = (p.slashImpulseY ?? 0) + wakeY + dragY - 25;
+        p.flipSpeed = 4 + Math.random() * 4;
+        p.rotationSpeed = (Math.random() - 0.5) * 12;
       }
-
-      p.slashImpulseX = (p.slashImpulseX ?? 0) + wakeX + radialX;
-      p.slashImpulseY = (p.slashImpulseY ?? 0) + wakeY + radialY - 25;
-      p.flipSpeed = 4.5 + Math.random() * 4;
-      p.rotationSpeed = (Math.random() - 0.5) * 12;
     }
   }
 }
@@ -256,9 +265,9 @@ export function updatePetal(
 /**
  * Renders an organic 3D dual-sided sakura petal with distinct front/back tones.
  */
-export function drawPetal(ctx: CanvasRenderingContext2D, petal: Petal): void {
+export function drawPetal(ctx: CanvasRenderingContext2D, petal: Petal, renderY?: number): void {
   ctx.save();
-  ctx.translate(petal.x, petal.y);
+  ctx.translate(petal.x, renderY !== undefined ? renderY : petal.y);
   ctx.rotate(petal.rotation);
 
   const normalZ = petal.isResting ? 1.0 : Math.cos(petal.flip);
