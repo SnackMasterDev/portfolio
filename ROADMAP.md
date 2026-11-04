@@ -16,9 +16,10 @@
 | Ciclo | Módulo / Sección | Estado | Spec Asociada | Commit |
 | :---: | :--- | :---: | :--- | :---: |
 | **01** | Scaffolding Limpio, Tailwind, Assets y Git Base | ✅ COMPLETADO | `specs/01-scaffolding/` | `4c3c66e` |
-| **02** | Canvas de Pétalos Flotantes (Física y Delta-Time a 60 FPS) | ⏳ EN PROCESO | `specs/02-petal-canvas/` | Pendiente |
-| **03** | Suelo Dinámico y Acumulación Orgánica de Pétalos | ⏸ PENDIENTE | `specs/03-floor-pile/` | Pendiente |
-| **04** | Puntero Katana y Detección de Velocidad Vectorial | ⏸ PENDIENTE | `specs/04-katana-cursor/` | Pendiente |
+| **02** | Canvas de Pétalos Flotantes (Física y Delta-Time a 60 FPS) | ✅ COMPLETADO | `specs/02-petal-canvas/` | `ab9f734` |
+| **03** | Suelo Dinámico y Acumulación Orgánica de Pétalos | ⏳ EN PROCESO | `specs/03-floor-pile/` | Pendiente |
+| **04** | Puntero Katana y Detección de Velocidad Vectorial | ⏳ EN PROCESO | `specs/04-katana-cursor/` | Pendiente |
+| **08** | Interfaz de Usuario y Showcase de Proyectos (<100 líneas) | ⏳ EN PROCESO | `specs/08-portfolio-ui/` | Pendiente |
 | **05** | Ventarrón Caótico al Cortar ("Wind Slash") | ⏸ PENDIENTE | `specs/05-wind-slash/` | Pendiente |
 | **06** | Árbol de Cerezo, Brisa en Ramas y Emisión desde Copas | ⏸ PENDIENTE | `specs/06-cherry-tree/` | Pendiente |
 | **07** | Colisión de Katana con Árbol (Recoil Elástico y Chispas) | ⏸ PENDIENTE | `specs/07-tree-collision/` | Pendiente |
