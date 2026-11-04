@@ -1,14 +1,14 @@
-import type { CanvasDimensions, SakuraConfig, Petal } from '../types';
+import type { CanvasDimensions, SakuraConfig, Petal, SlashEventDetail } from '../types';
 
 let nextPetalId = 1;
 
 export const SAKURA_PAIRS: { face: string; back: string }[] = [
-  { face: '#f7b8d0', back: '#be185d' },
-  { face: '#ee91b8', back: '#9d174d' },
-  { face: '#f6a9c7', back: '#b91c1c' },
-  { face: '#ff85a2', back: '#881337' },
-  { face: '#fad0df', back: '#a21caf' },
-  { face: '#fbcfe8', back: '#9f1239' },
+  { face: '#fce7f3', back: '#f472b6' },
+  { face: '#fbcfe8', back: '#ec4899' },
+  { face: '#f9a8d4', back: '#db2777' },
+  { face: '#fdf2f8', back: '#f472b6' },
+  { face: '#fad0df', back: '#e879a9' },
+  { face: '#fee2e2', back: '#f87171' },
 ];
 
 export const SAKURA_PALETTE = SAKURA_PAIRS.map((p) => p.face);
@@ -47,12 +47,13 @@ export function createPetal(
     rotation: (Math.random() - 0.5) * Math.PI,
     rotationSpeed: (Math.random() - 0.5) * 1.5,
     flip: Math.random() * Math.PI * 2,
-    flipSpeed: 1.5 + Math.random() * 2.5,
+    flipSpeed: 0.9 + Math.random() * 1.3,
     oscillationPhase: Math.random() * Math.PI * 2,
-    oscillationSpeed: 1.5 + Math.random() * 2,
+    oscillationSpeed: 1.2 + Math.random() * 1.6,
     opacity: 0.85 + Math.random() * 0.15,
     color,
     backColor: pair.back,
+    isResting: false,
   };
 
   return petal;
@@ -71,8 +72,8 @@ export function createBurstPetal(
   p.y = originY + (Math.random() - 0.5) * 50;
   p.speedX = (Math.random() - 0.5) * 160;
   p.speedY = -30 + Math.random() * 90;
-  p.flipSpeed = 3.5 + Math.random() * 4.5;
-  p.rotationSpeed = (Math.random() - 0.5) * 3.5;
+  p.flipSpeed = 3.2 + Math.random() * 2.5;
+  p.rotationSpeed = (Math.random() - 0.5) * 3;
   p.isBurst = true;
   return p;
 }
@@ -108,6 +109,46 @@ export function recyclePetal(
   petal.flip = Math.random() * Math.PI * 2;
   petal.opacity = 0.85 + Math.random() * 0.15;
   petal.isBurst = false;
+  petal.isResting = false;
+  petal.restingLife = 0;
+  petal.slashImpulseX = 0;
+  petal.slashImpulseY = 0;
+}
+
+/**
+ * Applies directional aerodynamic blast from katana slash to nearby petals.
+ */
+export function applyWindSlash(
+  petals: Petal[],
+  detail: SlashEventDetail,
+  radius = 220
+): void {
+  const rad = (detail.angle * Math.PI) / 180;
+  const dirX = Math.cos(rad);
+  const dirY = Math.sin(rad);
+
+  for (let i = 0; i < petals.length; i++) {
+    const p = petals[i];
+    const dx = p.x - detail.x;
+    const dy = p.y - detail.y;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < radius) {
+      const proximity = 1 - dist / radius;
+      const force = proximity * Math.min(detail.speed * 0.65, 380);
+
+      if (p.isResting) {
+        p.isResting = false;
+        p.opacity = 0.9;
+        p.speedY = 40 + Math.random() * 40;
+      }
+
+      p.slashImpulseX = (p.slashImpulseX ?? 0) + dirX * force + (Math.random() - 0.5) * 50;
+      p.slashImpulseY = (p.slashImpulseY ?? 0) + dirY * force - 35;
+      p.flipSpeed = 3 + Math.random() * 3;
+      p.rotationSpeed = (Math.random() - 0.5) * 5;
+    }
+  }
 }
 
 /**
@@ -122,32 +163,47 @@ export function updatePetal(
   const maxDt = config.maxDeltaTime ?? 0.05;
   const clampedDt = Math.min(Math.max(dt, 0), maxDt);
 
+  if (petal.isResting) {
+    petal.restingLife = (petal.restingLife ?? 0) + clampedDt;
+    if (petal.restingLife > 10) {
+      petal.opacity -= clampedDt * 0.15;
+      if (petal.opacity <= 0.05) {
+        recyclePetal(petal, dimensions, config);
+      }
+    }
+    return;
+  }
+
+  if (petal.slashImpulseX) {
+    petal.x += petal.slashImpulseX * clampedDt;
+    petal.slashImpulseX *= 0.91;
+    if (Math.abs(petal.slashImpulseX) < 1) petal.slashImpulseX = 0;
+  }
+  if (petal.slashImpulseY) {
+    petal.y += petal.slashImpulseY * clampedDt;
+    petal.slashImpulseY *= 0.91;
+    if (Math.abs(petal.slashImpulseY) < 1) petal.slashImpulseY = 0;
+  }
+
   petal.oscillationPhase += petal.oscillationSpeed * clampedDt;
 
-  // 3D Angle of attack (normalZ: 1 = flat facing viewer, 0 = edge-on cutting through air)
   const normalZ = Math.cos(petal.flip);
   const flatness = Math.abs(normalZ);
 
-  // Aerodynamic resistance: flat orientation slows fall; edge orientation accelerates
   const dragFactor = 0.55 + 0.45 * (1 - flatness);
   const effectiveSpeedY = petal.speedY * dragFactor;
+  const glideLift = Math.sin(petal.rotation) * (flatness * 30);
 
-  // Lateral aerodynamic lift: flat petal glides sideways along its rotational tilt
-  const glideLift = Math.sin(petal.rotation) * (flatness * 35);
-
-  // Gentle atmospheric air anomalies (turbulent micro-drafts, not simple static sine)
   const phase = petal.oscillationPhase;
-  const microTurbulence = Math.sin(phase * 0.8) * 18 + Math.cos(phase * 1.7 + petal.y * 0.003) * 10;
+  const microTurbulence = Math.sin(phase * 0.8) * 15 + Math.cos(phase * 1.7 + petal.y * 0.003) * 8;
 
   petal.x += (petal.speedX + config.wind.x + glideLift + microTurbulence) * clampedDt;
   petal.y += (effectiveSpeedY + config.wind.y) * clampedDt;
 
-  // Fluid tumbling: rotation rate adjusts with drag
   const dynamicFlipRate = petal.flipSpeed * (0.8 + 0.4 * flatness);
   petal.flip += dynamicFlipRate * clampedDt;
   petal.rotation += petal.rotationSpeed * clampedDt;
 
-  // Boundary check: recycle when petal drifts beyond bottom or far off lateral edges
   const lateralMargin = petal.size * 4;
   if (
     petal.y > dimensions.height + petal.size ||
@@ -155,30 +211,38 @@ export function updatePetal(
     petal.x > dimensions.width + lateralMargin
   ) {
     recyclePetal(petal, dimensions, config);
+    return;
+  }
+
+  if (config.groundY !== undefined && petal.y >= config.groundY - petal.size * 0.8) {
+    petal.y = config.groundY - petal.size * 0.4 + (Math.random() - 0.5) * 6;
+    petal.isResting = true;
+    petal.restingLife = 0;
+    petal.speedX = 0;
+    petal.speedY = 0;
+    petal.rotationSpeed = 0;
+    return;
   }
 }
 
 /**
- * Renders an organic 3D dual-sided sakura petal with distinct front/back tones and curved vein.
+ * Renders an organic 3D dual-sided sakura petal with distinct front/back tones.
  */
 export function drawPetal(ctx: CanvasRenderingContext2D, petal: Petal): void {
   ctx.save();
   ctx.translate(petal.x, petal.y);
   ctx.rotate(petal.rotation);
 
-  // Smooth 3D perspective flip with razor edge
   const normalZ = Math.cos(petal.flip);
   const isFront = normalZ >= 0;
-  const flipScale = Math.max(Math.abs(normalZ), 0.12);
+  const flipScale = Math.max(Math.abs(normalZ), 0.15);
   ctx.scale(flipScale, 1);
 
-  // Dual-sided coloration: Front face is radiant sakura; Back face is rich rose/magenta
-  ctx.fillStyle = isFront ? petal.color : (petal.backColor || '#9d174d');
-  ctx.globalAlpha = petal.opacity * (isFront ? 1.0 : 0.92);
-  ctx.shadowColor = isFront ? 'rgba(243, 164, 194, 0.45)' : 'rgba(157, 23, 77, 0.35)';
-  ctx.shadowBlur = isFront ? 5 : 3;
+  ctx.fillStyle = isFront ? petal.color : (petal.backColor || '#ec4899');
+  ctx.globalAlpha = petal.opacity * (isFront ? 1.0 : 0.9);
+  ctx.shadowColor = isFront ? 'rgba(252, 231, 243, 0.45)' : 'rgba(236, 72, 153, 0.35)';
+  ctx.shadowBlur = isFront ? 4 : 2;
 
-  // Organic sakura petal with notch
   const s = petal.size;
   ctx.beginPath();
   ctx.moveTo(-s * 0.5, 0);

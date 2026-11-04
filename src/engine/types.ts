@@ -26,6 +26,10 @@ export interface Petal {
   backColor?: string;
   airResistance?: number;
   isBurst?: boolean;
+  isResting?: boolean;
+  restingLife?: number;
+  slashImpulseX?: number;
+  slashImpulseY?: number;
 }
 
 export interface TreeBounds {
@@ -33,6 +37,13 @@ export interface TreeBounds {
   y: number;
   width: number;
   height: number;
+}
+
+export interface SlashEventDetail {
+  x: number;
+  y: number;
+  angle: number;
+  speed: number;
 }
 
 export interface SakuraConfig {
@@ -46,4 +57,6 @@ export interface SakuraConfig {
   maxDeltaTime: number;
   prefersReducedMotion?: boolean;
   treeBounds?: TreeBounds;
+  groundY?: number;
+  maxRestingPetals?: number;
 }

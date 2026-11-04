@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   createPetal,
   createBurstPetal,
+  applyWindSlash,
   updatePetal,
   recyclePetal,
   drawPetal,
@@ -111,6 +112,50 @@ describe('PetalSimulation', () => {
 
       // Should have been recycled above the top
       expect(petal.y).toBeLessThanOrEqual(0);
+    });
+
+    it('settles petal on ground when config.groundY is reached', () => {
+      const groundConfig: SakuraConfig = { ...config, groundY: 700 };
+      const petal: Petal = {
+        id: 2,
+        x: 300,
+        y: 695,
+        size: 10,
+        speedY: 50,
+        speedX: 0,
+        rotation: 0,
+        rotationSpeed: 0.5,
+        flip: 0,
+        flipSpeed: 1,
+        oscillationPhase: 0,
+        oscillationSpeed: 1,
+        opacity: 0.8,
+        color: '#ffb7c5',
+      };
+
+      updatePetal(petal, 0.016, dimensions, groundConfig);
+
+      expect(petal.isResting).toBe(true);
+      expect(petal.speedX).toBe(0);
+      expect(petal.speedY).toBe(0);
+    });
+  });
+
+  describe('applyWindSlash', () => {
+    it('applies directional velocity impulse to petals within blast radius', () => {
+      const p1 = createPetal(dimensions, config);
+      p1.x = 200;
+      p1.y = 200;
+
+      const p2 = createPetal(dimensions, config);
+      p2.x = 900;
+      p2.y = 900; // Outside radius
+
+      applyWindSlash([p1, p2], { x: 210, y: 210, angle: 45, speed: 900 }, 150);
+
+      expect(p1.slashImpulseX).toBeDefined();
+      expect(p1.slashImpulseX).not.toBe(0);
+      expect(p2.slashImpulseX).toBeUndefined();
     });
   });
 

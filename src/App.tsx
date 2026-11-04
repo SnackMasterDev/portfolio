@@ -23,7 +23,7 @@ export default function App() {
         <ContactSection />
       </main>
 
-      <footer className="relative z-10 border-t border-[#3c3b3d]/60 py-8 text-center text-xs text-[#aaa7a3]">
+      <footer id="ground" data-testid="ground" className="relative z-10 border-t border-[#3c3b3d]/60 py-8 text-center text-xs text-[#aaa7a3]">
         <p>© 2026 Juan Camilo Garcia · SnackMasterDev. Interfaces que respiran.</p>
       </footer>
     </div>

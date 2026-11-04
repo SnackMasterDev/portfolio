@@ -1,8 +1,9 @@
 import { useEffect, type RefObject } from 'react';
-import type { SakuraConfig, Petal, CanvasDimensions } from '../../engine/types';
+import type { SakuraConfig, Petal, CanvasDimensions, SlashEventDetail } from '../../engine/types';
 import {
   createPetal,
   createBurstPetal,
+  applyWindSlash,
   updatePetal,
   drawPetal,
   SAKURA_PALETTE,
@@ -53,7 +54,7 @@ export function setupSakuraCanvas(
 
   const dimensions: CanvasDimensions = { ...initialDims };
 
-  const updateTreeBounds = () => {
+  const updateEnvironment = () => {
     if (typeof document === 'undefined') return;
     const treeEl = document.getElementById('sakura-tree');
     if (treeEl) {
@@ -65,8 +66,15 @@ export function setupSakuraCanvas(
         height: rect.height,
       };
     }
+    const groundEl = document.getElementById('ground') || document.querySelector('footer');
+    if (groundEl) {
+      const gRect = groundEl.getBoundingClientRect();
+      config.groundY = gRect.top + 30;
+    } else {
+      config.groundY = dimensions.height - 15;
+    }
   };
-  updateTreeBounds();
+  updateEnvironment();
 
   // Pre-populate petals throughout vertical height
   const petals: Petal[] = Array.from({ length: config.petalCount }, (_, i) =>
@@ -166,10 +174,18 @@ export function setupSakuraCanvas(
     }
   };
 
+  const handleSlash = (e: Event) => {
+    const customEvent = e as CustomEvent<SlashEventDetail>;
+    if (customEvent.detail) {
+      applyWindSlash(petals, customEvent.detail);
+    }
+  };
+
   if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
     window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('scroll', updateTreeBounds, { passive: true });
+    window.addEventListener('scroll', updateEnvironment, { passive: true });
     window.addEventListener('sakura-tree-strike', handleTreeStrike);
+    window.addEventListener('katana-slash', handleSlash);
   }
 
   let resizeObserver: ResizeObserver | null = null;
@@ -192,8 +208,9 @@ export function setupSakuraCanvas(
     cancelAnimationFrame(animationFrameId);
     if (typeof window !== 'undefined' && typeof window.removeEventListener === 'function') {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', updateTreeBounds);
+      window.removeEventListener('scroll', updateEnvironment);
       window.removeEventListener('sakura-tree-strike', handleTreeStrike);
+      window.removeEventListener('katana-slash', handleSlash);
     }
     resizeObserver?.disconnect();
     motionQuery?.removeEventListener?.('change', handleMotionChange);
