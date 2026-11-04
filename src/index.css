@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #1c1c1e;
-  --surface: #262628;
-  --surface-light: #303033;
-  --paper: #f6f0e3;
-  --ink: #242427;
-  --white: #f2f0ed;
-  --muted: #aaa7a3;
-  --border: #3c3b3d;
-  --sakura: #f3a4c2;
-  --sakura-glow: rgba(243, 164, 194, 0.4);
+  --background: #f4eee5;
+  --surface: #ffffff;
+  --surface-light: #fdfbf7;
+  --paper: #f4eee5;
+  --ink: #1c1c1e;
+  --white: #1c1c1e;
+  --muted: #6b6966;
+  --border: #e3dacd;
+  --sakura: #db2777;
+  --sakura-glow: rgba(219, 39, 119, 0.25);
   --sun: #a72d32;
 }
 

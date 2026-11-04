@@ -38,32 +38,30 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
       id="sakura-tree"
       data-testid="sakura-tree"
       onClick={handleStrike}
-      className={`group relative mx-auto w-full max-w-5xl cursor-pointer select-none overflow-hidden transition-transform duration-300 ${
+      className={`group relative w-full max-w-none cursor-pointer select-none overflow-hidden transition-transform duration-300 ${
         isRecoiling ? 'animate-[tree-recoil_0.5s_cubic-bezier(0.36,0.07,0.19,0.97)]' : ''
       } ${className}`}
       role="button"
       tabIndex={0}
       aria-label="Árbol de cerezo sagrado. Haz clic o corta con la katana para desprender pétalos."
     >
-      <div className="relative aspect-[21/9] md:aspect-[24/9] w-full overflow-hidden">
+      <div className="relative w-full overflow-hidden">
         <img
           src="/assets/imagen-fondo.webp"
           alt="Árbol de Cerezo Sakura Milenario"
-          className="h-full w-full object-cover object-center filter brightness-90 contrast-110 pointer-events-none transition-transform duration-700 group-hover:scale-[1.02]"
+          className="h-auto w-full max-h-[85vh] object-cover object-center filter brightness-100 contrast-100 pointer-events-none transition-transform duration-700 group-hover:scale-[1.01]"
           loading="eager"
         />
-        {/* Máscaras de degradado suaves en los 4 bordes para fundir perfectamente la imagen con el fondo #1c1c1e */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#1c1c1e] via-transparent to-[#1c1c1e]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#1c1c1e] via-transparent to-[#1c1c1e]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,#1c1c1e_92%)]" />
+        {/* Máscara de fundido inferior suave con el color pergamino washi (#f4eee5) */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f4eee5] via-[#f4eee5]/60 to-transparent" />
       </div>
 
-      <div className="mt-2 flex items-center justify-center gap-3 text-xs text-[#aaa7a3]">
-        <span className="flex items-center gap-1.5 font-mono text-[#f3a4c2]">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#f3a4c2] animate-ping" />
+      <div className="mt-2 flex items-center justify-center gap-3 text-xs text-[#6b6966]">
+        <span className="flex items-center gap-1.5 font-mono text-[#db2777]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#db2777] animate-ping" />
           Árbol de Cerezo Milenario
         </span>
-        <span className="text-[11px] text-[#aaa7a3]/60 group-hover:text-[#f3a4c2] transition-colors">
+        <span className="text-[11px] text-[#6b6966]/80 group-hover:text-[#db2777] transition-colors">
           🌸 Golpea con la Katana ({strikeCount} cortes)
         </span>
       </div>
