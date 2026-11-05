@@ -17,6 +17,19 @@ export function calculateSpeed(dx: number, dy: number, dtSeconds: number): numbe
   return Math.hypot(vx, vy);
 }
 
+export function calculateViewportSpeedFraction(
+  dx: number,
+  dy: number,
+  dtSeconds: number,
+  viewportWidth: number,
+  viewportHeight: number
+): number {
+  const safeDt = Math.max(dtSeconds, 0.016);
+  const speedPxPerSec = calculateSpeed(dx, dy, safeDt);
+  const viewportDiagonal = Math.hypot(viewportWidth, viewportHeight) || 1000;
+  return speedPxPerSec / viewportDiagonal;
+}
+
 export function lerp(start: number, end: number, factor: number): number {
   return start + (end - start) * factor;
 }

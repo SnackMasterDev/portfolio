@@ -3,6 +3,7 @@ import {
   calculateAngle,
   calculateAngleDegrees,
   calculateSpeed,
+  calculateViewportSpeedFraction,
   lerp,
   lerpAngleDegrees,
 } from '../kinematics';
@@ -43,6 +44,22 @@ describe('kinematics', () => {
 
     it('returns 0 when stationary (dx=0, dy=0)', () => {
       expect(calculateSpeed(0, 0, 0.016)).toBe(0);
+    });
+  });
+
+  describe('calculateViewportSpeedFraction', () => {
+    it('computes fraction of viewport diagonal traversed per second', () => {
+      // 1000x1000 viewport => diagonal ~1414.21
+      // Moving 282.84 px in 1s => ~0.20 (20% of viewport/s)
+      const fraction = calculateViewportSpeedFraction(200, 200, 1.0, 1000, 1000);
+      expect(fraction).toBeCloseTo(0.20, 2);
+    });
+
+    it('clamps micro dt to 16ms to avoid instantaneous division spikes', () => {
+      // Micro move: 2px in 0.001s
+      // Clamped to 0.016s => speed 125 px/s on 2000px viewport => ~0.06 (6%), well under 20%
+      const fraction = calculateViewportSpeedFraction(2, 0, 0.001, 1600, 1200);
+      expect(fraction).toBeLessThan(0.10);
     });
   });
 

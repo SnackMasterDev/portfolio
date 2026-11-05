@@ -3,6 +3,7 @@ import type { CursorState, CursorVariant, KatanaMotionConfig } from '../../engin
 import {
   calculateAngleDegrees,
   calculateSpeed,
+  calculateViewportSpeedFraction,
   lerpAngleDegrees,
 } from '../../engine/cursor/kinematics';
 
@@ -86,8 +87,20 @@ export function setupKatanaMotionListener(
       } else {
         currentAngle = 0;
       }
-      currentSpeed = calculateSpeed(dx, dy, dtSeconds);
-      if (currentSpeed > 480 && typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      const dtSafe = Math.max(dtSeconds, 0.016);
+      currentSpeed = calculateSpeed(dx, dy, dtSafe);
+
+      const vpW = (typeof window !== 'undefined' ? window.innerWidth : 0) || 1200;
+      const vpH = (typeof window !== 'undefined' ? window.innerHeight : 0) || 800;
+      const viewportSpeedFraction = calculateViewportSpeedFraction(dx, dy, dtSafe, vpW, vpH);
+
+      // Activates only if movement exceeds 20% of viewport per second and travels >= 18px stroke
+      if (
+        viewportSpeedFraction >= 0.20 &&
+        dist >= 18 &&
+        typeof window !== 'undefined' &&
+        typeof window.dispatchEvent === 'function'
+      ) {
         const slashEvent = new CustomEvent('katana-slash', {
           detail: {
             x: clientX,
