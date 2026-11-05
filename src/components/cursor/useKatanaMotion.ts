@@ -6,6 +6,7 @@ import {
   calculateViewportSpeedFraction,
   lerpAngleDegrees,
 } from '../../engine/cursor/kinematics';
+import { TrunkCollisionManager } from '../../engine/cursor/trunkCollisionPhysics';
 
 export function setupKatanaMotionListener(
   onUpdate: (state: CursorState) => void,
@@ -23,6 +24,12 @@ export function setupKatanaMotionListener(
   const threshold = config?.minMovementThreshold ?? 1.5;
   const isReducedMotion = config?.prefersReducedMotion === true;
 
+  const collisionManager = new TrunkCollisionManager({
+    speedThresholdFraction: 0.20,
+    recoilImpulseDistance: 60,
+    recoilDamping: 0.82,
+  });
+
   let isFirstMove = true;
   let lastX = 0;
   let lastY = 0;
@@ -32,7 +39,10 @@ export function setupKatanaMotionListener(
   let currentVariant: CursorVariant = 'default';
   let isClicking = false;
   let rafId: number | null = null;
+  let recoilRafId: number | null = null;
   let pendingEvent: { clientX: number; clientY: number } | null = null;
+  let lastBaseX = 0;
+  let lastBaseY = 0;
 
   const detectVariant = (target: EventTarget | null): CursorVariant => {
     if (isClicking) return 'clicking';
@@ -48,7 +58,14 @@ export function setupKatanaMotionListener(
     return 'default';
   };
 
-  const notifyState = (x: number, y: number, angle: number, speed: number, isVisible: boolean) => {
+  const notifyState = (
+    x: number,
+    y: number,
+    angle: number,
+    speed: number,
+    isVisible: boolean,
+    isClashing = false
+  ) => {
     onUpdate({
       x,
       y,
@@ -56,7 +73,27 @@ export function setupKatanaMotionListener(
       speed,
       isVisible,
       variant: isClicking ? 'clicking' : currentVariant,
+      isClashing,
     });
+  };
+
+  const stepRecoilAnimation = () => {
+    const isStillRecoiling = collisionManager.stepSpring();
+    const recoil = collisionManager.getRecoilOffset();
+    notifyState(
+      lastBaseX + recoil.x,
+      lastBaseY + recoil.y,
+      isReducedMotion ? 0 : currentAngle,
+      currentSpeed,
+      true,
+      isStillRecoiling
+    );
+
+    if (isStillRecoiling) {
+      recoilRafId = window.requestAnimationFrame(stepRecoilAnimation);
+    } else {
+      recoilRafId = null;
+    }
   };
 
   const processMotion = () => {
@@ -71,6 +108,8 @@ export function setupKatanaMotionListener(
       lastX = clientX;
       lastY = clientY;
       lastTime = now;
+      lastBaseX = clientX;
+      lastBaseY = clientY;
       notifyState(lastX, lastY, isReducedMotion ? 0 : currentAngle, 0, true);
       return;
     }
@@ -79,6 +118,9 @@ export function setupKatanaMotionListener(
     const dx = clientX - lastX;
     const dy = clientY - lastY;
     const dist = Math.hypot(dx, dy);
+    const dtSafe = Math.max(dtSeconds, 0.016);
+
+    let viewportSpeedFraction = 0;
 
     if (dist >= threshold) {
       if (!isReducedMotion) {
@@ -87,14 +129,13 @@ export function setupKatanaMotionListener(
       } else {
         currentAngle = 0;
       }
-      const dtSafe = Math.max(dtSeconds, 0.016);
       currentSpeed = calculateSpeed(dx, dy, dtSafe);
 
       const vpW = (typeof window !== 'undefined' ? window.innerWidth : 0) || 1200;
       const vpH = (typeof window !== 'undefined' ? window.innerHeight : 0) || 800;
-      const viewportSpeedFraction = calculateViewportSpeedFraction(dx, dy, dtSafe, vpW, vpH);
+      viewportSpeedFraction = calculateViewportSpeedFraction(dx, dy, dtSafe, vpW, vpH);
 
-      // Activates only if movement exceeds 20% of viewport per second and travels >= 18px stroke
+      // Activates wind slash only if movement exceeds 20% of viewport per second and travels >= 18px stroke
       if (
         viewportSpeedFraction >= 0.20 &&
         dist >= 18 &&
@@ -113,11 +154,27 @@ export function setupKatanaMotionListener(
       }
     }
 
+    // Resolve trunk collision and spring recoil
+    const resolved = collisionManager.updateAndResolve(clientX, clientY, viewportSpeedFraction);
+    lastBaseX = resolved.x - collisionManager.getRecoilOffset().x;
+    lastBaseY = resolved.y - collisionManager.getRecoilOffset().y;
+
+    if (resolved.isRecoiling && recoilRafId === null) {
+      recoilRafId = window.requestAnimationFrame(stepRecoilAnimation);
+    }
+
     lastX = clientX;
     lastY = clientY;
     lastTime = now;
 
-    notifyState(lastX, lastY, isReducedMotion ? 0 : currentAngle, currentSpeed, true);
+    notifyState(
+      resolved.x,
+      resolved.y,
+      isReducedMotion ? 0 : currentAngle,
+      currentSpeed,
+      true,
+      resolved.isRecoiling
+    );
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -144,6 +201,11 @@ export function setupKatanaMotionListener(
       window.cancelAnimationFrame(rafId);
       rafId = null;
     }
+    if (recoilRafId !== null) {
+      window.cancelAnimationFrame(recoilRafId);
+      recoilRafId = null;
+    }
+    collisionManager.reset();
     pendingEvent = null;
     isFirstMove = true;
     notifyState(lastX, lastY, currentAngle, 0, false);
@@ -168,6 +230,11 @@ export function setupKatanaMotionListener(
       window.cancelAnimationFrame(rafId);
       rafId = null;
     }
+    if (recoilRafId !== null) {
+      window.cancelAnimationFrame(recoilRafId);
+      recoilRafId = null;
+    }
+    collisionManager.reset();
     pendingEvent = null;
     window.removeEventListener('mousemove', handleMouseMove);
     window.removeEventListener('mousedown', handleMouseDown);

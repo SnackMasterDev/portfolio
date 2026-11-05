@@ -7,6 +7,7 @@ export interface CursorState {
   speed: number; // in px/s
   isVisible: boolean;
   variant: CursorVariant;
+  isClashing?: boolean;
 }
 
 export interface KatanaMotionConfig {

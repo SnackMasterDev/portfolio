@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 export interface SakuraTreeProps {
   className?: string;
@@ -9,15 +9,36 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
   const [isRecoiling, setIsRecoiling] = useState(false);
   const [strikeCount, setStrikeCount] = useState(0);
 
+  const triggerStrikeFeedback = useCallback(() => {
+    setIsRecoiling(true);
+    setStrikeCount((prev) => prev + 1);
+    onStrike?.();
+
+    setTimeout(() => {
+      setIsRecoiling(false);
+    }, 550);
+  }, [onStrike]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleStrikeEvent = () => {
+      triggerStrikeFeedback();
+    };
+
+    window.addEventListener('sakura-tree-strike', handleStrikeEvent);
+    return () => {
+      window.removeEventListener('sakura-tree-strike', handleStrikeEvent);
+    };
+  }, [triggerStrikeFeedback]);
+
   const handleStrike = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const rect = e.currentTarget.getBoundingClientRect();
       const clickX = e.clientX || rect.left + rect.width * 0.5;
       const clickY = e.clientY || rect.top + rect.height * 0.4;
 
-      setIsRecoiling(true);
-      setStrikeCount((prev) => prev + 1);
-      onStrike?.();
+      triggerStrikeFeedback();
 
       if (typeof window !== 'undefined') {
         const event = new CustomEvent('sakura-tree-strike', {
@@ -25,12 +46,8 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
         });
         window.dispatchEvent(event);
       }
-
-      setTimeout(() => {
-        setIsRecoiling(false);
-      }, 550);
     },
-    [onStrike]
+    [triggerStrikeFeedback]
   );
 
   return (
@@ -47,6 +64,7 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
     >
       <div className="relative w-full overflow-hidden">
         <img
+          id="sakura-tree-img"
           src="/assets/imagen-fondo.webp"
           alt="Árbol de Cerezo Sakura Milenario"
           className="h-auto w-full max-h-[85vh] object-cover object-center filter brightness-100 contrast-100 pointer-events-none"

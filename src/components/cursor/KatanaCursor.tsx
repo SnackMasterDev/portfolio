@@ -8,7 +8,7 @@ export interface KatanaCursorProps {
 }
 
 export const KatanaCursor: React.FC<KatanaCursorProps> = ({ className, config }) => {
-  const { x, y, angle, isVisible, variant } = useKatanaMotion(config);
+  const { x, y, angle, isVisible, variant, isClashing = false } = useKatanaMotion(config);
 
   const displayAngle = variant === 'text' ? -45 : angle;
 
@@ -22,7 +22,13 @@ export const KatanaCursor: React.FC<KatanaCursorProps> = ({ className, config })
       } ${className ?? ''}`}
       style={{
         transform: `translate3d(${x}px, ${y}px, 0) translate(-12px, -22px) rotate(${displayAngle}deg) ${
-          variant === 'pointer' ? 'scale(1.22)' : variant === 'clicking' ? 'scale(0.92)' : 'scale(1)'
+          isClashing
+            ? 'scale(1.35)'
+            : variant === 'pointer'
+            ? 'scale(1.22)'
+            : variant === 'clicking'
+            ? 'scale(0.92)'
+            : 'scale(1)'
         }`,
         transformOrigin: '12px 22px',
         transition: 'transform 0.08s ease-out, opacity 0.15s ease',
@@ -34,21 +40,32 @@ export const KatanaCursor: React.FC<KatanaCursorProps> = ({ className, config })
         viewBox="0 0 44 44"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={getVariantFilter(variant)}
+        className={`${getVariantFilter(variant)} ${isClashing ? 'drop-shadow-[0_0_24px_rgba(251,191,36,1)] brightness-150' : ''}`}
       >
+        {/* Chispas de choque metálico contra el tronco */}
+        {isClashing && (
+          <g stroke="#FDE047" strokeWidth="1.6" strokeLinecap="round">
+            <line x1="41" y1="22" x2="47" y2="17" />
+            <line x1="41" y1="22" x2="48" y2="22" />
+            <line x1="41" y1="22" x2="47" y2="27" />
+            <line x1="41" y1="22" x2="38" y2="15" />
+            <line x1="41" y1="22" x2="38" y2="29" />
+          </g>
+        )}
+
         {/* Filo principal de acero */}
         <path
           d="M16 20.8L35.5 21.2C37.5 21.5 39.5 22 41 22C39.5 22 37.5 22.5 35.5 22.8L16 23.2Z"
-          fill={variant === 'pointer' ? '#FFF1F2' : variant === 'text' ? '#E0F2FE' : '#F1F5F9'}
+          fill={isClashing ? '#FFFBEB' : variant === 'pointer' ? '#FFF1F2' : variant === 'text' ? '#E0F2FE' : '#F1F5F9'}
         />
         <path
           d="M16 21.5L40 22L16 22.5"
-          stroke={variant === 'pointer' ? '#F43F5E' : '#FFFFFF'}
+          stroke={isClashing ? '#F59E0B' : variant === 'pointer' ? '#F43F5E' : '#FFFFFF'}
           strokeWidth="0.8"
         />
 
         {/* Destello de punta en modo Pointer (enlaces/botones) */}
-        {variant === 'pointer' && (
+        {variant === 'pointer' && !isClashing && (
           <circle cx="40.5" cy="22" r="2" fill="#F43F5E" className="animate-ping" />
         )}
 
