@@ -139,9 +139,20 @@
     .layer:active {
       cursor: grabbing;
     }
+    .layer.locked {
+      cursor: not-allowed !important;
+    }
     .layer.selected {
       outline: 2px dashed #db2777;
       outline-offset: 2px;
+    }
+    input[type="range"]:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .layer-card.is-locked {
+      background: #fafaf9;
+      border-color: #fde68a;
     }
     .controls {
       max-width: 1392px;
@@ -242,7 +253,7 @@
     </div>
 
     <div class="top-group">
-      <button id="btn-reset" class="btn btn-secondary">🔄 Restablecer</button>
+      <button id="btn-reset" class="btn btn-secondary" title="Reiniciar a solo fondo y tronco">🔄 Limpiar (Solo Tronco)</button>
       <button id="btn-copy-json" class="btn btn-primary">📋 Copiar Configuración JSON</button>
     </div>
   </div>
@@ -268,18 +279,15 @@
   </div>
 
   <script>
+    // Configuración base limpia: Solo el tronco con el samurai sobre el fondo washi
     const INITIAL_CONFIG = [
-      { id: 'tronco', src: 'tronco', name: 'Tronco y Samurai', left: 44, top: -8, width: 60, scale: 1, rot: 0, flipX: false, z: 10, opacity: 1 },
-      { id: 'rama4_deep', src: 'rama_4', name: 'Rama 4 Sombra Trasera', left: 40, top: -8, width: 58, scale: 1.02, rot: 0, flipX: false, z: 2, opacity: 0.85 },
-      { id: 'rama1_deep', src: 'rama_1', name: 'Rama 1 Sombra Trasera', left: 30, top: 10, width: 38, scale: 1, rot: 0, flipX: true, z: 3, opacity: 0.8 },
-      { id: 'rama4_main', src: 'rama_4', name: 'Rama 4 Copa Principal', left: 44, top: -3, width: 54, scale: 1, rot: 0, flipX: false, z: 12, opacity: 1 },
-      { id: 'rama1_mid', src: 'rama_1', name: 'Rama 1 Media', left: 48, top: 14, width: 36, scale: 1, rot: 0, flipX: false, z: 13, opacity: 1 },
-      { id: 'rama3_left', src: 'rama_3', name: 'Rama 3 Extensión Izquierda', left: 32, top: 26, width: 32, scale: 1, rot: 0, flipX: false, z: 14, opacity: 1 },
-      { id: 'rama2_right', src: 'rama_2', name: 'Rama 2 Punta Derecha', left: 70, top: 19, width: 16, scale: 1, rot: 0, flipX: false, z: 14, opacity: 1 },
-      { id: 'rama3_drape', src: 'rama_3', name: 'Rama 3 Colgante Delantera', left: 24, top: 19, width: 26, scale: 0.95, rot: 12, flipX: true, z: 15, opacity: 0.95 }
+      { id: 'tronco', src: 'tronco', name: 'Tronco y Samurai', left: 44, top: -8, width: 60, scale: 1, rot: 0, flipX: false, z: 10, opacity: 1, locked: true }
     ];
 
-    let layers = JSON.parse(localStorage.getItem('sakura_branches_calibrator') || 'null') || INITIAL_CONFIG;
+    let layers = JSON.parse(localStorage.getItem('sakura_branches_calibrator_v4') || 'null');
+    if (!layers || layers.length === 0) {
+      layers = JSON.parse(JSON.stringify(INITIAL_CONFIG));
+    }
     let selectedId = null;
 
     const stage = document.getElementById('stage');
@@ -288,7 +296,7 @@
     const jsonOutput = document.getElementById('json-output');
 
     function saveState() {
-      localStorage.setItem('sakura_branches_calibrator', JSON.stringify(layers));
+      localStorage.setItem('sakura_branches_calibrator_v4', JSON.stringify(layers));
       jsonOutput.textContent = JSON.stringify(layers, null, 2);
     }
 
@@ -297,10 +305,11 @@
     function updateHUD(item) {
       if (!hudBadge) return;
       if (!item) {
-        hudBadge.innerHTML = '🌸 Haz clic o arrastra cualquier rama para posicionarla';
+        hudBadge.innerHTML = '🌸 Agrega una rama arriba o haz clic en una para moverla';
         return;
       }
-      hudBadge.innerHTML = `🌸 <b>${item.name || item.id}</b> | X: <span style="color:#f472b6;">${item.left}%</span> | Y: <span style="color:#f472b6;">${item.top}%</span> | Escala: ${item.scale} | Rot: ${item.rot}° ${item.flipX ? '| 🪞 Espejo' : ''}`;
+      const lockHtml = item.locked ? ' | <span style="color:#fbbf24; font-weight:bold;">🔒 Bloqueado</span>' : '';
+      hudBadge.innerHTML = `🌸 <b>${item.name || item.id}</b> | X: <span style="color:#f472b6;">${item.left}%</span> | Y: <span style="color:#f472b6;">${item.top}%</span> | Escala: ${item.scale} | Rot: ${item.rot}° ${item.flipX ? '| 🪞 Espejo' : ''}${lockHtml}`;
     }
 
     function renderStage() {
@@ -308,23 +317,28 @@
       layers.forEach(item => {
         const img = document.createElement('img');
         img.id = 'layer-' + item.id;
-        img.className = 'layer' + (selectedId === item.id ? ' selected' : '');
+        img.className = 'layer' + (selectedId === item.id ? ' selected' : '') + (item.locked ? ' locked' : '');
         img.src = '/assets/tree/' + item.src + '.webp';
         img.style.left = item.left + '%';
         img.style.top = item.top + '%';
         img.style.width = item.width + '%';
         img.style.zIndex = item.z;
         img.style.opacity = item.opacity ?? 1;
+        img.style.cursor = item.locked ? 'default' : 'grab';
         
         const flipScale = item.flipX ? -item.scale : item.scale;
         img.style.transform = `scale(${flipScale}, ${item.scale}) rotate(${item.rot}deg)`;
 
-        // Arrastre fluido moderno con pointer events y pointer capture (cero scroll, cero pérdida de foco)
+        // Arrastre fluido moderno con pointer events y pointer capture
         img.addEventListener('pointerdown', (e) => {
           e.preventDefault();
           e.stopPropagation();
           selectLayer(item.id, false);
           updateHUD(item);
+
+          if (item.locked) {
+            return; // Si está bloqueado, no se mueve
+          }
 
           try {
             img.setPointerCapture(e.pointerId);
@@ -405,13 +419,16 @@
       controlsContainer.innerHTML = '';
       layers.forEach((item, index) => {
         const card = document.createElement('div');
-        card.className = 'layer-card' + (selectedId === item.id ? ' selected' : '');
+        card.className = 'layer-card' + (selectedId === item.id ? ' selected' : '') + (item.locked ? ' is-locked' : '');
         card.dataset.id = item.id;
 
         card.innerHTML = `
           <div class="card-header">
             <h3>🌸 ${item.name || item.id}</h3>
             <div class="card-actions">
+              <button class="btn btn-secondary btn-lock" title="Bloquear / Desbloquear posición" style="${item.locked ? 'background: #fef3c7; border-color: #f59e0b; color: #b45309; font-weight: bold;' : ''}">
+                ${item.locked ? '🔒 Bloqueado' : '🔓 Desbloqueado'}
+              </button>
               <button class="btn btn-secondary btn-mirror" title="Alternar Espejo (Flip X)" style="${item.flipX ? 'background: #fbcfe8; border-color: #db2777; color: #831843;' : ''}">
                 🪞 ${item.flipX ? 'Reflejado' : 'Espejo'}
               </button>
@@ -422,42 +439,51 @@
 
           <div class="prop-row">
             <div class="prop-label"><span>Horizontal (Left):</span><span class="left-val">${item.left}%</span></div>
-            <input type="range" min="-30" max="110" step="0.5" value="${item.left}" data-prop="left">
+            <input type="range" ${item.locked ? 'disabled' : ''} min="-30" max="110" step="0.5" value="${item.left}" data-prop="left">
           </div>
 
           <div class="prop-row">
             <div class="prop-label"><span>Vertical (Top):</span><span class="top-val">${item.top}%</span></div>
-            <input type="range" min="-40" max="110" step="0.5" value="${item.top}" data-prop="top">
+            <input type="range" ${item.locked ? 'disabled' : ''} min="-40" max="110" step="0.5" value="${item.top}" data-prop="top">
           </div>
 
           <div class="prop-row">
             <div class="prop-label"><span>Ancho (Width):</span><span class="width-val">${item.width}%</span></div>
-            <input type="range" min="5" max="100" step="0.5" value="${item.width}" data-prop="width">
+            <input type="range" ${item.locked ? 'disabled' : ''} min="5" max="100" step="0.5" value="${item.width}" data-prop="width">
           </div>
 
           <div class="prop-row">
             <div class="prop-label"><span>Escala (Scale):</span><span class="scale-val">${item.scale}</span></div>
-            <input type="range" min="0.3" max="2.2" step="0.02" value="${item.scale}" data-prop="scale">
+            <input type="range" ${item.locked ? 'disabled' : ''} min="0.3" max="2.2" step="0.02" value="${item.scale}" data-prop="scale">
           </div>
 
           <div class="prop-row">
             <div class="prop-label"><span>Rotación:</span><span class="rot-val">${item.rot}°</span></div>
-            <input type="range" min="-180" max="180" step="1" value="${item.rot}" data-prop="rot">
+            <input type="range" ${item.locked ? 'disabled' : ''} min="-180" max="180" step="1" value="${item.rot}" data-prop="rot">
           </div>
 
           <div class="prop-row">
             <div class="prop-label"><span>Profundidad (Z-Index):</span><span class="z-val">${item.z}</span></div>
-            <input type="range" min="1" max="25" step="1" value="${item.z}" data-prop="z">
+            <input type="range" ${item.locked ? 'disabled' : ''} min="1" max="25" step="1" value="${item.z}" data-prop="z">
           </div>
 
           <div class="prop-row">
             <div class="prop-label"><span>Opacidad:</span><span class="opacity-val">${item.opacity ?? 1}</span></div>
-            <input type="range" min="0.2" max="1" step="0.05" value="${item.opacity ?? 1}" data-prop="opacity">
+            <input type="range" ${item.locked ? 'disabled' : ''} min="0.2" max="1" step="0.05" value="${item.opacity ?? 1}" data-prop="opacity">
           </div>
         `;
 
         // Eventos
         card.addEventListener('click', () => selectLayer(item.id, false));
+
+        card.querySelector('.btn-lock').addEventListener('click', (e) => {
+          e.stopPropagation();
+          item.locked = !item.locked;
+          renderStage();
+          renderControls();
+          saveState();
+          updateHUD(item);
+        });
 
         card.querySelector('.btn-mirror').addEventListener('click', (e) => {
           e.stopPropagation();
@@ -510,7 +536,8 @@
         name: (item.name || item.id) + ' (Copia)',
         left: item.left + 3,
         top: item.top + 2,
-        z: item.z + 1
+        z: item.z + 1,
+        locked: false
       };
       layers.push(cloned);
       selectedId = newId;
@@ -555,7 +582,8 @@
         rot: 0,
         flipX: false,
         z: 15,
-        opacity: 1
+        opacity: 1,
+        locked: false
       };
       layers.push(newLayer);
       selectedId = newLayer.id;
@@ -565,12 +593,13 @@
     });
 
     document.getElementById('btn-reset').addEventListener('click', () => {
-      if (confirm('¿Restablecer la configuración inicial?')) {
+      if (confirm('¿Limpiar el lienzo y dejar solo el tronco con el samurai sobre el fondo?')) {
         layers = JSON.parse(JSON.stringify(INITIAL_CONFIG));
-        selectedId = null;
+        selectedId = 'tronco';
         renderStage();
         renderControls();
         saveState();
+        updateHUD(layers[0]);
       }
     });
 
