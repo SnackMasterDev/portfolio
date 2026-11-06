@@ -8,7 +8,7 @@ export interface KatanaCursorProps {
 }
 
 export const KatanaCursor: React.FC<KatanaCursorProps> = ({ className, config }) => {
-  const { x, y, angle, isVisible, variant, isClashing = false } = useKatanaMotion(config);
+  const { x, y, angle, isVisible, variant } = useKatanaMotion(config);
 
   const displayAngle = variant === 'text' ? -45 : angle;
 
@@ -22,16 +22,14 @@ export const KatanaCursor: React.FC<KatanaCursorProps> = ({ className, config })
       } ${className ?? ''}`}
       style={{
         transform: `translate3d(${x}px, ${y}px, 0) translate(-12px, -22px) rotate(${displayAngle}deg) ${
-          isClashing
-            ? 'scale(1.35)'
-            : variant === 'pointer'
+          variant === 'pointer'
             ? 'scale(1.22)'
             : variant === 'clicking'
             ? 'scale(0.92)'
             : 'scale(1)'
         }`,
         transformOrigin: '12px 22px',
-        transition: 'transform 0.08s ease-out, opacity 0.15s ease',
+        transition: 'opacity 0.15s ease',
       }}
     >
       <svg
@@ -40,39 +38,28 @@ export const KatanaCursor: React.FC<KatanaCursorProps> = ({ className, config })
         viewBox="0 0 44 44"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={`${getVariantFilter(variant)} ${isClashing ? 'drop-shadow-[0_0_24px_rgba(251,191,36,1)] brightness-150' : ''}`}
+        className={getVariantFilter(variant)}
       >
-        {/* Chispas de choque metálico contra el tronco */}
-        {isClashing && (
-          <g stroke="#FDE047" strokeWidth="1.6" strokeLinecap="round">
-            <line x1="41" y1="22" x2="47" y2="17" />
-            <line x1="41" y1="22" x2="48" y2="22" />
-            <line x1="41" y1="22" x2="47" y2="27" />
-            <line x1="41" y1="22" x2="38" y2="15" />
-            <line x1="41" y1="22" x2="38" y2="29" />
-          </g>
-        )}
-
-        {/* Filo principal de acero */}
+        {/* Filo principal de acero templado */}
         <path
           d="M16 20.8L35.5 21.2C37.5 21.5 39.5 22 41 22C39.5 22 37.5 22.5 35.5 22.8L16 23.2Z"
-          fill={isClashing ? '#FFFBEB' : variant === 'pointer' ? '#FFF1F2' : variant === 'text' ? '#E0F2FE' : '#F1F5F9'}
+          fill={variant === 'pointer' ? '#FFF1F2' : variant === 'text' ? '#E0F2FE' : '#F1F5F9'}
         />
         <path
           d="M16 21.5L40 22L16 22.5"
-          stroke={isClashing ? '#F59E0B' : variant === 'pointer' ? '#F43F5E' : '#FFFFFF'}
+          stroke={variant === 'pointer' ? '#F43F5E' : '#FFFFFF'}
           strokeWidth="0.8"
         />
 
         {/* Destello de punta en modo Pointer (enlaces/botones) */}
-        {variant === 'pointer' && !isClashing && (
+        {variant === 'pointer' && (
           <circle cx="40.5" cy="22" r="2" fill="#F43F5E" className="animate-ping" />
         )}
 
-        {/* Habaki (collarín de hoja) */}
-        <rect x="13.5" y="20.2" width="2.5" height="3.6" rx="0.5" fill={variant === 'pointer' ? '#FBBF24' : '#F59E0B'} />
-        {/* Tsuba (guarda circular) */}
-        <ellipse cx="13" cy="22" rx="1.8" ry="4.5" fill="#1E293B" stroke={variant === 'pointer' ? '#FBBF24' : '#F59E0B'} strokeWidth="0.8" />
+        {/* Habaki (collarín de hoja en acero plateado bruñido) */}
+        <rect x="13.5" y="20.2" width="2.5" height="3.6" rx="0.5" fill="#94A3B8" />
+        {/* Tsuba (guarda circular de hierro pavonado) */}
+        <ellipse cx="13" cy="22" rx="1.8" ry="4.5" fill="#1E293B" stroke="#64748B" strokeWidth="0.8" />
         {/* Tsuka (empuñadura) */}
         <rect x="3" y="20.5" width="9.5" height="3" rx="0.8" fill="#0F172A" />
         {/* Tsukaito (encordado tradicional) */}
@@ -91,7 +78,7 @@ function getVariantFilter(variant: CursorVariant): string {
     case 'text':
       return 'drop-shadow-[0_0_12px_rgba(56,189,248,0.9)]';
     case 'clicking':
-      return 'drop-shadow-[0_0_18px_rgba(251,191,36,1)] brightness-125';
+      return 'drop-shadow-[0_0_14px_rgba(244,63,94,0.95)] brightness-125';
     default:
       return 'drop-shadow-[0_0_8px_rgba(243,164,194,0.65)]';
   }

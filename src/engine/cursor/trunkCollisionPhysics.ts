@@ -35,16 +35,16 @@ export class TrunkCollisionManager {
   private readonly onReboundCallback?: (normal: Point2D, impactX: number, impactY: number) => void;
 
   constructor(config?: CollisionManagerConfig) {
-    this.recoilImpulse = config?.recoilImpulseDistance ?? 60;
-    this.damping = config?.recoilDamping ?? 0.82;
-    this.speedThreshold = config?.speedThresholdFraction ?? 0.38;
-    this.cooldownMs = config?.reboundCooldownMs ?? 280;
+    this.recoilImpulse = config?.recoilImpulseDistance ?? 80;
+    this.damping = config?.recoilDamping ?? 0.80;
+    this.speedThreshold = config?.speedThresholdFraction ?? 0.30;
+    this.cooldownMs = config?.reboundCooldownMs ?? 220;
     this.getTreeEl =
       config?.getTreeElement ??
-      (() =>
-        typeof document !== 'undefined' && typeof document.getElementById === 'function'
-          ? document.getElementById('sakura-tree-img')
-          : null);
+      (() => {
+        if (typeof document === 'undefined' || typeof document.getElementById !== 'function') return null;
+        return document.getElementById('sakura-tree') ?? document.getElementById('sakura-tree-img');
+      });
     this.onReboundCallback = config?.onRebound;
   }
 
@@ -89,7 +89,7 @@ export class TrunkCollisionManager {
     if (collision.isColliding) {
       // Solo colisiones rápidas en la ventana de tiempo activan el rebote contra el tronco
       const canRebound = now - this.lastReboundTime > this.cooldownMs;
-      const isFastStroke = viewportSpeedFraction >= this.speedThreshold && (motionDist === 0 || motionDist >= 20);
+      const isFastStroke = viewportSpeedFraction >= this.speedThreshold && (motionDist === 0 || motionDist >= 15);
       if (isFastStroke && canRebound) {
         this.triggerRebound(collision.normal, collision.clampedX, collision.clampedY, now, motionDx, motionDy);
       }
