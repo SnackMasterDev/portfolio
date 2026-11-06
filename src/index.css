@@ -33,6 +33,32 @@ html, body, a, button, input, textarea, select, [role="button"], label, * {
   100% { transform: scale(1) rotate(0deg); }
 }
 
+/* Brisas naturales independientes para las ramas */
+@keyframes branch-breeze-1 {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1.4deg) translateY(-1px); }
+}
+
+@keyframes branch-breeze-2 {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-1.6deg) translateY(-2px); }
+}
+
+@keyframes branch-breeze-3 {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg) translateY(-0.8px); }
+}
+
+/* Sacudida reactiva intensa en las ramas al recibir corte de la katana */
+@keyframes branch-impact-shudder {
+  0% { transform: rotate(0deg) scale(1); }
+  20% { transform: rotate(-3.8deg) scale(1.03); }
+  40% { transform: rotate(3.2deg) scale(0.98); }
+  60% { transform: rotate(-1.8deg) scale(1.01); }
+  80% { transform: rotate(0.8deg) scale(0.995); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
 html {
   scroll-behavior: smooth;
   background-color: var(--background);

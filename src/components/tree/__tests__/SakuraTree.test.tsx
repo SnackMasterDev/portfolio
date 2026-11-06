@@ -9,7 +9,8 @@ describe('SakuraTree Component', () => {
 
     expect(html).toContain('id="sakura-tree"');
     expect(html).toContain('data-testid="sakura-tree"');
-    expect(html).toContain('src="/assets/imagen-fondo.webp"');
+    expect(html).toContain('src="/assets/tree/imagen-fondo.webp"');
+    expect(html).toContain('src="/assets/tree/tronco.webp"');
     expect(html).toContain('Árbol de Cerezo Milenario');
     expect(html).toContain('role="button"');
   });

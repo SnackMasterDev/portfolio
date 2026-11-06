@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajustador de Capas del Árbol Sakura</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f4eee5;
+      font-family: sans-serif;
+    }
+    .container {
+      position: relative;
+      width: 1392px;
+      height: 752px;
+      margin: 0 auto;
+      border: 2px dashed #db2777;
+      overflow: hidden;
+      background: #f4eee5;
+    }
+    .layer {
+      position: absolute;
+      pointer-events: auto;
+      cursor: move;
+      user-select: none;
+    }
+    .controls {
+      max-width: 1392px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .layer-card {
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+    .layer-card h4 {
+      margin: 0 0 10px 0;
+      color: #be185d;
+    }
+    label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #a5f3fc;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="text-align: center; color: #831843;">🌸 Calibrador de Capas del Árbol Sakura</h2>
+  <p style="text-align: center; font-size: 14px; color: #6b6966;">
+    Ajusta la posición, escala y rotación de las ramas para que encajen perfectamente en el tronco.
+  </p>
+
+  <div class="container" id="stage">
+    <!-- Capa 0: Fondo -->
+    <img id="bg" src="/assets/tree/imagen-fondo.webp" style="position: absolute; inset: 0; width: 100%; height: 100%;" />
+
+    <!-- Capa 1: Tronco -->
+    <img id="layer-tronco" class="layer" src="/assets/tree/tronco.webp" />
+
+    <!-- Ramas -->
+    <img id="layer-rama1" class="layer" src="/assets/tree/rama_1.webp" />
+    <img id="layer-rama2" class="layer" src="/assets/tree/rama_2.webp" />
+    <img id="layer-rama3" class="layer" src="/assets/tree/rama_3.webp" />
+    <img id="layer-rama4" class="layer" src="/assets/tree/rama_4.webp" />
+
+    <!-- Ramas Duplicadas para Follaje Frondoso -->
+    <img id="layer-rama1-b" class="layer" src="/assets/tree/rama_1.webp" />
+    <img id="layer-rama3-b" class="layer" src="/assets/tree/rama_3.webp" />
+    <img id="layer-rama4-b" class="layer" src="/assets/tree/rama_4.webp" />
+  </div>
+
+  <div class="controls" id="controls"></div>
+
+  <div style="max-width: 1392px; margin: 20px auto;">
+    <button id="btn-export" style="padding: 10px 20px; background: #db2777; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+      Copiar Configuración JSON
+    </button>
+    <pre id="json-output"></pre>
+  </div>
+
+  <script>
+    const defaultConfig = {
+      tronco: { left: 42, top: -10, width: 62, scale: 1, rot: 0, z: 2 },
+      rama1: { left: 45, top: 12, width: 34, scale: 1, rot: 0, z: 4 },
+      rama2: { left: 68, top: 22, width: 14, scale: 1, rot: 0, z: 3 },
+      rama3: { left: 32, top: 28, width: 30, scale: 1, rot: -5, z: 3 },
+      rama4: { left: 48, top: 0, width: 52, scale: 1, rot: 0, z: 5 },
+      rama1b: { left: 28, top: 18, width: 32, scale: 0.95, rot: 15, z: 3 },
+      rama3b: { left: 58, top: 32, width: 28, scale: 0.9, rot: -10, z: 4 },
+      rama4b: { left: 38, top: -5, width: 50, scale: 1.05, rot: -8, z: 4 }
+    };
+
+    const config = JSON.parse(localStorage.getItem('sakura_layers') || JSON.stringify(defaultConfig));
+
+    const mapping = {
+      tronco: 'layer-tronco',
+      rama1: 'layer-rama1',
+      rama2: 'layer-rama2',
+      rama3: 'layer-rama3',
+      rama4: 'layer-rama4',
+      rama1b: 'layer-rama1-b',
+      rama3b: 'layer-rama3-b',
+      rama4b: 'layer-rama4-b'
+    };
+
+    function applyConfig() {
+      for (const [key, elId] of Object.entries(mapping)) {
+        const el = document.getElementById(elId);
+        const c = config[key];
+        if (!el || !c) continue;
+        el.style.left = c.left + '%';
+        el.style.top = c.top + '%';
+        el.style.width = c.width + '%';
+        el.style.transform = `scale(${c.scale}) rotate(${c.rot}deg)`;
+        el.style.zIndex = c.z;
+      }
+      document.getElementById('json-output').textContent = JSON.stringify(config, null, 2);
+      localStorage.setItem('sakura_layers', JSON.stringify(config));
+    }
+
+    const controlsContainer = document.getElementById('controls');
+    for (const [key, c] of Object.entries(config)) {
+      const card = document.createElement('div');
+      card.className = 'layer-card';
+      card.innerHTML = `
+        <h4>${key}</h4>
+        <label>Left: <span id="${key}-left-val">${c.left}%</span></label>
+        <input type="range" min="-20" max="100" step="0.5" value="${c.left}" data-key="${key}" data-prop="left">
+        <label>Top: <span id="${key}-top-val">${c.top}%</span></label>
+        <input type="range" min="-30" max="100" step="0.5" value="${c.top}" data-key="${key}" data-prop="top">
+        <label>Width: <span id="${key}-width-val">${c.width}%</span></label>
+        <input type="range" min="5" max="100" step="0.5" value="${c.width}" data-key="${key}" data-prop="width">
+        <label>Scale: <span id="${key}-scale-val">${c.scale}</span></label>
+        <input type="range" min="0.3" max="2" step="0.02" value="${c.scale}" data-key="${key}" data-prop="scale">
+        <label>Rotación: <span id="${key}-rot-val">${c.rot}°</span></label>
+        <input type="range" min="-180" max="180" step="1" value="${c.rot}" data-key="${key}" data-prop="rot">
+        <label>Z-Index: <span id="${key}-z-val">${c.z}</span></label>
+        <input type="range" min="1" max="10" step="1" value="${c.z}" data-key="${key}" data-prop="z">
+      `;
+      controlsContainer.appendChild(card);
+    }
+
+    controlsContainer.addEventListener('input', (e) => {
+      const target = e.target;
+      const key = target.dataset.key;
+      const prop = target.dataset.prop;
+      if (!key || !prop) return;
+      config[key][prop] = parseFloat(target.value);
+      const span = document.getElementById(`${key}-${prop}-val`);
+      if (span) span.textContent = target.value + (prop === 'rot' ? '°' : prop === 'scale' || prop === 'z' ? '' : '%');
+      applyConfig();
+    });
+
+    document.getElementById('btn-export').addEventListener('click', () => {
+      navigator.clipboard.writeText(JSON.stringify(config, null, 2));
+      alert('Configuración JSON copiada al portapapeles!');
+    });
+
+    applyConfig();
+  </script>
+</body>
+</html>
