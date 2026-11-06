@@ -30,6 +30,7 @@ export interface Petal {
   restingLife?: number;
   slashImpulseX?: number;
   slashImpulseY?: number;
+  baseSpeedY?: number;
 }
 
 export interface TreeBounds {

@@ -4,17 +4,20 @@ import SakuraTree from './components/tree/SakuraTree';
 import { HeroSection, ProjectsSection, ExperienceSection } from './components/sections';
 import { ContactSection } from './components/contact/ContactSection';
 
+const SAKURA_CONFIG = { prefersReducedMotion: false, petalCount: 110, minSpeedY: 65, maxSpeedY: 125 };
+const KATANA_CONFIG = { prefersReducedMotion: false, lerpFactor: 0.35 };
+
 export default function App() {
   return (
     <div className="relative min-h-screen bg-[#f4eee5] text-[#1c1c1e] selection:bg-[#fbcfe8] selection:text-[#1c1c1e]">
       {/* Canvas interactivo de petalos flotando en primer plano (z-20) con click-through */}
       <SakuraCanvas
-        config={{ prefersReducedMotion: false, petalCount: 110, minSpeedY: 65, maxSpeedY: 125 }}
+        config={SAKURA_CONFIG}
         className="pointer-events-none fixed inset-0 z-20 h-full w-full"
       />
 
       {/* Puntero Katana estilizado con rotacion fisica garantizada */}
-      <KatanaCursor config={{ prefersReducedMotion: false, lerpFactor: 0.35 }} />
+      <KatanaCursor config={KATANA_CONFIG} />
 
       {/* Árbol de cerezo que ocupa todo el ancho de la pantalla (100% width) */}
       <div className="relative w-full overflow-hidden">

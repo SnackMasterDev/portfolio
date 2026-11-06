@@ -110,11 +110,11 @@ export function setupKatanaMotionListener(
       }
       currentSpeed = calculateSpeed(dx, dy, dtSafe);
 
-      // Activación del corte si la velocidad supera el umbral en la ventana de medio segundo (500ms)
+      // Activación del corte si la velocidad supera el umbral en la ventana activa
       const isSlashActivated =
-        viewportSpeedFraction >= 0.28 &&
-        windowMetrics.distance >= 40 &&
-        now - lastSlashTime >= 280;
+        viewportSpeedFraction >= 0.20 &&
+        windowMetrics.distance >= 35 &&
+        now - lastSlashTime >= 200;
 
       if (
         isSlashActivated &&

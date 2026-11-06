@@ -73,16 +73,44 @@ export function calculateWindowSpeed(
     return { speedFraction: 0, distance: 0, dtSeconds: 0, dx: 0, dy: 0, startX: 0, startY: 0 };
   }
 
-  const oldest = samples[0];
   const latest = samples[samples.length - 1];
-  const dtSeconds = Math.max((latest.time - oldest.time) / 1000, 0.016);
+
+  // Identifica el inicio del movimiento activo dentro de la ventana (descarta reposo previo)
+  let activeStartIdx = 0;
+  for (let i = samples.length - 2; i >= 0; i--) {
+    const s = samples[i];
+    const prev = i > 0 ? samples[i - 1] : s;
+    const stepDist = Math.hypot(s.x - prev.x, s.y - prev.y);
+    const stepDt = (s.time - prev.time) / 1000;
+    if (stepDist < 2 && stepDt > 0.04) {
+      activeStartIdx = i;
+      break;
+    }
+  }
+
+  const oldest = samples[activeStartIdx];
+  const dtSeconds = Math.max((latest.time - oldest.time) / 1000, 0.04);
   const dx = latest.x - oldest.x;
   const dy = latest.y - oldest.y;
   const distance = Math.hypot(dx, dy);
 
-  const speedPxPerSec = distance / dtSeconds;
+  let pathDistance = 0;
+  for (let i = activeStartIdx + 1; i < samples.length; i++) {
+    pathDistance += Math.hypot(samples[i].x - samples[i - 1].x, samples[i].y - samples[i - 1].y);
+  }
+  const effectiveDistance = Math.max(distance, pathDistance * 0.85);
+
+  const speedPxPerSec = effectiveDistance / dtSeconds;
   const viewportDiagonal = Math.hypot(viewportWidth, viewportHeight) || 1000;
   const speedFraction = speedPxPerSec / viewportDiagonal;
 
-  return { speedFraction, distance, dtSeconds, dx, dy, startX: oldest.x, startY: oldest.y };
+  return {
+    speedFraction,
+    distance: effectiveDistance,
+    dtSeconds,
+    dx,
+    dy,
+    startX: oldest.x,
+    startY: oldest.y,
+  };
 }

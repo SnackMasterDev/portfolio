@@ -45,6 +45,7 @@ export function createPetal(
     y: spawnY,
     size,
     speedY: config.minSpeedY + Math.random() * (config.maxSpeedY - config.minSpeedY),
+    baseSpeedY: config.minSpeedY + Math.random() * (config.maxSpeedY - config.minSpeedY),
     speedX: (Math.random() - 0.5) * 20,
     rotation: (Math.random() - 0.5) * Math.PI,
     rotationSpeed: (Math.random() - 0.5) * 1.5,
@@ -106,6 +107,7 @@ export function recyclePetal(
   }
 
   petal.speedY = config.minSpeedY + Math.random() * (config.maxSpeedY - config.minSpeedY);
+  petal.baseSpeedY = petal.speedY;
   petal.speedX = (Math.random() - 0.5) * 20;
   petal.rotation = (Math.random() - 0.5) * Math.PI;
   petal.rotationSpeed = (Math.random() - 0.5) * 1.5;
@@ -157,6 +159,14 @@ export function updatePetal(
     petal.slashImpulseY *= 0.94;
     if (Math.abs(petal.slashImpulseY) < 1) petal.slashImpulseY = 0;
   }
+
+  // Damping y recuperación natural de caída tras el impulso del tajo o viento
+  const defaultFallSpeed = (config.minSpeedY + config.maxSpeedY) * 0.5;
+  const targetSpeedY = petal.baseSpeedY ?? defaultFallSpeed;
+  if (petal.speedY < targetSpeedY) {
+    petal.speedY += 140 * clampedDt;
+  }
+  petal.speedX *= 0.985;
 
   petal.oscillationPhase += petal.oscillationSpeed * clampedDt;
 
