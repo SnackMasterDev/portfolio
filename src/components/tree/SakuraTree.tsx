@@ -7,17 +7,11 @@ export interface SakuraTreeProps {
 }
 
 export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike }) => {
-  const [isRecoiling, setIsRecoiling] = useState(false);
   const [strikeCount, setStrikeCount] = useState(0);
 
   const triggerStrikeFeedback = useCallback(() => {
-    setIsRecoiling(true);
     setStrikeCount((prev) => prev + 1);
     onStrike?.();
-
-    setTimeout(() => {
-      setIsRecoiling(false);
-    }, 550);
   }, [onStrike]);
 
   useEffect(() => {
@@ -56,7 +50,7 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
       id="sakura-tree"
       data-testid="sakura-tree"
       onClick={handleStrike}
-      className={`group relative w-full max-w-none cursor-pointer select-none overflow-hidden ${className}`}
+      className={`relative w-full max-w-none select-none overflow-hidden ${className}`}
       role="button"
       tabIndex={0}
       aria-label="Árbol de cerezo sagrado. Haz clic o corta con la katana para desprender pétalos."
@@ -71,15 +65,15 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
           loading="eager"
         />
 
-        {/* Capa 1: Tronco y samurai (Base física del árbol con colisión) */}
+        {/* Capa 1: Tronco y samurai (Base física del árbol fija e inalterable) */}
         <div
           id="sakura-tree-img-container"
-          className="absolute pointer-events-none z-10 transition-transform duration-300"
+          className="absolute pointer-events-none z-10"
           style={{
             left: '33%',
             top: '-19%',
             width: '60%',
-            transform: `scale(${isRecoiling ? 0.528 : 0.52}) translate(${isRecoiling ? -2 : 0}px, 0)`,
+            transform: 'scale(0.52)',
             transformOrigin: 'center center',
           }}
         >
@@ -92,8 +86,8 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
           />
         </div>
 
-        {/* Capa 2: Follaje y ramas multicapa animadas con brisa e impacto */}
-        <SakuraBranches isRecoiling={isRecoiling} />
+        {/* Capa 2: Follaje y ramas fijadas a la madera con brisa sutil en las puntas */}
+        <SakuraBranches />
 
         {/* Máscara de fundido inferior suave con el color pergamino washi (#f4eee5) */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 bg-gradient-to-t from-[#f4eee5] via-[#f4eee5]/60 to-transparent" />
@@ -104,7 +98,7 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
           <span className="h-1.5 w-1.5 rounded-full bg-[#db2777] animate-ping" />
           Árbol de Cerezo Milenario
         </span>
-        <span className="text-[11px] text-[#6b6966]/80 group-hover:text-[#db2777] transition-colors">
+        <span className="text-[11px] text-[#6b6966]/80">
           🌸 Golpea con la Katana ({strikeCount} cortes)
         </span>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface SakuraBranchesProps {
-  isRecoiling: boolean;
+  isRecoiling?: boolean;
 }
 
 interface BranchConfig {
@@ -19,7 +19,7 @@ interface BranchConfig {
   breezeAnim: string;
 }
 
-// Configuración calibrada exacta del usuario con pivotes fijados a la base del tronco
+// Configuración calibrada con los pivotes colocados exactamente en el tronco de la madera
 const CALIBRATED_BRANCHES: BranchConfig[] = [
   {
     id: 'rama_1_7013',
@@ -32,7 +32,7 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: 'bottom left',
+    origin: '8% 83%', // Unión del tallo de madera
     breezeAnim: 'animate-[branch-tip-sway-1_5.8s_ease-in-out_infinite]',
   },
   {
@@ -46,8 +46,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
-    origin: 'bottom right',
-    breezeAnim: 'animate-[branch-tip-sway-2_6.4s_ease-in-out_infinite_0.5s]',
+    origin: '92% 83%', // Unión del tallo espejado
+    breezeAnim: 'animate-[branch-tip-sway-2_6.4s_ease-in-out_infinite_0.4s]',
   },
   {
     id: 'rama_4_8968',
@@ -60,7 +60,7 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: 'bottom center',
+    origin: '27% 86%', // Bifurcación del tronco
     breezeAnim: 'animate-[branch-tip-sway-3_5.4s_ease-in-out_infinite_1.1s]',
   },
   {
@@ -74,7 +74,7 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: 'center right',
+    origin: '92% 48%', // Rama larga: extremo derecho del leño unido al tronco
     breezeAnim: 'animate-[branch-tip-sway-1_5.0s_ease-in-out_infinite_1.7s]',
   },
   {
@@ -88,7 +88,7 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: 'bottom right',
+    origin: '27% 86%',
     breezeAnim: 'animate-[branch-tip-sway-2_6.8s_ease-in-out_infinite_0.3s]',
   },
   {
@@ -102,7 +102,7 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
-    origin: 'bottom center',
+    origin: '12% 67%',
     breezeAnim: 'animate-[branch-tip-sway-3_4.6s_ease-in-out_infinite_1.4s]',
   },
   {
@@ -116,7 +116,7 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
-    origin: 'bottom center',
+    origin: '73% 86%',
     breezeAnim: 'animate-[branch-tip-sway-1_6.2s_ease-in-out_infinite_0.8s]',
   },
   {
@@ -130,18 +130,18 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
-    origin: 'bottom center',
+    origin: '12% 67%',
     breezeAnim: 'animate-[branch-tip-sway-2_5.1s_ease-in-out_infinite_1.2s]',
   },
 ];
 
-export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ isRecoiling }) => {
+export const SakuraBranches: React.FC<SakuraBranchesProps> = () => {
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-visible">
       {CALIBRATED_BRANCHES.map((b) => {
         const flipScale = b.flipX ? -b.scale : b.scale;
         return (
-          /* Contenedor estático: Conserva 100% fiel la posición, rotación y escala exacta del JSON */
+          /* Contenedor estático: Fija 100% inalterable la posición y rotación del JSON */
           <div
             key={b.id}
             className="pointer-events-none absolute"
@@ -155,16 +155,12 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ isRecoiling }) =
               transformOrigin: b.origin,
             }}
           >
-            {/* Imagen animada: El pivote está en la base (tronco), por lo que la base no se mueve y solo se mecen las puntas */}
+            {/* Imagen: Movimiento sutil únicamente en la punta. La base permanece soldada al tronco con 0px de desplazamiento */}
             <img
               src={`/assets/tree/${b.src}.webp`}
               alt=""
               aria-hidden="true"
-              className={`block h-auto w-full max-w-none object-contain transition-transform duration-300 ${
-                isRecoiling
-                  ? 'animate-[branch-impact-shudder_0.5s_cubic-bezier(0.36,0.07,0.19,0.97)]'
-                  : b.breezeAnim
-              }`}
+              className={`block h-auto w-full max-w-none object-contain ${b.breezeAnim}`}
               style={{
                 transformOrigin: b.origin,
               }}
