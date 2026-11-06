@@ -16,15 +16,9 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    const handleStrikeEvent = () => {
-      triggerStrikeFeedback();
-    };
-
+    const handleStrikeEvent = () => triggerStrikeFeedback();
     window.addEventListener('sakura-tree-strike', handleStrikeEvent);
-    return () => {
-      window.removeEventListener('sakura-tree-strike', handleStrikeEvent);
-    };
+    return () => window.removeEventListener('sakura-tree-strike', handleStrikeEvent);
   }, [triggerStrikeFeedback]);
 
   const handleStrike = useCallback(
@@ -32,14 +26,11 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
       const rect = e.currentTarget.getBoundingClientRect();
       const clickX = e.clientX || rect.left + rect.width * 0.5;
       const clickY = e.clientY || rect.top + rect.height * 0.4;
-
       triggerStrikeFeedback();
-
       if (typeof window !== 'undefined') {
-        const event = new CustomEvent('sakura-tree-strike', {
-          detail: { x: clickX, y: clickY, count: 50 },
-        });
-        window.dispatchEvent(event);
+        window.dispatchEvent(
+          new CustomEvent('sakura-tree-strike', { detail: { x: clickX, y: clickY, count: 50 } })
+        );
       }
     },
     [triggerStrikeFeedback]
