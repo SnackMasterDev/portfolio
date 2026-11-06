@@ -39,10 +39,10 @@ export function createFlowerPetal(
   const p = createPetal({ width: 800, height: 600 }, config);
   p.x = originX + (Math.random() - 0.5) * 24;
   p.y = originY + (Math.random() - 0.5) * 16;
-  p.speedX = -20 + Math.random() * 65; // Deriva suave lateral
-  p.speedY = 25 + Math.random() * 60;  // Velocidad de caída hacia abajo
-  p.flipSpeed = 2.4 + Math.random() * 2.0;
-  p.rotationSpeed = (Math.random() - 0.5) * 2.5;
+  p.speedX = -20 + Math.random() * 75; // Deriva suave lateral
+  p.speedY = 175 + Math.random() * 120; // Peso físico real: 175..295 px/s (caída ágil y grácil)
+  p.flipSpeed = 3.6 + Math.random() * 2.8;
+  p.rotationSpeed = (Math.random() - 0.5) * 3.5;
   p.isBurst = true;
   return p;
 }

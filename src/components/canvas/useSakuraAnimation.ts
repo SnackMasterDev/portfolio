@@ -11,11 +11,11 @@ import { spawnBranchFlowerPetals } from '../../engine/sakura/branchFlowerPetals'
 
 export const DEFAULT_SAKURA_CONFIG: SakuraConfig = {
   petalCount: 75,
-  minSpeedY: 60,
-  maxSpeedY: 110,
+  minSpeedY: 120,
+  maxSpeedY: 210,
   minSize: 10,
   maxSize: 20,
-  wind: { x: 16, y: 0 },
+  wind: { x: 22, y: 0 },
   colors: SAKURA_PALETTE,
   maxDeltaTime: 0.05,
 };
@@ -180,8 +180,10 @@ export function setupSakuraCanvas(
     const flowerPetals = spawnBranchFlowerPetals(rect, scrollY, dimensions, count, config);
     petals.push(...flowerPetals);
 
-    if (petals.length > config.petalCount + 120) {
-      petals.splice(config.petalCount, petals.length - (config.petalCount + 120));
+    // Buffer amplio (500 pétalos de ráfaga) para que golpes continuos no corten ni desvanezcan pétalos en el aire
+    const maxActiveBurst = 500;
+    if (petals.length > config.petalCount + maxActiveBurst) {
+      petals.splice(config.petalCount, petals.length - (config.petalCount + maxActiveBurst));
     }
   };
 
