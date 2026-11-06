@@ -3,6 +3,7 @@ import type { SakuraConfig, Petal, CanvasDimensions, SlashEventDetail } from '..
 import {
   createPetal,
   applyWindSlash,
+  deflectPetals,
   updatePetal,
   drawPetal,
   SAKURA_PALETTE,
@@ -105,12 +106,20 @@ export function setupSakuraCanvas(
 
   let animationFrameId: number;
   let lastTime = performance.now();
+  let bladePos = { x: -1000, y: -1000, vx: 0, vy: 0 };
 
   const render = (currentTime: number) => {
     const dt = Math.min((currentTime - lastTime) / 1000, 0.05);
     lastTime = currentTime;
 
     const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+
+    // Deflexión física continua cuando la katana roza o corta pétalos
+    if (bladePos.x > -500) {
+      deflectPetals(petals, bladePos.x, bladePos.y, bladePos.vx, bladePos.vy, currentScrollY);
+      bladePos.vx *= 0.5;
+      bladePos.vy *= 0.5;
+    }
 
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
@@ -195,11 +204,23 @@ export function setupSakuraCanvas(
     }
   };
 
+  const handlePointerMove = (e: MouseEvent) => {
+    const vx = bladePos.x > -500 ? e.clientX - bladePos.x : 0;
+    const vy = bladePos.y > -500 ? e.clientY - bladePos.y : 0;
+    bladePos = { x: e.clientX, y: e.clientY, vx, vy };
+  };
+
+  const handlePointerLeave = () => {
+    bladePos = { x: -1000, y: -1000, vx: 0, vy: 0 };
+  };
+
   if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('scroll', updateEnvironment, { passive: true });
     window.addEventListener('sakura-tree-strike', handleTreeStrike);
     window.addEventListener('katana-slash', handleSlash);
+    window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    window.addEventListener('mouseleave', handlePointerLeave);
   }
 
   let resizeObserver: ResizeObserver | null = null;
@@ -225,6 +246,8 @@ export function setupSakuraCanvas(
       window.removeEventListener('scroll', updateEnvironment);
       window.removeEventListener('sakura-tree-strike', handleTreeStrike);
       window.removeEventListener('katana-slash', handleSlash);
+      window.removeEventListener('mousemove', handlePointerMove);
+      window.removeEventListener('mouseleave', handlePointerLeave);
     }
     resizeObserver?.disconnect();
     motionQuery?.removeEventListener?.('change', handleMotionChange);

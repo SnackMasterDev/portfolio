@@ -17,7 +17,7 @@ export function createFlowerPetal(
   p.x = originX + (Math.random() - 0.5) * 24;
   p.y = originY + (Math.random() - 0.5) * 16;
   p.speedX = -20 + Math.random() * 75; // Deriva suave lateral
-  p.speedY = 175 + Math.random() * 120; // Peso físico real: 175..295 px/s (caída ágil y grácil)
+  p.speedY = 120 + Math.random() * 80; // Peso físico grácil y reactivo al corte del sable: 120..200 px/s
   p.flipSpeed = 3.6 + Math.random() * 2.8;
   p.rotationSpeed = (Math.random() - 0.5) * 3.5;
   p.isBurst = true;

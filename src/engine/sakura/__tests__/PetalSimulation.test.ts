@@ -3,6 +3,7 @@ import {
   createPetal,
   createBurstPetal,
   applyWindSlash,
+  deflectPetals,
   updatePetal,
   recyclePetal,
   drawPetal,
@@ -156,6 +157,19 @@ describe('PetalSimulation', () => {
       expect(p1.slashImpulseX).toBeDefined();
       expect(p1.slashImpulseX).not.toBe(0);
       expect(p2.slashImpulseX).toBeUndefined();
+    });
+
+    it('deflects petals continuously when sword passes nearby', () => {
+      const p = createPetal(dimensions, config);
+      p.x = 200;
+      p.y = 200;
+
+      deflectPetals([p], 220, 210, 15, 10, 0, 95);
+
+      expect(p.slashImpulseX).toBeDefined();
+      expect(p.slashImpulseX).not.toBe(0);
+      expect(p.slashImpulseY).toBeDefined();
+      expect(p.slashImpulseY).not.toBe(0);
     });
   });
 

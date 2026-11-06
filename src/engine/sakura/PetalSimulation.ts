@@ -1,4 +1,4 @@
-import type { CanvasDimensions, SakuraConfig, Petal, SlashEventDetail } from '../types';
+import type { CanvasDimensions, SakuraConfig, Petal } from '../types';
 import { sampleFlowerBlossomPosition } from './flowerZones';
 
 let nextPetalId = 1;
@@ -122,57 +122,7 @@ export function recyclePetal(
  * Applies triangular aerodynamic wake behind the katana blade.
  * The triangle apex is at the sword tip (x, y) and widens backward like a boat wake.
  */
-export function applyWindSlash(
-  petals: Petal[],
-  detail: SlashEventDetail,
-  scrollY: number = 0,
-  length = 340,
-  halfWidth = 180
-): void {
-  const rad = (detail.angle * Math.PI) / 180;
-  const fwdX = Math.cos(rad);
-  const fwdY = Math.sin(rad);
-  const normX = -fwdY;
-  const normY = fwdX;
-  const speedFactor = Math.min(Math.max(detail.speed / 300, 1), 4);
-
-  for (let i = 0; i < petals.length; i++) {
-    const p = petals[i];
-    const screenY = p.y - scrollY;
-    const dx = p.x - detail.x;
-    const dy = screenY - detail.y;
-
-    const dBack = -(dx * fwdX + dy * fwdY);
-    const dSide = dx * normX + dy * normY;
-
-    if (dBack >= -60 && dBack <= length) {
-      const progress = (dBack + 60) / (length + 60);
-      const localHalfWidth = halfWidth * Math.max(progress, 0.35);
-
-      if (Math.abs(dSide) <= localHalfWidth) {
-        const sideSign = dSide >= 0 ? 1 : -1;
-        const proximity = 1 - Math.abs(dSide) / localHalfWidth;
-        const force = (0.6 + 0.4 * proximity) * (420 * speedFactor);
-
-        const wakeX = normX * sideSign * force * 2.2;
-        const wakeY = normY * sideSign * force * 2.2;
-        const dragX = fwdX * force * 0.9;
-        const dragY = fwdY * force * 0.9;
-
-        if (p.isResting) {
-          p.isResting = false;
-          p.opacity = 0.9;
-          p.speedY = 40 + Math.random() * 40;
-        }
-
-        p.slashImpulseX = (p.slashImpulseX ?? 0) + wakeX + dragX;
-        p.slashImpulseY = (p.slashImpulseY ?? 0) + wakeY + dragY - 140;
-        p.flipSpeed = 6 + Math.random() * 5;
-        p.rotationSpeed = (Math.random() - 0.5) * 16;
-      }
-    }
-  }
-}
+export { applyWindSlash, deflectPetals } from './slashPhysics';
 
 /**
  * Advances physical simulation of a petal by delta-time with fluid non-linear aerodynamics.
