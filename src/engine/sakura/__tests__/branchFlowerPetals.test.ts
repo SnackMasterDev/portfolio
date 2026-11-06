@@ -60,4 +60,15 @@ describe('branchFlowerPetals', () => {
       expect(p.y).toBeLessThanOrEqual(50 + 600 * 0.55);
     }
   });
+
+  it('samples ambient flower blossom position within tree bounds', async () => {
+    const treeBounds = { x: 200, y: 100, width: 800, height: 500 };
+    const { sampleFlowerBlossomPosition } = await import('../flowerZones');
+    const pos = sampleFlowerBlossomPosition(treeBounds);
+
+    expect(pos.x).toBeGreaterThanOrEqual(treeBounds.x);
+    expect(pos.x).toBeLessThanOrEqual(treeBounds.x + treeBounds.width);
+    expect(pos.y).toBeGreaterThanOrEqual(treeBounds.y);
+    expect(pos.y).toBeLessThanOrEqual(treeBounds.y + treeBounds.height * 0.5);
+  });
 });

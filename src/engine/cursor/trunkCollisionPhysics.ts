@@ -37,7 +37,7 @@ export class TrunkCollisionManager {
   constructor(config?: CollisionManagerConfig) {
     this.recoilImpulse = config?.recoilImpulseDistance ?? 60;
     this.damping = config?.recoilDamping ?? 0.82;
-    this.speedThreshold = config?.speedThresholdFraction ?? 0.20;
+    this.speedThreshold = config?.speedThresholdFraction ?? 0.38;
     this.cooldownMs = config?.reboundCooldownMs ?? 280;
     this.getTreeEl =
       config?.getTreeElement ??

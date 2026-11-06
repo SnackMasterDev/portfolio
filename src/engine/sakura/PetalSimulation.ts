@@ -1,4 +1,5 @@
 import type { CanvasDimensions, SakuraConfig, Petal, SlashEventDetail } from '../types';
+import { sampleFlowerBlossomPosition } from './flowerZones';
 
 let nextPetalId = 1;
 
@@ -33,8 +34,9 @@ export function createPetal(
   if (initialProgress !== undefined) {
     spawnY = initialProgress * (dimensions.height || 600);
   } else if (config.treeBounds) {
-    spawnX = config.treeBounds.x + Math.random() * config.treeBounds.width;
-    spawnY = config.treeBounds.y + Math.random() * (config.treeBounds.height * 0.5);
+    const pos = sampleFlowerBlossomPosition(config.treeBounds);
+    spawnX = pos.x;
+    spawnY = pos.y;
   }
 
   const petal: Petal = {
@@ -94,14 +96,10 @@ export function recyclePetal(
   petal.color = colors.includes(pair.face) ? pair.face : colors[Math.floor(Math.random() * colors.length)];
   petal.backColor = pair.back;
 
-  const isTreeInView =
-    config.treeBounds &&
-    config.treeBounds.y > -200 &&
-    config.treeBounds.y < (dimensions.height || 600);
-
-  if (isTreeInView && config.treeBounds) {
-    petal.x = config.treeBounds.x + Math.random() * config.treeBounds.width;
-    petal.y = Math.max(config.treeBounds.y, 0) + Math.random() * (config.treeBounds.height * 0.5);
+  if (config.treeBounds) {
+    const pos = sampleFlowerBlossomPosition(config.treeBounds);
+    petal.x = pos.x;
+    petal.y = pos.y;
   } else {
     petal.x = Math.random() * (dimensions.width || 800);
     petal.y = -petal.size - Math.random() * 40;

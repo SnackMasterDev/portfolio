@@ -25,7 +25,7 @@ export function setupKatanaMotionListener(
   const isReducedMotion = config?.prefersReducedMotion === true;
 
   const collisionManager = new TrunkCollisionManager({
-    speedThresholdFraction: 0.20,
+    speedThresholdFraction: 0.38,
     recoilImpulseDistance: 60,
     recoilDamping: 0.82,
   });
@@ -135,9 +135,9 @@ export function setupKatanaMotionListener(
       const vpH = (typeof window !== 'undefined' ? window.innerHeight : 0) || 800;
       viewportSpeedFraction = calculateViewportSpeedFraction(dx, dy, dtSafe, vpW, vpH);
 
-      // Activates wind slash only if movement exceeds 20% of viewport per second and travels >= 18px stroke
+      // Activates wind slash only if movement exceeds 38% of viewport per second and travels >= 18px stroke
       if (
-        viewportSpeedFraction >= 0.20 &&
+        viewportSpeedFraction >= 0.38 &&
         dist >= 18 &&
         typeof window !== 'undefined' &&
         typeof window.dispatchEvent === 'function'
