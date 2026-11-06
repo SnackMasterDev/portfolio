@@ -4,6 +4,7 @@ import {
   calculateAngleDegrees,
   calculateSpeed,
   calculateViewportSpeedFraction,
+  calculateWindowSpeed,
   lerp,
   lerpAngleDegrees,
 } from '../kinematics';
@@ -78,6 +79,40 @@ describe('kinematics', () => {
     it('interpolates negative to positive degrees smoothly', () => {
       const interpolated = lerpAngleDegrees(-10, 10, 0.5);
       expect(interpolated).toBeCloseTo(0);
+    });
+  });
+
+  describe('calculateWindowSpeed', () => {
+    it('computes velocity fraction over a calibrated 250ms window', () => {
+      const samples = [
+        { x: 100, y: 100, time: 1000 },
+        { x: 200, y: 100, time: 1100 },
+        { x: 350, y: 100, time: 1200 }, // Moved 250px in 200ms
+      ];
+
+      // Viewport 1000x1000 => diagonal ~1414.21
+      // 250px / 0.2s = 1250 px/s => 1250 / 1414.21 = ~0.88 fraction
+      const result = calculateWindowSpeed(samples, 1200, 250, 1000, 1000);
+      expect(result.distance).toBe(250);
+      expect(result.speedFraction).toBeCloseTo(0.88, 1);
+    });
+
+    it('prunes samples older than window duration (e.g. 250ms)', () => {
+      const samples = [
+        { x: 0, y: 0, time: 500 }, // Expired
+        { x: 100, y: 100, time: 900 },
+        { x: 150, y: 150, time: 1000 },
+      ];
+
+      calculateWindowSpeed(samples, 1000, 250, 1000, 1000);
+      // Samples older than 1000 - 250 = 750ms must be shifted out
+      expect(samples.some((s) => s.time === 500)).toBe(false);
+    });
+
+    it('returns zero speed fraction when samples length < 2', () => {
+      const result = calculateWindowSpeed([{ x: 10, y: 10, time: 100 }], 100);
+      expect(result.speedFraction).toBe(0);
+      expect(result.distance).toBe(0);
     });
   });
 });

@@ -3,8 +3,9 @@ import type { CursorState, CursorVariant, KatanaMotionConfig } from '../../engin
 import {
   calculateAngleDegrees,
   calculateSpeed,
-  calculateViewportSpeedFraction,
+  calculateWindowSpeed,
   lerpAngleDegrees,
+  type MotionSample,
 } from '../../engine/cursor/kinematics';
 import { TrunkCollisionManager } from '../../engine/cursor/trunkCollisionPhysics';
 
@@ -43,6 +44,8 @@ export function setupKatanaMotionListener(
   let pendingEvent: { clientX: number; clientY: number } | null = null;
   let lastBaseX = 0;
   let lastBaseY = 0;
+  const motionSamples: MotionSample[] = [];
+  let lastSlashTime = 0;
 
   const detectVariant = (target: EventTarget | null): CursorVariant => {
     if (isClicking) return 'clicking';
@@ -133,15 +136,20 @@ export function setupKatanaMotionListener(
 
       const vpW = (typeof window !== 'undefined' ? window.innerWidth : 0) || 1200;
       const vpH = (typeof window !== 'undefined' ? window.innerHeight : 0) || 800;
-      viewportSpeedFraction = calculateViewportSpeedFraction(dx, dy, dtSafe, vpW, vpH);
 
-      // Activates wind slash only if movement exceeds 38% of viewport per second and travels >= 18px stroke
+      motionSamples.push({ x: clientX, y: clientY, time: now });
+      const windowMetrics = calculateWindowSpeed(motionSamples, now, 250, vpW, vpH);
+      viewportSpeedFraction = windowMetrics.speedFraction;
+
+      // Activación del corte si la velocidad supera el umbral en la ventana de un cuarto de segundo (250ms)
       if (
         viewportSpeedFraction >= 0.38 &&
-        dist >= 18 &&
+        windowMetrics.distance >= 24 &&
+        now - lastSlashTime >= 250 &&
         typeof window !== 'undefined' &&
         typeof window.dispatchEvent === 'function'
       ) {
+        lastSlashTime = now;
         const slashEvent = new CustomEvent('katana-slash', {
           detail: {
             x: clientX,
