@@ -71,13 +71,30 @@ html, body, a, button, input, textarea, select, [role="button"], label, * {
 }
 
 /* Sacudida reactiva en las puntas al recibir corte de la katana */
-@keyframes branch-impact-shudder {
+@keyframes branch-shudder-ccw {
   0% { transform: rotate(0deg); }
-  20% { transform: rotate(-2.8deg); }
-  45% { transform: rotate(2.2deg); }
-  70% { transform: rotate(-1.1deg); }
-  85% { transform: rotate(0.5deg); }
+  18% { transform: rotate(-2.2deg); }
+  38% { transform: rotate(1.6deg); }
+  58% { transform: rotate(-0.8deg); }
+  78% { transform: rotate(0.3deg); }
   100% { transform: rotate(0deg); }
+}
+
+@keyframes branch-shudder-cw {
+  0% { transform: rotate(0deg); }
+  18% { transform: rotate(2.2deg); }
+  38% { transform: rotate(-1.6deg); }
+  58% { transform: rotate(0.8deg); }
+  78% { transform: rotate(-0.3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.branch-shudder-ccw-a, .branch-shudder-ccw-b {
+  animation: branch-shudder-ccw 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.branch-shudder-cw-a, .branch-shudder-cw-b {
+  animation: branch-shudder-cw 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 html {
