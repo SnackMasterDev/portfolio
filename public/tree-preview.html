@@ -2,182 +2,541 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Ajustador de Capas del Árbol Sakura</title>
+  <title>🌸 Calibrador de Ramas y Capas del Sakura</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       padding: 20px;
       background: #f4eee5;
-      font-family: sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: #1c1c1e;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      margin: 0;
+      color: #831843;
+      font-size: 26px;
+    }
+    header p {
+      margin: 6px 0 0;
+      color: #6b6966;
+      font-size: 14px;
+    }
+    .top-bar {
+      max-width: 1392px;
+      margin: 0 auto 15px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      gap: 10px;
+    }
+    .top-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn:active {
+      transform: scale(0.97);
+    }
+    .btn-primary {
+      background: #db2777;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #be185d;
+    }
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+    .btn-danger {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+    }
+    .btn-danger:hover {
+      background: #fecaca;
+    }
+    select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      background: white;
+    }
+    .canvas-wrapper {
+      max-width: 1392px;
+      margin: 0 auto;
+      background: #f4eee5;
+      border: 2px solid #db2777;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
     .container {
       position: relative;
       width: 1392px;
       height: 752px;
-      margin: 0 auto;
-      border: 2px dashed #db2777;
       overflow: hidden;
-      background: #f4eee5;
+      user-select: none;
     }
     .layer {
       position: absolute;
-      pointer-events: auto;
-      cursor: move;
+      cursor: grab;
       user-select: none;
+      transform-origin: center center;
+      transition: outline 0.1s;
+    }
+    .layer:active {
+      cursor: grabbing;
+    }
+    .layer.selected {
+      outline: 2px dashed #db2777;
+      outline-offset: 2px;
     }
     .controls {
       max-width: 1392px;
       margin: 20px auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
       gap: 15px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .layer-card {
+      background: #ffffff;
       border: 1px solid #e5e7eb;
-      padding: 12px;
-      border-radius: 6px;
-      background: #fafafa;
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    .layer-card h4 {
-      margin: 0 0 10px 0;
-      color: #be185d;
+    .layer-card.selected {
+      border-color: #db2777;
+      box-shadow: 0 0 0 2px rgba(219,39,119,0.2);
     }
-    label {
+    .card-header {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
-      margin-bottom: 6px;
+      align-items: center;
+      border-bottom: 1px solid #f3f4f6;
+      padding-bottom: 8px;
+      margin-bottom: 4px;
+    }
+    .card-header h3 {
+      margin: 0;
+      font-size: 14px;
+      color: #831843;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-actions {
+      display: flex;
+      gap: 5px;
+    }
+    .prop-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .prop-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4b5563;
     }
     input[type="range"] {
       width: 100%;
+      height: 6px;
+      accent-color: #db2777;
+      cursor: pointer;
+    }
+    .output-section {
+      max-width: 1392px;
+      margin: 20px auto;
+      background: #ffffff;
+      padding: 18px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
     pre {
-      background: #1e1e1e;
-      color: #a5f3fc;
+      background: #18181b;
+      color: #38bdf8;
       padding: 15px;
       border-radius: 6px;
       overflow-x: auto;
+      font-family: monospace;
       font-size: 12px;
+      margin: 10px 0 0 0;
     }
   </style>
 </head>
 <body>
-  <h2 style="text-align: center; color: #831843;">🌸 Calibrador de Capas del Árbol Sakura</h2>
-  <p style="text-align: center; font-size: 14px; color: #6b6966;">
-    Ajusta la posición, escala y rotación de las ramas para que encajen perfectamente en el tronco.
-  </p>
+  <header>
+    <h1>🌸 Calibrador de Ramas y Capas del Árbol Sakura</h1>
+    <p>Arrastra las ramas directamente sobre el lienzo o usa los controles para mover, escalar, rotar, duplicar y aplicar modo espejo.</p>
+  </header>
 
-  <div class="container" id="stage">
-    <!-- Capa 0: Fondo -->
-    <img id="bg" src="/assets/tree/imagen-fondo.webp" style="position: absolute; inset: 0; width: 100%; height: 100%;" />
+  <div class="top-bar">
+    <div class="top-group">
+      <label style="font-weight: 600; font-size: 13px;">Nueva rama:</label>
+      <select id="select-branch-type">
+        <option value="rama_4">Rama 4 (Copa Grande Principal)</option>
+        <option value="rama_1">Rama 1 (Rama Media Frondosa)</option>
+        <option value="rama_3">Rama 3 (Rama Larga Colgante)</option>
+        <option value="rama_2">Rama 2 (Punta con Flores)</option>
+        <option value="tronco">Tronco</option>
+      </select>
+      <button id="btn-add-branch" class="btn btn-primary">➕ Agregar Rama</button>
+    </div>
 
-    <!-- Capa 1: Tronco -->
-    <img id="layer-tronco" class="layer" src="/assets/tree/tronco.webp" />
+    <div class="top-group">
+      <button id="btn-reset" class="btn btn-secondary">🔄 Restablecer</button>
+      <button id="btn-copy-json" class="btn btn-primary">📋 Copiar Configuración JSON</button>
+    </div>
+  </div>
 
-    <!-- Ramas -->
-    <img id="layer-rama1" class="layer" src="/assets/tree/rama_1.webp" />
-    <img id="layer-rama2" class="layer" src="/assets/tree/rama_2.webp" />
-    <img id="layer-rama3" class="layer" src="/assets/tree/rama_3.webp" />
-    <img id="layer-rama4" class="layer" src="/assets/tree/rama_4.webp" />
-
-    <!-- Ramas Duplicadas para Follaje Frondoso -->
-    <img id="layer-rama1-b" class="layer" src="/assets/tree/rama_1.webp" />
-    <img id="layer-rama3-b" class="layer" src="/assets/tree/rama_3.webp" />
-    <img id="layer-rama4-b" class="layer" src="/assets/tree/rama_4.webp" />
+  <div class="canvas-wrapper">
+    <div class="container" id="stage">
+      <!-- Capa 0: Fondo cielo y colinas -->
+      <img id="bg" src="/assets/tree/imagen-fondo.webp" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;" />
+      <!-- Contenedor dinámico de capas de ramas y tronco -->
+      <div id="layers-container"></div>
+    </div>
   </div>
 
   <div class="controls" id="controls"></div>
 
-  <div style="max-width: 1392px; margin: 20px auto;">
-    <button id="btn-export" style="padding: 10px 20px; background: #db2777; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-      Copiar Configuración JSON
-    </button>
+  <div class="output-section">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; color: #831843;">Configuración JSON Actual (Persistida en tu navegador)</h3>
+      <button id="btn-copy-bottom" class="btn btn-secondary">📋 Copiar JSON</button>
+    </div>
     <pre id="json-output"></pre>
   </div>
 
   <script>
-    const defaultConfig = {
-      tronco: { left: 42, top: -10, width: 62, scale: 1, rot: 0, z: 2 },
-      rama1: { left: 45, top: 12, width: 34, scale: 1, rot: 0, z: 4 },
-      rama2: { left: 68, top: 22, width: 14, scale: 1, rot: 0, z: 3 },
-      rama3: { left: 32, top: 28, width: 30, scale: 1, rot: -5, z: 3 },
-      rama4: { left: 48, top: 0, width: 52, scale: 1, rot: 0, z: 5 },
-      rama1b: { left: 28, top: 18, width: 32, scale: 0.95, rot: 15, z: 3 },
-      rama3b: { left: 58, top: 32, width: 28, scale: 0.9, rot: -10, z: 4 },
-      rama4b: { left: 38, top: -5, width: 50, scale: 1.05, rot: -8, z: 4 }
-    };
+    const INITIAL_CONFIG = [
+      { id: 'tronco', src: 'tronco', name: 'Tronco y Samurai', left: 44, top: -8, width: 60, scale: 1, rot: 0, flipX: false, z: 10, opacity: 1 },
+      { id: 'rama4_deep', src: 'rama_4', name: 'Rama 4 Sombra Trasera', left: 40, top: -8, width: 58, scale: 1.02, rot: 0, flipX: false, z: 2, opacity: 0.85 },
+      { id: 'rama1_deep', src: 'rama_1', name: 'Rama 1 Sombra Trasera', left: 30, top: 10, width: 38, scale: 1, rot: 0, flipX: true, z: 3, opacity: 0.8 },
+      { id: 'rama4_main', src: 'rama_4', name: 'Rama 4 Copa Principal', left: 44, top: -3, width: 54, scale: 1, rot: 0, flipX: false, z: 12, opacity: 1 },
+      { id: 'rama1_mid', src: 'rama_1', name: 'Rama 1 Media', left: 48, top: 14, width: 36, scale: 1, rot: 0, flipX: false, z: 13, opacity: 1 },
+      { id: 'rama3_left', src: 'rama_3', name: 'Rama 3 Extensión Izquierda', left: 32, top: 26, width: 32, scale: 1, rot: 0, flipX: false, z: 14, opacity: 1 },
+      { id: 'rama2_right', src: 'rama_2', name: 'Rama 2 Punta Derecha', left: 70, top: 19, width: 16, scale: 1, rot: 0, flipX: false, z: 14, opacity: 1 },
+      { id: 'rama3_drape', src: 'rama_3', name: 'Rama 3 Colgante Delantera', left: 24, top: 19, width: 26, scale: 0.95, rot: 12, flipX: true, z: 15, opacity: 0.95 }
+    ];
 
-    const config = JSON.parse(localStorage.getItem('sakura_layers') || JSON.stringify(defaultConfig));
+    let layers = JSON.parse(localStorage.getItem('sakura_branches_calibrator') || 'null') || INITIAL_CONFIG;
+    let selectedId = null;
 
-    const mapping = {
-      tronco: 'layer-tronco',
-      rama1: 'layer-rama1',
-      rama2: 'layer-rama2',
-      rama3: 'layer-rama3',
-      rama4: 'layer-rama4',
-      rama1b: 'layer-rama1-b',
-      rama3b: 'layer-rama3-b',
-      rama4b: 'layer-rama4-b'
-    };
-
-    function applyConfig() {
-      for (const [key, elId] of Object.entries(mapping)) {
-        const el = document.getElementById(elId);
-        const c = config[key];
-        if (!el || !c) continue;
-        el.style.left = c.left + '%';
-        el.style.top = c.top + '%';
-        el.style.width = c.width + '%';
-        el.style.transform = `scale(${c.scale}) rotate(${c.rot}deg)`;
-        el.style.zIndex = c.z;
-      }
-      document.getElementById('json-output').textContent = JSON.stringify(config, null, 2);
-      localStorage.setItem('sakura_layers', JSON.stringify(config));
-    }
-
+    const stage = document.getElementById('stage');
+    const layersContainer = document.getElementById('layers-container');
     const controlsContainer = document.getElementById('controls');
-    for (const [key, c] of Object.entries(config)) {
-      const card = document.createElement('div');
-      card.className = 'layer-card';
-      card.innerHTML = `
-        <h4>${key}</h4>
-        <label>Left: <span id="${key}-left-val">${c.left}%</span></label>
-        <input type="range" min="-20" max="100" step="0.5" value="${c.left}" data-key="${key}" data-prop="left">
-        <label>Top: <span id="${key}-top-val">${c.top}%</span></label>
-        <input type="range" min="-30" max="100" step="0.5" value="${c.top}" data-key="${key}" data-prop="top">
-        <label>Width: <span id="${key}-width-val">${c.width}%</span></label>
-        <input type="range" min="5" max="100" step="0.5" value="${c.width}" data-key="${key}" data-prop="width">
-        <label>Scale: <span id="${key}-scale-val">${c.scale}</span></label>
-        <input type="range" min="0.3" max="2" step="0.02" value="${c.scale}" data-key="${key}" data-prop="scale">
-        <label>Rotación: <span id="${key}-rot-val">${c.rot}°</span></label>
-        <input type="range" min="-180" max="180" step="1" value="${c.rot}" data-key="${key}" data-prop="rot">
-        <label>Z-Index: <span id="${key}-z-val">${c.z}</span></label>
-        <input type="range" min="1" max="10" step="1" value="${c.z}" data-key="${key}" data-prop="z">
-      `;
-      controlsContainer.appendChild(card);
+    const jsonOutput = document.getElementById('json-output');
+
+    function saveState() {
+      localStorage.setItem('sakura_branches_calibrator', JSON.stringify(layers));
+      jsonOutput.textContent = JSON.stringify(layers, null, 2);
     }
 
-    controlsContainer.addEventListener('input', (e) => {
-      const target = e.target;
-      const key = target.dataset.key;
-      const prop = target.dataset.prop;
-      if (!key || !prop) return;
-      config[key][prop] = parseFloat(target.value);
-      const span = document.getElementById(`${key}-${prop}-val`);
-      if (span) span.textContent = target.value + (prop === 'rot' ? '°' : prop === 'scale' || prop === 'z' ? '' : '%');
-      applyConfig();
+    function renderStage() {
+      layersContainer.innerHTML = '';
+      layers.forEach(item => {
+        const img = document.createElement('img');
+        img.id = 'layer-' + item.id;
+        img.className = 'layer' + (selectedId === item.id ? ' selected' : '');
+        img.src = '/assets/tree/' + item.src + '.webp';
+        img.style.left = item.left + '%';
+        img.style.top = item.top + '%';
+        img.style.width = item.width + '%';
+        img.style.zIndex = item.z;
+        img.style.opacity = item.opacity ?? 1;
+        
+        const flipScale = item.flipX ? -item.scale : item.scale;
+        img.style.transform = `scale(${flipScale}, ${item.scale}) rotate(${item.rot}deg)`;
+
+        // Arrastrar con ratón
+        img.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          selectLayer(item.id);
+
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const startLeft = item.left;
+          const startTop = item.top;
+          const stageRect = stage.getBoundingClientRect();
+
+          function onMouseMove(moveEvent) {
+            const dx = moveEvent.clientX - startX;
+            const dy = moveEvent.clientY - startY;
+            const dLeftPercent = (dx / stageRect.width) * 100;
+            const dTopPercent = (dy / stageRect.height) * 100;
+
+            item.left = Math.round((startLeft + dLeftPercent) * 2) / 2;
+            item.top = Math.round((startTop + dTopPercent) * 2) / 2;
+
+            img.style.left = item.left + '%';
+            img.style.top = item.top + '%';
+
+            updateCardInputs(item);
+            saveState();
+          }
+
+          function onMouseUp() {
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+          }
+
+          window.addEventListener('mousemove', onMouseMove);
+          window.addEventListener('mouseup', onMouseUp);
+        });
+
+        layersContainer.appendChild(img);
+      });
+    }
+
+    function selectLayer(id) {
+      selectedId = id;
+      document.querySelectorAll('.layer').forEach(el => {
+        el.classList.toggle('selected', el.id === 'layer-' + id);
+      });
+      document.querySelectorAll('.layer-card').forEach(el => {
+        el.classList.toggle('selected', el.dataset.id === id);
+      });
+      const card = document.querySelector(`.layer-card[data-id="${id}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function updateCardInputs(item) {
+      const card = document.querySelector(`.layer-card[data-id="${item.id}"]`);
+      if (!card) return;
+      ['left', 'top', 'width', 'scale', 'rot', 'z', 'opacity'].forEach(prop => {
+        const input = card.querySelector(`[data-prop="${prop}"]`);
+        const valSpan = card.querySelector(`.${prop}-val`);
+        if (input && valSpan) {
+          input.value = item[prop];
+          valSpan.textContent = item[prop] + (prop === 'rot' ? '°' : prop === 'scale' || prop === 'z' || prop === 'opacity' ? '' : '%');
+        }
+      });
+    }
+
+    function renderControls() {
+      controlsContainer.innerHTML = '';
+      layers.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'layer-card' + (selectedId === item.id ? ' selected' : '');
+        card.dataset.id = item.id;
+
+        card.innerHTML = `
+          <div class="card-header">
+            <h3>🌸 ${item.name || item.id}</h3>
+            <div class="card-actions">
+              <button class="btn btn-secondary btn-mirror" title="Alternar Espejo (Flip X)" style="${item.flipX ? 'background: #fbcfe8; border-color: #db2777; color: #831843;' : ''}">
+                🪞 ${item.flipX ? 'Reflejado' : 'Espejo'}
+              </button>
+              <button class="btn btn-secondary btn-duplicate" title="Duplicar esta rama">➕</button>
+              <button class="btn btn-danger btn-delete" title="Eliminar rama">🗑️</button>
+            </div>
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-label"><span>Horizontal (Left):</span><span class="left-val">${item.left}%</span></div>
+            <input type="range" min="-30" max="110" step="0.5" value="${item.left}" data-prop="left">
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-label"><span>Vertical (Top):</span><span class="top-val">${item.top}%</span></div>
+            <input type="range" min="-40" max="110" step="0.5" value="${item.top}" data-prop="top">
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-label"><span>Ancho (Width):</span><span class="width-val">${item.width}%</span></div>
+            <input type="range" min="5" max="100" step="0.5" value="${item.width}" data-prop="width">
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-label"><span>Escala (Scale):</span><span class="scale-val">${item.scale}</span></div>
+            <input type="range" min="0.3" max="2.2" step="0.02" value="${item.scale}" data-prop="scale">
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-label"><span>Rotación:</span><span class="rot-val">${item.rot}°</span></div>
+            <input type="range" min="-180" max="180" step="1" value="${item.rot}" data-prop="rot">
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-label"><span>Profundidad (Z-Index):</span><span class="z-val">${item.z}</span></div>
+            <input type="range" min="1" max="25" step="1" value="${item.z}" data-prop="z">
+          </div>
+
+          <div class="prop-row">
+            <div class="prop-label"><span>Opacidad:</span><span class="opacity-val">${item.opacity ?? 1}</span></div>
+            <input type="range" min="0.2" max="1" step="0.05" value="${item.opacity ?? 1}" data-prop="opacity">
+          </div>
+        `;
+
+        // Eventos
+        card.addEventListener('click', () => selectLayer(item.id));
+
+        card.querySelector('.btn-mirror').addEventListener('click', (e) => {
+          e.stopPropagation();
+          item.flipX = !item.flipX;
+          renderStage();
+          renderControls();
+          saveState();
+        });
+
+        card.querySelector('.btn-duplicate').addEventListener('click', (e) => {
+          e.stopPropagation();
+          duplicateLayer(item);
+        });
+
+        card.querySelector('.btn-delete').addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (confirm(`¿Eliminar ${item.name || item.id}?`)) {
+            deleteLayer(item.id);
+          }
+        });
+
+        card.addEventListener('input', (e) => {
+          const prop = e.target.dataset.prop;
+          if (!prop) return;
+          item[prop] = parseFloat(e.target.value);
+          card.querySelector(`.${prop}-val`).textContent = item[prop] + (prop === 'rot' ? '°' : prop === 'scale' || prop === 'z' || prop === 'opacity' ? '' : '%');
+          
+          const img = document.getElementById('layer-' + item.id);
+          if (img) {
+            img.style.left = item.left + '%';
+            img.style.top = item.top + '%';
+            img.style.width = item.width + '%';
+            img.style.zIndex = item.z;
+            img.style.opacity = item.opacity;
+            const flipScale = item.flipX ? -item.scale : item.scale;
+            img.style.transform = `scale(${flipScale}, ${item.scale}) rotate(${item.rot}deg)`;
+          }
+          saveState();
+        });
+
+        controlsContainer.appendChild(card);
+      });
+    }
+
+    function duplicateLayer(item) {
+      const newId = item.src + '_' + Date.now().toString().slice(-4);
+      const cloned = {
+        ...JSON.parse(JSON.stringify(item)),
+        id: newId,
+        name: (item.name || item.id) + ' (Copia)',
+        left: item.left + 3,
+        top: item.top + 2,
+        z: item.z + 1
+      };
+      layers.push(cloned);
+      selectedId = newId;
+      renderStage();
+      renderControls();
+      saveState();
+    }
+
+    function deleteLayer(id) {
+      layers = layers.filter(x => x.id !== id);
+      if (selectedId === id) selectedId = null;
+      renderStage();
+      renderControls();
+      saveState();
+    }
+
+    document.getElementById('btn-add-branch').addEventListener('click', () => {
+      const type = document.getElementById('select-branch-type').value;
+      const count = layers.filter(x => x.src === type).length + 1;
+      const names = {
+        rama_4: 'Rama 4 Copa',
+        rama_1: 'Rama 1 Media',
+        rama_3: 'Rama 3 Larga',
+        rama_2: 'Rama 2 Punta',
+        tronco: 'Tronco'
+      };
+      const widths = {
+        rama_4: 52,
+        rama_1: 36,
+        rama_3: 32,
+        rama_2: 18,
+        tronco: 60
+      };
+      const newLayer = {
+        id: type + '_' + Date.now().toString().slice(-4),
+        src: type,
+        name: `${names[type] || type} #${count}`,
+        left: 45,
+        top: 10,
+        width: widths[type] || 35,
+        scale: 1,
+        rot: 0,
+        flipX: false,
+        z: 15,
+        opacity: 1
+      };
+      layers.push(newLayer);
+      selectedId = newLayer.id;
+      renderStage();
+      renderControls();
+      saveState();
     });
 
-    document.getElementById('btn-export').addEventListener('click', () => {
-      navigator.clipboard.writeText(JSON.stringify(config, null, 2));
-      alert('Configuración JSON copiada al portapapeles!');
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (confirm('¿Restablecer la configuración inicial?')) {
+        layers = JSON.parse(JSON.stringify(INITIAL_CONFIG));
+        selectedId = null;
+        renderStage();
+        renderControls();
+        saveState();
+      }
     });
 
-    applyConfig();
+    function copyJSON() {
+      navigator.clipboard.writeText(JSON.stringify(layers, null, 2));
+      alert('¡Configuración copiada al portapapeles! Pégamela en el chat o guárdala.');
+    }
+
+    document.getElementById('btn-copy-json').addEventListener('click', copyJSON);
+    document.getElementById('btn-copy-bottom').addEventListener('click', copyJSON);
+
+    // Inicializar
+    renderStage();
+    renderControls();
+    saveState();
   </script>
 </body>
 </html>
