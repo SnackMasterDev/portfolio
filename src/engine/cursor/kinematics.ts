@@ -48,12 +48,12 @@ export interface MotionSample {
 }
 
 /**
- * Computes speed fraction of viewport over a calibrated time window (e.g. 250ms = 0.25s).
+ * Computes speed fraction of viewport over a calibrated time window (e.g. 500ms = 0.5s).
  */
 export function calculateWindowSpeed(
   samples: MotionSample[],
   now: number,
-  windowMs: number = 250,
+  windowMs: number = 500,
   viewportWidth: number = 1200,
   viewportHeight: number = 800
 ): { speedFraction: number; distance: number; dtSeconds: number; dx: number; dy: number } {

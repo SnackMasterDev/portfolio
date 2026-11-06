@@ -2,6 +2,8 @@ import {
   DEFAULT_TRUNK_POLYGON,
   denormalizePolygon,
   resolveTrunkCollision,
+  isPointInPolygon,
+  getClosestBoundaryPoint,
   type Point2D,
 } from '../tree/trunkHitbox';
 
@@ -46,6 +48,20 @@ export class TrunkCollisionManager {
         return document.getElementById('sakura-tree') ?? document.getElementById('sakura-tree-img');
       });
     this.onReboundCallback = config?.onRebound;
+  }
+
+  /**
+   * Checks whether coordinates (rawX, rawY) are inside or grazing the trunk perimeter.
+   */
+  public isNearTrunk(rawX: number, rawY: number, tolerancePx = 45): boolean {
+    const treeEl = this.getTreeEl();
+    if (!treeEl) return false;
+    const rect = treeEl.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return false;
+    const screenPolygon = denormalizePolygon(DEFAULT_TRUNK_POLYGON, rect);
+    if (isPointInPolygon({ x: rawX, y: rawY }, screenPolygon)) return true;
+    const boundary = getClosestBoundaryPoint({ x: rawX, y: rawY }, screenPolygon);
+    return boundary.distance <= tolerancePx;
   }
 
   /**

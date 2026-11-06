@@ -25,11 +25,7 @@ export function setupKatanaMotionListener(
   const threshold = config?.minMovementThreshold ?? 1.5;
   const isReducedMotion = config?.prefersReducedMotion === true;
 
-  const collisionManager = new TrunkCollisionManager({
-    speedThresholdFraction: 0.38,
-    recoilImpulseDistance: 60,
-    recoilDamping: 0.82,
-  });
+  const collisionManager = new TrunkCollisionManager();
 
   let isFirstMove = true;
   let lastX = 0;
@@ -40,10 +36,7 @@ export function setupKatanaMotionListener(
   let currentVariant: CursorVariant = 'default';
   let isClicking = false;
   let rafId: number | null = null;
-  let recoilRafId: number | null = null;
   let pendingEvent: { clientX: number; clientY: number } | null = null;
-  let lastBaseX = 0;
-  let lastBaseY = 0;
   const motionSamples: MotionSample[] = [];
   let lastSlashTime = 0;
 
@@ -66,8 +59,7 @@ export function setupKatanaMotionListener(
     y: number,
     angle: number,
     speed: number,
-    isVisible: boolean,
-    isClashing = false
+    isVisible: boolean
   ) => {
     onUpdate({
       x,
@@ -76,27 +68,7 @@ export function setupKatanaMotionListener(
       speed,
       isVisible,
       variant: isClicking ? 'clicking' : currentVariant,
-      isClashing,
     });
-  };
-
-  const stepRecoilAnimation = () => {
-    const isStillRecoiling = collisionManager.stepSpring();
-    const recoil = collisionManager.getRecoilOffset();
-    notifyState(
-      lastBaseX + recoil.x,
-      lastBaseY + recoil.y,
-      isReducedMotion ? 0 : currentAngle,
-      currentSpeed,
-      true,
-      isStillRecoiling
-    );
-
-    if (isStillRecoiling) {
-      recoilRafId = window.requestAnimationFrame(stepRecoilAnimation);
-    } else {
-      recoilRafId = null;
-    }
   };
 
   const processMotion = () => {
@@ -111,8 +83,6 @@ export function setupKatanaMotionListener(
       lastX = clientX;
       lastY = clientY;
       lastTime = now;
-      lastBaseX = clientX;
-      lastBaseY = clientY;
       notifyState(lastX, lastY, isReducedMotion ? 0 : currentAngle, 0, true);
       return;
     }
@@ -127,7 +97,8 @@ export function setupKatanaMotionListener(
     const vpH = (typeof window !== 'undefined' ? window.innerHeight : 0) || 800;
 
     motionSamples.push({ x: clientX, y: clientY, time: now });
-    const windowMetrics = calculateWindowSpeed(motionSamples, now, 250, vpW, vpH);
+    // Ventana de velocidad calibrada exactamente a medio segundo (500ms)
+    const windowMetrics = calculateWindowSpeed(motionSamples, now, 500, vpW, vpH);
     const viewportSpeedFraction = windowMetrics.speedFraction;
 
     if (dist >= threshold) {
@@ -139,15 +110,20 @@ export function setupKatanaMotionListener(
       }
       currentSpeed = calculateSpeed(dx, dy, dtSafe);
 
-      // Activación del corte si la velocidad supera el umbral en la ventana de un cuarto de segundo (250ms)
+      // Activación del corte si la velocidad supera el umbral en la ventana de medio segundo (500ms)
+      const isSlashActivated =
+        viewportSpeedFraction >= 0.28 &&
+        windowMetrics.distance >= 40 &&
+        now - lastSlashTime >= 280;
+
       if (
-        viewportSpeedFraction >= 0.38 &&
-        windowMetrics.distance >= 24 &&
-        now - lastSlashTime >= 250 &&
+        isSlashActivated &&
         typeof window !== 'undefined' &&
         typeof window.dispatchEvent === 'function'
       ) {
         lastSlashTime = now;
+
+        // Efecto 1: Estela de viento cortante para mandar a volar los pétalos en el aire
         const slashEvent = new CustomEvent('katana-slash', {
           detail: {
             x: clientX,
@@ -157,36 +133,28 @@ export function setupKatanaMotionListener(
           },
         });
         window.dispatchEvent(slashEvent);
+
+        // Efecto 2: Si el corte impacta sobre el árbol, activa la sacudida de ramas y lluvia de pétalos
+        if (collisionManager.isNearTrunk(clientX, clientY)) {
+          const strikeEvt = new CustomEvent('sakura-tree-strike', {
+            detail: { x: clientX, y: clientY, count: 65 },
+          });
+          window.dispatchEvent(strikeEvt);
+        }
       }
-    }
-
-    // Resolve trunk collision and spring recoil using exact opposite rebound vector
-    const resolved = collisionManager.updateAndResolve(
-      clientX,
-      clientY,
-      viewportSpeedFraction,
-      windowMetrics.dx,
-      windowMetrics.dy,
-      windowMetrics.distance
-    );
-    lastBaseX = resolved.x - collisionManager.getRecoilOffset().x;
-    lastBaseY = resolved.y - collisionManager.getRecoilOffset().y;
-
-    if (resolved.isRecoiling && recoilRafId === null) {
-      recoilRafId = window.requestAnimationFrame(stepRecoilAnimation);
     }
 
     lastX = clientX;
     lastY = clientY;
     lastTime = now;
 
+    // Movimiento natural 100% libre y fluido sin interferencias de rebote artificial
     notifyState(
-      resolved.x,
-      resolved.y,
+      clientX,
+      clientY,
       isReducedMotion ? 0 : currentAngle,
       currentSpeed,
-      true,
-      resolved.isRecoiling
+      true
     );
   };
 
@@ -214,10 +182,6 @@ export function setupKatanaMotionListener(
       window.cancelAnimationFrame(rafId);
       rafId = null;
     }
-    if (recoilRafId !== null) {
-      window.cancelAnimationFrame(recoilRafId);
-      recoilRafId = null;
-    }
     collisionManager.reset();
     pendingEvent = null;
     isFirstMove = true;
@@ -242,10 +206,6 @@ export function setupKatanaMotionListener(
     if (rafId !== null) {
       window.cancelAnimationFrame(rafId);
       rafId = null;
-    }
-    if (recoilRafId !== null) {
-      window.cancelAnimationFrame(recoilRafId);
-      recoilRafId = null;
     }
     collisionManager.reset();
     pendingEvent = null;

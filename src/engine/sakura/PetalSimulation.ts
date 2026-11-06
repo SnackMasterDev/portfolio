@@ -126,8 +126,8 @@ export function applyWindSlash(
   petals: Petal[],
   detail: SlashEventDetail,
   scrollY: number = 0,
-  length = 260,
-  halfWidth = 120
+  length = 340,
+  halfWidth = 180
 ): void {
   const rad = (detail.angle * Math.PI) / 180;
   const fwdX = Math.cos(rad);
@@ -145,19 +145,19 @@ export function applyWindSlash(
     const dBack = -(dx * fwdX + dy * fwdY);
     const dSide = dx * normX + dy * normY;
 
-    if (dBack >= -25 && dBack <= length) {
-      const progress = (dBack + 25) / (length + 25);
-      const localHalfWidth = halfWidth * Math.max(progress, 0.25);
+    if (dBack >= -60 && dBack <= length) {
+      const progress = (dBack + 60) / (length + 60);
+      const localHalfWidth = halfWidth * Math.max(progress, 0.35);
 
       if (Math.abs(dSide) <= localHalfWidth) {
         const sideSign = dSide >= 0 ? 1 : -1;
         const proximity = 1 - Math.abs(dSide) / localHalfWidth;
-        const force = (0.5 + 0.5 * proximity) * (180 * speedFactor);
+        const force = (0.6 + 0.4 * proximity) * (420 * speedFactor);
 
-        const wakeX = normX * sideSign * force * 1.6;
-        const wakeY = normY * sideSign * force * 1.6;
-        const dragX = -fwdX * force * 0.35;
-        const dragY = -fwdY * force * 0.35;
+        const wakeX = normX * sideSign * force * 2.2;
+        const wakeY = normY * sideSign * force * 2.2;
+        const dragX = fwdX * force * 0.9;
+        const dragY = fwdY * force * 0.9;
 
         if (p.isResting) {
           p.isResting = false;
@@ -166,9 +166,9 @@ export function applyWindSlash(
         }
 
         p.slashImpulseX = (p.slashImpulseX ?? 0) + wakeX + dragX;
-        p.slashImpulseY = (p.slashImpulseY ?? 0) + wakeY + dragY - 25;
-        p.flipSpeed = 4 + Math.random() * 4;
-        p.rotationSpeed = (Math.random() - 0.5) * 12;
+        p.slashImpulseY = (p.slashImpulseY ?? 0) + wakeY + dragY - 140;
+        p.flipSpeed = 6 + Math.random() * 5;
+        p.rotationSpeed = (Math.random() - 0.5) * 16;
       }
     }
   }
@@ -199,12 +199,12 @@ export function updatePetal(
 
   if (petal.slashImpulseX) {
     petal.x += petal.slashImpulseX * clampedDt;
-    petal.slashImpulseX *= 0.91;
+    petal.slashImpulseX *= 0.94;
     if (Math.abs(petal.slashImpulseX) < 1) petal.slashImpulseX = 0;
   }
   if (petal.slashImpulseY) {
     petal.y += petal.slashImpulseY * clampedDt;
-    petal.slashImpulseY *= 0.91;
+    petal.slashImpulseY *= 0.94;
     if (Math.abs(petal.slashImpulseY) < 1) petal.slashImpulseY = 0;
   }
 

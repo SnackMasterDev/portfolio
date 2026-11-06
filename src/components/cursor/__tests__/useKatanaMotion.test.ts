@@ -32,6 +32,7 @@ describe('setupKatanaMotionListener', () => {
     };
 
     const mockWindow = {
+      dispatchEvent: vi.fn(),
       addEventListener: vi.fn((type: string, listener: any) => {
         listeners[type] = listener;
       }),
@@ -215,5 +216,26 @@ describe('setupKatanaMotionListener', () => {
         isVisible: true,
       })
     );
+  });
+
+  it('does NOT trigger slash or tree strike on minimal slow movement', () => {
+    const onUpdate = vi.fn();
+    setupKatanaMotionListener(onUpdate);
+
+    const dispatchSpy = vi.spyOn(window, 'dispatchEvent');
+    const mouseMoveHandler = listeners['mousemove'] as (e: any) => void;
+
+    // Small crawl: 5px movement over 200ms
+    mouseMoveHandler({ clientX: 100, clientY: 100 });
+    flushRaf();
+
+    mockNow = 1200;
+    mouseMoveHandler({ clientX: 105, clientY: 102 });
+    flushRaf();
+
+    // Neither katana-slash nor sakura-tree-strike should be dispatched
+    const dispatchedEvents = dispatchSpy.mock.calls.map((c) => (c[0] as CustomEvent).type);
+    expect(dispatchedEvents).not.toContain('katana-slash');
+    expect(dispatchedEvents).not.toContain('sakura-tree-strike');
   });
 });
