@@ -33,30 +33,30 @@ html, body, a, button, input, textarea, select, [role="button"], label, * {
   100% { transform: scale(1) rotate(0deg); }
 }
 
-/* Brisas naturales independientes para las ramas */
-@keyframes branch-breeze-1 {
+/* Brisas sutiles exclusivamente en las puntas de las ramas (base fija en el tronco) */
+@keyframes branch-tip-sway-1 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(1.4deg) translateY(-1px); }
+  50% { transform: rotate(1.2deg); }
 }
 
-@keyframes branch-breeze-2 {
+@keyframes branch-tip-sway-2 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-1.6deg) translateY(-2px); }
+  50% { transform: rotate(-1.3deg); }
 }
 
-@keyframes branch-breeze-3 {
+@keyframes branch-tip-sway-3 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(2deg) translateY(-0.8px); }
+  50% { transform: rotate(0.9deg); }
 }
 
-/* Sacudida reactiva intensa en las ramas al recibir corte de la katana */
+/* Sacudida reactiva en las puntas al recibir corte de la katana */
 @keyframes branch-impact-shudder {
-  0% { transform: rotate(0deg) scale(1); }
-  20% { transform: rotate(-3.8deg) scale(1.03); }
-  40% { transform: rotate(3.2deg) scale(0.98); }
-  60% { transform: rotate(-1.8deg) scale(1.01); }
-  80% { transform: rotate(0.8deg) scale(0.995); }
-  100% { transform: rotate(0deg) scale(1); }
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-2.8deg); }
+  45% { transform: rotate(2.2deg); }
+  70% { transform: rotate(-1.1deg); }
+  85% { transform: rotate(0.5deg); }
+  100% { transform: rotate(0deg); }
 }
 
 html {

@@ -15,10 +15,11 @@ interface BranchConfig {
   flipX: boolean;
   z: number;
   opacity: number;
+  origin: string;
   breezeAnim: string;
 }
 
-// Configuración calibrada exacta enviada por el usuario
+// Configuración calibrada exacta del usuario con pivotes fijados a la base del tronco
 const CALIBRATED_BRANCHES: BranchConfig[] = [
   {
     id: 'rama_1_7013',
@@ -31,7 +32,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-1_5.5s_ease-in-out_infinite]',
+    origin: 'bottom left',
+    breezeAnim: 'animate-[branch-tip-sway-1_5.8s_ease-in-out_infinite]',
   },
   {
     id: 'rama_1_7946',
@@ -44,7 +46,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-2_6.2s_ease-in-out_infinite_0.4s]',
+    origin: 'bottom right',
+    breezeAnim: 'animate-[branch-tip-sway-2_6.4s_ease-in-out_infinite_0.5s]',
   },
   {
     id: 'rama_4_8968',
@@ -57,7 +60,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-3_5.8s_ease-in-out_infinite_0.8s]',
+    origin: 'bottom center',
+    breezeAnim: 'animate-[branch-tip-sway-3_5.4s_ease-in-out_infinite_1.1s]',
   },
   {
     id: 'rama_3_6132',
@@ -70,7 +74,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-1_4.8s_ease-in-out_infinite_1.2s]',
+    origin: 'center right',
+    breezeAnim: 'animate-[branch-tip-sway-1_5.0s_ease-in-out_infinite_1.7s]',
   },
   {
     id: 'rama_4_5896',
@@ -83,7 +88,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-2_6.6s_ease-in-out_infinite_0.2s]',
+    origin: 'bottom right',
+    breezeAnim: 'animate-[branch-tip-sway-2_6.8s_ease-in-out_infinite_0.3s]',
   },
   {
     id: 'rama_2_4776',
@@ -96,7 +102,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-3_5.2s_ease-in-out_infinite_1.6s]',
+    origin: 'bottom center',
+    breezeAnim: 'animate-[branch-tip-sway-3_4.6s_ease-in-out_infinite_1.4s]',
   },
   {
     id: 'rama_4_5438',
@@ -109,7 +116,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-1_6.0s_ease-in-out_infinite_0.9s]',
+    origin: 'bottom center',
+    breezeAnim: 'animate-[branch-tip-sway-1_6.2s_ease-in-out_infinite_0.8s]',
   },
   {
     id: 'rama_2_3918',
@@ -122,7 +130,8 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
-    breezeAnim: 'animate-[branch-breeze-2_4.9s_ease-in-out_infinite_1.1s]',
+    origin: 'bottom center',
+    breezeAnim: 'animate-[branch-tip-sway-2_5.1s_ease-in-out_infinite_1.2s]',
   },
 ];
 
@@ -132,16 +141,10 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ isRecoiling }) =
       {CALIBRATED_BRANCHES.map((b) => {
         const flipScale = b.flipX ? -b.scale : b.scale;
         return (
-          <img
+          /* Contenedor estático: Conserva 100% fiel la posición, rotación y escala exacta del JSON */
+          <div
             key={b.id}
-            src={`/assets/tree/${b.src}.webp`}
-            alt=""
-            aria-hidden="true"
-            className={`absolute max-w-none transition-transform duration-300 ${
-              isRecoiling
-                ? 'animate-[branch-impact-shudder_0.52s_cubic-bezier(0.36,0.07,0.19,0.97)]'
-                : b.breezeAnim
-            }`}
+            className="pointer-events-none absolute"
             style={{
               left: `${b.left}%`,
               top: `${b.top}%`,
@@ -149,9 +152,24 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ isRecoiling }) =
               zIndex: b.z,
               opacity: b.opacity,
               transform: `scale(${flipScale}, ${b.scale}) rotate(${b.rot}deg)`,
-              transformOrigin: 'center center',
+              transformOrigin: b.origin,
             }}
-          />
+          >
+            {/* Imagen animada: El pivote está en la base (tronco), por lo que la base no se mueve y solo se mecen las puntas */}
+            <img
+              src={`/assets/tree/${b.src}.webp`}
+              alt=""
+              aria-hidden="true"
+              className={`block h-auto w-full max-w-none object-contain transition-transform duration-300 ${
+                isRecoiling
+                  ? 'animate-[branch-impact-shudder_0.5s_cubic-bezier(0.36,0.07,0.19,0.97)]'
+                  : b.breezeAnim
+              }`}
+              style={{
+                transformOrigin: b.origin,
+              }}
+            />
+          </div>
         );
       })}
     </div>

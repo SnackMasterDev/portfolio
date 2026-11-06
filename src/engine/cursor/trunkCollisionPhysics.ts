@@ -24,7 +24,7 @@ export interface CollisionStepResult {
 export class TrunkCollisionManager {
   private recoilX = 0;
   private recoilY = 0;
-  private lastReboundTime = 0;
+  private lastReboundTime = -10000;
   private isCurrentlyRecoiling = false;
 
   private readonly recoilImpulse: number;
@@ -164,6 +164,6 @@ export class TrunkCollisionManager {
     this.recoilX = 0;
     this.recoilY = 0;
     this.isCurrentlyRecoiling = false;
-    this.lastReboundTime = 0;
+    this.lastReboundTime = -10000;
   }
 }
