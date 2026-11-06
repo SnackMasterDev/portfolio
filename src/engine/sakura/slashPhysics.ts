@@ -1,5 +1,18 @@
 import type { Petal, SlashEventDetail } from '../types';
 
+function distToSegment(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
+  const abx = bx - ax;
+  const aby = by - ay;
+  const lenSq = abx * abx + aby * aby;
+  if (lenSq === 0) return Math.hypot(px - ax, py - ay);
+  const apx = px - ax;
+  const apy = py - ay;
+  const t = Math.max(0, Math.min(1, (apx * abx + apy * aby) / lenSq));
+  const cx = ax + t * abx;
+  const cy = ay + t * aby;
+  return Math.hypot(px - cx, py - cy);
+}
+
 /**
  * Applies expansive shockwave and directional aerodynamic wake to petals on a slash.
  */
@@ -7,15 +20,16 @@ export function applyWindSlash(
   petals: Petal[],
   detail: SlashEventDetail,
   scrollY: number = 0,
-  length = 360,
-  halfWidth = 200
+  length = 380,
+  halfWidth = 220
 ): void {
   const rad = (detail.angle * Math.PI) / 180;
   const fwdX = Math.cos(rad);
   const fwdY = Math.sin(rad);
   const normX = -fwdY;
   const normY = fwdX;
-  const speedFactor = Math.min(Math.max(detail.speed / 280, 1), 4.5);
+  const speedFactor = Math.min(Math.max(detail.speed / 260, 1), 4.5);
+  const hasSegment = detail.startX !== undefined && detail.startY !== undefined;
 
   for (let i = 0; i < petals.length; i++) {
     const p = petals[i];
@@ -27,15 +41,24 @@ export function applyWindSlash(
     const dBack = -(dx * fwdX + dy * fwdY);
     const dSide = dx * normX + dy * normY;
 
-    // Afecta a cualquier pétalo en el radio de choque (240px) o en la estela direccional extendida
-    const inShockwave = distToSlash <= 240;
+    // Abarca pétalos en el radio de choque, en la estela cónica o a lo largo de todo el trazo de la espada
+    const inShockwave = distToSlash <= 260;
     const inDirectionalWake =
-      dBack >= -80 &&
+      dBack >= -100 &&
       dBack <= length &&
-      Math.abs(dSide) <= halfWidth * Math.max((dBack + 80) / (length + 80), 0.35);
+      Math.abs(dSide) <= halfWidth * Math.max((dBack + 100) / (length + 100), 0.35);
 
-    if (inShockwave || inDirectionalWake) {
-      const proximity = inShockwave ? 1 - distToSlash / 240 : 1 - Math.abs(dSide) / halfWidth;
+    const inStrokePath = hasSegment
+      ? distToSegment(p.x, screenY, detail.startX!, detail.startY!, detail.x, detail.y) <= 220
+      : false;
+
+    if (inShockwave || inDirectionalWake || inStrokePath) {
+      const proximity = inShockwave
+        ? 1 - distToSlash / 260
+        : inStrokePath
+        ? 0.85
+        : 1 - Math.abs(dSide) / halfWidth;
+
       const sideSign = dSide >= 0 ? 1 : dx >= 0 ? 1 : -1;
       const force = (0.7 + 0.3 * proximity) * (520 * speedFactor);
 
@@ -44,7 +67,7 @@ export function applyWindSlash(
       const dragX = fwdX * force * 1.2;
       const dragY = fwdY * force * 1.2;
 
-      // Resetea la gravedad pesada para que todos los pétalos salgan volando
+      // Resetea la gravedad pesada para que todos los pétalos (incluidos los de las flores) salgan volando
       p.speedY = -60 + (Math.random() - 0.5) * 40;
       p.speedX = (dx >= 0 ? 1 : -1) * (60 + Math.random() * 80) + fwdX * 90;
 

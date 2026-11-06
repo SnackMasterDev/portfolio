@@ -128,14 +128,20 @@ export function setupKatanaMotionListener(
           detail: {
             x: clientX,
             y: clientY,
+            startX: windowMetrics.startX,
+            startY: windowMetrics.startY,
             angle: currentAngle,
             speed: currentSpeed,
           },
         });
         window.dispatchEvent(slashEvent);
 
-        // Efecto 2: Si el corte impacta sobre el árbol, activa la sacudida de ramas y lluvia de pétalos
-        if (collisionManager.isNearTrunk(clientX, clientY)) {
+        // Efecto 2: Si el trazo del corte intersecta o cruza el árbol, activa la sacudida y lluvia de flores
+        const hitTree =
+          collisionManager.isNearTrunk(clientX, clientY) ||
+          motionSamples.some((s) => collisionManager.isNearTrunk(s.x, s.y));
+
+        if (hitTree) {
           const strikeEvt = new CustomEvent('sakura-tree-strike', {
             detail: { x: clientX, y: clientY, count: 65 },
           });

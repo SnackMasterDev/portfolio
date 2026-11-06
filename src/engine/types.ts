@@ -44,6 +44,8 @@ export interface SlashEventDetail {
   y: number;
   angle: number;
   speed: number;
+  startX?: number;
+  startY?: number;
 }
 
 export interface SakuraConfig {
