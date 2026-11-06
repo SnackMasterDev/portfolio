@@ -56,13 +56,13 @@ export function calculateWindowSpeed(
   windowMs: number = 250,
   viewportWidth: number = 1200,
   viewportHeight: number = 800
-): { speedFraction: number; distance: number; dtSeconds: number } {
+): { speedFraction: number; distance: number; dtSeconds: number; dx: number; dy: number } {
   while (samples.length > 1 && now - samples[0].time > windowMs) {
     samples.shift();
   }
 
   if (samples.length < 2) {
-    return { speedFraction: 0, distance: 0, dtSeconds: 0 };
+    return { speedFraction: 0, distance: 0, dtSeconds: 0, dx: 0, dy: 0 };
   }
 
   const oldest = samples[0];
@@ -76,5 +76,5 @@ export function calculateWindowSpeed(
   const viewportDiagonal = Math.hypot(viewportWidth, viewportHeight) || 1000;
   const speedFraction = speedPxPerSec / viewportDiagonal;
 
-  return { speedFraction, distance, dtSeconds };
+  return { speedFraction, distance, dtSeconds, dx, dy };
 }

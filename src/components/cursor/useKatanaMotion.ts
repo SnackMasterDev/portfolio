@@ -123,7 +123,12 @@ export function setupKatanaMotionListener(
     const dist = Math.hypot(dx, dy);
     const dtSafe = Math.max(dtSeconds, 0.016);
 
-    let viewportSpeedFraction = 0;
+    const vpW = (typeof window !== 'undefined' ? window.innerWidth : 0) || 1200;
+    const vpH = (typeof window !== 'undefined' ? window.innerHeight : 0) || 800;
+
+    motionSamples.push({ x: clientX, y: clientY, time: now });
+    const windowMetrics = calculateWindowSpeed(motionSamples, now, 250, vpW, vpH);
+    const viewportSpeedFraction = windowMetrics.speedFraction;
 
     if (dist >= threshold) {
       if (!isReducedMotion) {
@@ -133,13 +138,6 @@ export function setupKatanaMotionListener(
         currentAngle = 0;
       }
       currentSpeed = calculateSpeed(dx, dy, dtSafe);
-
-      const vpW = (typeof window !== 'undefined' ? window.innerWidth : 0) || 1200;
-      const vpH = (typeof window !== 'undefined' ? window.innerHeight : 0) || 800;
-
-      motionSamples.push({ x: clientX, y: clientY, time: now });
-      const windowMetrics = calculateWindowSpeed(motionSamples, now, 250, vpW, vpH);
-      viewportSpeedFraction = windowMetrics.speedFraction;
 
       // Activación del corte si la velocidad supera el umbral en la ventana de un cuarto de segundo (250ms)
       if (
@@ -162,8 +160,15 @@ export function setupKatanaMotionListener(
       }
     }
 
-    // Resolve trunk collision and spring recoil
-    const resolved = collisionManager.updateAndResolve(clientX, clientY, viewportSpeedFraction);
+    // Resolve trunk collision and spring recoil using exact opposite rebound vector
+    const resolved = collisionManager.updateAndResolve(
+      clientX,
+      clientY,
+      viewportSpeedFraction,
+      windowMetrics.dx,
+      windowMetrics.dy,
+      windowMetrics.distance
+    );
     lastBaseX = resolved.x - collisionManager.getRecoilOffset().x;
     lastBaseY = resolved.y - collisionManager.getRecoilOffset().y;
 

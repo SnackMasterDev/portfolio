@@ -56,7 +56,10 @@ export class TrunkCollisionManager {
   public updateAndResolve(
     rawX: number,
     rawY: number,
-    viewportSpeedFraction: number
+    viewportSpeedFraction: number,
+    motionDx = 0,
+    motionDy = 0,
+    motionDist = 0
   ): CollisionStepResult {
     const treeEl = this.getTreeEl();
     if (!treeEl) {
@@ -84,10 +87,11 @@ export class TrunkCollisionManager {
     const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
 
     if (collision.isColliding) {
-      // High-speed strike triggers rebound
+      // Solo colisiones rápidas en la ventana de tiempo activan el rebote contra el tronco
       const canRebound = now - this.lastReboundTime > this.cooldownMs;
-      if (viewportSpeedFraction >= this.speedThreshold && canRebound) {
-        this.triggerRebound(collision.normal, collision.clampedX, collision.clampedY, now);
+      const isFastStroke = viewportSpeedFraction >= this.speedThreshold && (motionDist === 0 || motionDist >= 20);
+      if (isFastStroke && canRebound) {
+        this.triggerRebound(collision.normal, collision.clampedX, collision.clampedY, now, motionDx, motionDy);
       }
     }
 
@@ -100,26 +104,38 @@ export class TrunkCollisionManager {
   }
 
   /**
-   * Imparts an elastic spring impulse away from the trunk surface.
+   * Imparts an elastic spring impulse rebounding strictly opposite to the swing direction.
    */
   public triggerRebound(
     normal: Point2D,
     impactX: number,
     impactY: number,
-    timestamp: number
+    timestamp: number,
+    motionDx = 0,
+    motionDy = 0
   ): void {
     this.lastReboundTime = timestamp;
     this.isCurrentlyRecoiling = true;
 
-    // Normal points outward from trunk; throw katana back along normal
     const impulse = this.recoilImpulse;
-    const nx = normal.x !== 0 || normal.y !== 0 ? normal.x : -1;
-    const ny = normal.x !== 0 || normal.y !== 0 ? normal.y : -0.5;
+    const motionLen = Math.hypot(motionDx, motionDy);
 
-    this.recoilX = nx * impulse;
-    this.recoilY = ny * impulse;
+    let rx: number;
+    let ry: number;
 
-    this.onReboundCallback?.({ x: nx, y: ny }, impactX, impactY);
+    if (motionLen > 0.001) {
+      // Rebote hacia el lado contrario exacto de donde venía el golpe
+      rx = -motionDx / motionLen;
+      ry = -motionDy / motionLen;
+    } else {
+      rx = normal.x !== 0 || normal.y !== 0 ? normal.x : -1;
+      ry = normal.x !== 0 || normal.y !== 0 ? normal.y : -0.5;
+    }
+
+    this.recoilX = rx * impulse;
+    this.recoilY = ry * impulse;
+
+    this.onReboundCallback?.({ x: rx, y: ry }, impactX, impactY);
 
     if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       // Dislodge extra petals from the tree
@@ -130,7 +146,7 @@ export class TrunkCollisionManager {
 
       // Trigger blade clash spark effect
       const clashEvt = new CustomEvent('katana-clash', {
-        detail: { x: impactX, y: impactY, normal: { x: nx, y: ny } },
+        detail: { x: impactX, y: impactY, normal: { x: rx, y: ry } },
       });
       window.dispatchEvent(clashEvt);
     }

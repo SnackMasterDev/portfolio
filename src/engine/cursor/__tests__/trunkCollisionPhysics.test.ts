@@ -91,4 +91,20 @@ describe('TrunkCollisionManager', () => {
     expect(stillRecoilingFinal).toBe(false);
     expect(manager.getRecoilOffset().x).toBe(0);
   });
+
+  it('rebounds strictly in the opposite direction of the incoming stroke motion', () => {
+    const manager = new TrunkCollisionManager({
+      getTreeElement: () => fakeElement,
+      recoilImpulseDistance: 60,
+      speedThresholdFraction: 0.35,
+    });
+
+    // Stroke swinging to the right (+dx) and downwards (+dy)
+    manager.updateAndResolve(670, 600, 0.40, 50, 20, 53.8);
+
+    const recoil = manager.getRecoilOffset();
+    // Must rebound to the opposite direction: negative X and negative Y
+    expect(recoil.x).toBeLessThan(0);
+    expect(recoil.y).toBeLessThan(0);
+  });
 });
