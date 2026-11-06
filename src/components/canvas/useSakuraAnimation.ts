@@ -2,12 +2,12 @@ import { useEffect, type RefObject } from 'react';
 import type { SakuraConfig, Petal, CanvasDimensions, SlashEventDetail } from '../../engine/types';
 import {
   createPetal,
-  createBurstPetal,
   applyWindSlash,
   updatePetal,
   drawPetal,
   SAKURA_PALETTE,
 } from '../../engine/sakura/PetalSimulation';
+import { spawnBranchFlowerPetals } from '../../engine/sakura/branchFlowerPetals';
 
 export const DEFAULT_SAKURA_CONFIG: SakuraConfig = {
   petalCount: 75,
@@ -171,20 +171,17 @@ export function setupSakuraCanvas(
   };
 
   const handleTreeStrike = (e: Event) => {
-    const customEvent = e as CustomEvent<{ x?: number; y?: number; count?: number }>;
+    const customEvent = e as CustomEvent<{ count?: number }>;
     const treeEl = typeof document !== 'undefined' ? document.getElementById('sakura-tree') : null;
-    const rect = treeEl?.getBoundingClientRect();
+    const rect = treeEl?.getBoundingClientRect() ?? null;
     const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-    const originX = customEvent.detail?.x ?? (rect ? rect.left + rect.width * 0.5 : dimensions.width * 0.5);
-    const originY = (customEvent.detail?.y ?? (rect ? rect.top + rect.height * 0.35 : dimensions.height * 0.25)) + scrollY;
-    const count = customEvent.detail?.count ?? 45;
+    const count = customEvent.detail?.count ?? 50;
 
-    for (let i = 0; i < count; i++) {
-      petals.push(createBurstPetal(originX, originY, config));
-    }
+    const flowerPetals = spawnBranchFlowerPetals(rect, scrollY, dimensions, count, config);
+    petals.push(...flowerPetals);
 
-    if (petals.length > config.petalCount + 100) {
-      petals.splice(config.petalCount, petals.length - (config.petalCount + 100));
+    if (petals.length > config.petalCount + 120) {
+      petals.splice(config.petalCount, petals.length - (config.petalCount + 120));
     }
   };
 
