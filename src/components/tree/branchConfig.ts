@@ -55,7 +55,7 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    stemOrigin: '22% 90%',
+    stemOrigin: '85% 20%', // Extremo superior derecho de la rama (unión al tronco)
     breezeClass: 'breeze-sway-3',
   },
   {
@@ -83,7 +83,7 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    stemOrigin: '22% 90%',
+    stemOrigin: '85% 20%',
     breezeClass: 'breeze-sway-4',
   },
   {
@@ -111,7 +111,7 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
-    stemOrigin: '22% 90%',
+    stemOrigin: '85% 20%',
     breezeClass: 'breeze-sway-3',
   },
   {
