@@ -92,20 +92,42 @@
       background: white;
     }
     .canvas-wrapper {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
       max-width: 1392px;
-      margin: 0 auto;
+      margin: 0 auto 20px auto;
       background: #f4eee5;
       border: 2px solid #db2777;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
     }
     .container {
       position: relative;
-      width: 1392px;
-      height: 752px;
+      width: 100%;
+      aspect-ratio: 1392 / 752;
+      max-height: 54vh;
       overflow: hidden;
       user-select: none;
+    }
+    .hud-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      z-index: 100;
+      background: rgba(28, 28, 30, 0.85);
+      color: #fdf2f8;
+      backdrop-filter: blur(4px);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      pointer-events: none;
+      border: 1px solid rgba(219, 39, 119, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .layer {
       position: absolute;
@@ -227,6 +249,7 @@
 
   <div class="canvas-wrapper">
     <div class="container" id="stage">
+      <div id="hud-badge" class="hud-badge">🌸 Haz clic o arrastra cualquier rama para posicionarla</div>
       <!-- Capa 0: Fondo cielo y colinas -->
       <img id="bg" src="/assets/tree/imagen-fondo.webp" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;" />
       <!-- Contenedor dinámico de capas de ramas y tronco -->
@@ -269,6 +292,17 @@
       jsonOutput.textContent = JSON.stringify(layers, null, 2);
     }
 
+    const hudBadge = document.getElementById('hud-badge');
+
+    function updateHUD(item) {
+      if (!hudBadge) return;
+      if (!item) {
+        hudBadge.innerHTML = '🌸 Haz clic o arrastra cualquier rama para posicionarla';
+        return;
+      }
+      hudBadge.innerHTML = `🌸 <b>${item.name || item.id}</b> | X: <span style="color:#f472b6;">${item.left}%</span> | Y: <span style="color:#f472b6;">${item.top}%</span> | Escala: ${item.scale} | Rot: ${item.rot}° ${item.flipX ? '| 🪞 Espejo' : ''}`;
+    }
+
     function renderStage() {
       layersContainer.innerHTML = '';
       layers.forEach(item => {
@@ -285,10 +319,16 @@
         const flipScale = item.flipX ? -item.scale : item.scale;
         img.style.transform = `scale(${flipScale}, ${item.scale}) rotate(${item.rot}deg)`;
 
-        // Arrastrar con ratón
-        img.addEventListener('mousedown', (e) => {
+        // Arrastre fluido moderno con pointer events y pointer capture (cero scroll, cero pérdida de foco)
+        img.addEventListener('pointerdown', (e) => {
           e.preventDefault();
-          selectLayer(item.id);
+          e.stopPropagation();
+          selectLayer(item.id, false);
+          updateHUD(item);
+
+          try {
+            img.setPointerCapture(e.pointerId);
+          } catch (_) {}
 
           const startX = e.clientX;
           const startY = e.clientY;
@@ -296,7 +336,7 @@
           const startTop = item.top;
           const stageRect = stage.getBoundingClientRect();
 
-          function onMouseMove(moveEvent) {
+          function onPointerMove(moveEvent) {
             const dx = moveEvent.clientX - startX;
             const dy = moveEvent.clientY - startY;
             const dLeftPercent = (dx / stageRect.width) * 100;
@@ -308,24 +348,28 @@
             img.style.left = item.left + '%';
             img.style.top = item.top + '%';
 
+            updateHUD(item);
             updateCardInputs(item);
             saveState();
           }
 
-          function onMouseUp() {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mouseup', onMouseUp);
+          function onPointerUp(upEvent) {
+            try {
+              img.releasePointerCapture(upEvent.pointerId);
+            } catch (_) {}
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
           }
 
-          window.addEventListener('mousemove', onMouseMove);
-          window.addEventListener('mouseup', onMouseUp);
+          window.addEventListener('pointermove', onPointerMove);
+          window.addEventListener('pointerup', onPointerUp);
         });
 
         layersContainer.appendChild(img);
       });
     }
 
-    function selectLayer(id) {
+    function selectLayer(id, shouldScroll = false) {
       selectedId = id;
       document.querySelectorAll('.layer').forEach(el => {
         el.classList.toggle('selected', el.id === 'layer-' + id);
@@ -333,9 +377,14 @@
       document.querySelectorAll('.layer-card').forEach(el => {
         el.classList.toggle('selected', el.dataset.id === id);
       });
-      const card = document.querySelector(`.layer-card[data-id="${id}"]`);
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const current = layers.find(x => x.id === id);
+      updateHUD(current);
+
+      if (shouldScroll) {
+        const card = document.querySelector(`.layer-card[data-id="${id}"]`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       }
     }
 
@@ -408,7 +457,7 @@
         `;
 
         // Eventos
-        card.addEventListener('click', () => selectLayer(item.id));
+        card.addEventListener('click', () => selectLayer(item.id, false));
 
         card.querySelector('.btn-mirror').addEventListener('click', (e) => {
           e.stopPropagation();
