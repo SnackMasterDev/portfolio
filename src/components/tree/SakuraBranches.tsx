@@ -11,12 +11,9 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = () => {
       {CALIBRATED_BRANCHES.map((b) => {
         const flipScale = b.flipX ? -b.scale : b.scale;
         return (
-          <img
+          <div
             key={b.id}
-            src={`/assets/tree/${b.src}.webp`}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute block max-w-none object-contain"
+            className="pointer-events-none absolute"
             style={{
               left: `${b.left}%`,
               top: `${b.top}%`,
@@ -26,7 +23,18 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = () => {
               transform: `scale(${flipScale}, ${b.scale}) rotate(${b.rot}deg)`,
               transformOrigin: 'center center',
             }}
-          />
+          >
+            <img
+              src={`/assets/tree/${b.src}.webp`}
+              alt=""
+              aria-hidden="true"
+              className={`block h-auto w-full max-w-none object-contain ${b.breezeClass}`}
+              style={{
+                transformOrigin: b.stemOrigin,
+                willChange: 'transform',
+              }}
+            />
+          </div>
         );
       })}
     </div>

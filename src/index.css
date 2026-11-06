@@ -33,20 +33,41 @@ html, body, a, button, input, textarea, select, [role="button"], label, * {
   100% { transform: scale(1) rotate(0deg); }
 }
 
-/* Brisas sutiles exclusivamente en las puntas de las ramas (base fija en el tronco) */
+/* Brisas sutiles en las puntas de las ramas (base del leño fija con 0px de desplazamiento) */
 @keyframes branch-tip-sway-1 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(1.2deg); }
+  50% { transform: rotate(0.9deg); }
 }
 
 @keyframes branch-tip-sway-2 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-1.3deg); }
+  50% { transform: rotate(-0.8deg); }
 }
 
 @keyframes branch-tip-sway-3 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(0.9deg); }
+  50% { transform: rotate(1.1deg); }
+}
+
+@keyframes branch-tip-sway-4 {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-0.95deg); }
+}
+
+.breeze-sway-1 {
+  animation: branch-tip-sway-1 5.6s ease-in-out infinite;
+}
+
+.breeze-sway-2 {
+  animation: branch-tip-sway-2 6.4s ease-in-out infinite 0.5s;
+}
+
+.breeze-sway-3 {
+  animation: branch-tip-sway-3 5.0s ease-in-out infinite 1.1s;
+}
+
+.breeze-sway-4 {
+  animation: branch-tip-sway-4 6.8s ease-in-out infinite 0.7s;
 }
 
 /* Sacudida reactiva en las puntas al recibir corte de la katana */

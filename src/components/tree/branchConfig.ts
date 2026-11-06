@@ -9,9 +9,12 @@ export interface BranchConfig {
   flipX: boolean;
   z: number;
   opacity: number;
+  stemOrigin: string;
+  breezeClass: string;
 }
 
 // Configuración exacta 1:1 calibrada por el usuario en tree-preview.html
+// stemOrigin apunta al extremo más grueso de la madera pegado al tronco (0px de movimiento)
 export const CALIBRATED_BRANCHES: BranchConfig[] = [
   {
     id: 'rama_1_7013',
@@ -24,6 +27,8 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
+    stemOrigin: '11% 80%',
+    breezeClass: 'breeze-sway-1',
   },
   {
     id: 'rama_1_7946',
@@ -36,6 +41,8 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
+    stemOrigin: '11% 80%',
+    breezeClass: 'breeze-sway-2',
   },
   {
     id: 'rama_4_8968',
@@ -48,6 +55,8 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
+    stemOrigin: '22% 90%',
+    breezeClass: 'breeze-sway-3',
   },
   {
     id: 'rama_3_6132',
@@ -60,6 +69,8 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
+    stemOrigin: '83% 56%', // Rama larga: unión del leño al tronco en el extremo derecho
+    breezeClass: 'breeze-sway-1',
   },
   {
     id: 'rama_4_5896',
@@ -72,6 +83,8 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
+    stemOrigin: '22% 90%',
+    breezeClass: 'breeze-sway-4',
   },
   {
     id: 'rama_2_4776',
@@ -84,6 +97,8 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
+    stemOrigin: '88% 7%', // Rama punta: leño grueso en la base superior derecha
+    breezeClass: 'breeze-sway-2',
   },
   {
     id: 'rama_4_5438',
@@ -96,6 +111,8 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
+    stemOrigin: '22% 90%',
+    breezeClass: 'breeze-sway-3',
   },
   {
     id: 'rama_2_3918',
@@ -108,5 +125,7 @@ export const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
+    stemOrigin: '88% 7%',
+    breezeClass: 'breeze-sway-4',
   },
 ];
