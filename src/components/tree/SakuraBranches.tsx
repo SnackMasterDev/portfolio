@@ -15,11 +15,9 @@ interface BranchConfig {
   flipX: boolean;
   z: number;
   opacity: number;
-  origin: string;
-  breezeAnim: string;
 }
 
-// Configuración calibrada con los pivotes colocados exactamente en el tronco de la madera
+// Configuración exacta 1:1 copiada del calibrador
 const CALIBRATED_BRANCHES: BranchConfig[] = [
   {
     id: 'rama_1_7013',
@@ -32,8 +30,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: '8% 83%', // Unión del tallo de madera
-    breezeAnim: 'animate-[branch-tip-sway-1_5.8s_ease-in-out_infinite]',
   },
   {
     id: 'rama_1_7946',
@@ -46,8 +42,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
-    origin: '92% 83%', // Unión del tallo espejado
-    breezeAnim: 'animate-[branch-tip-sway-2_6.4s_ease-in-out_infinite_0.4s]',
   },
   {
     id: 'rama_4_8968',
@@ -60,8 +54,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: '27% 86%', // Bifurcación del tronco
-    breezeAnim: 'animate-[branch-tip-sway-3_5.4s_ease-in-out_infinite_1.1s]',
   },
   {
     id: 'rama_3_6132',
@@ -74,8 +66,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: '92% 48%', // Rama larga: extremo derecho del leño unido al tronco
-    breezeAnim: 'animate-[branch-tip-sway-1_5.0s_ease-in-out_infinite_1.7s]',
   },
   {
     id: 'rama_4_5896',
@@ -88,8 +78,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 15,
     opacity: 1,
-    origin: '27% 86%',
-    breezeAnim: 'animate-[branch-tip-sway-2_6.8s_ease-in-out_infinite_0.3s]',
   },
   {
     id: 'rama_2_4776',
@@ -102,8 +90,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
-    origin: '12% 67%',
-    breezeAnim: 'animate-[branch-tip-sway-3_4.6s_ease-in-out_infinite_1.4s]',
   },
   {
     id: 'rama_4_5438',
@@ -116,8 +102,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: true,
     z: 15,
     opacity: 1,
-    origin: '73% 86%',
-    breezeAnim: 'animate-[branch-tip-sway-1_6.2s_ease-in-out_infinite_0.8s]',
   },
   {
     id: 'rama_2_3918',
@@ -130,8 +114,6 @@ const CALIBRATED_BRANCHES: BranchConfig[] = [
     flipX: false,
     z: 14,
     opacity: 1,
-    origin: '12% 67%',
-    breezeAnim: 'animate-[branch-tip-sway-2_5.1s_ease-in-out_infinite_1.2s]',
   },
 ];
 
@@ -141,10 +123,12 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = () => {
       {CALIBRATED_BRANCHES.map((b) => {
         const flipScale = b.flipX ? -b.scale : b.scale;
         return (
-          /* Contenedor estático: Fija 100% inalterable la posición y rotación del JSON */
-          <div
+          <img
             key={b.id}
-            className="pointer-events-none absolute"
+            src={`/assets/tree/${b.src}.webp`}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute block max-w-none object-contain"
             style={{
               left: `${b.left}%`,
               top: `${b.top}%`,
@@ -152,20 +136,9 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = () => {
               zIndex: b.z,
               opacity: b.opacity,
               transform: `scale(${flipScale}, ${b.scale}) rotate(${b.rot}deg)`,
-              transformOrigin: b.origin,
+              transformOrigin: 'center center',
             }}
-          >
-            {/* Imagen: Movimiento sutil únicamente en la punta. La base permanece soldada al tronco con 0px de desplazamiento */}
-            <img
-              src={`/assets/tree/${b.src}.webp`}
-              alt=""
-              aria-hidden="true"
-              className={`block h-auto w-full max-w-none object-contain ${b.breezeAnim}`}
-              style={{
-                transformOrigin: b.origin,
-              }}
-            />
-          </div>
+          />
         );
       })}
     </div>

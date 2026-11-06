@@ -65,26 +65,23 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
           loading="eager"
         />
 
-        {/* Capa 1: Tronco y samurai (Base física del árbol fija e inalterable) */}
-        <div
-          id="sakura-tree-img-container"
-          className="absolute pointer-events-none z-10"
+        {/* Capa 1: Tronco y samurai (Base física del árbol 1:1 idéntica al calibrador) */}
+        <img
+          id="sakura-tree-img"
+          src="/assets/tree/tronco.webp"
+          alt="Árbol de Cerezo Sakura Milenario"
+          className="pointer-events-none absolute block max-w-none object-contain"
           style={{
             left: '33%',
             top: '-19%',
             width: '60%',
-            transform: 'scale(0.52)',
+            zIndex: 10,
+            opacity: 1,
+            transform: 'scale(0.52, 0.52) rotate(0deg)',
             transformOrigin: 'center center',
           }}
-        >
-          <img
-            id="sakura-tree-img"
-            src="/assets/tree/tronco.webp"
-            alt="Árbol de Cerezo Sakura Milenario"
-            className="w-full h-auto object-contain pointer-events-none"
-            loading="eager"
-          />
-        </div>
+          loading="eager"
+        />
 
         {/* Capa 2: Follaje y ramas fijadas a la madera con brisa sutil en las puntas */}
         <SakuraBranches />
