@@ -29,7 +29,7 @@ describe('SakuraTree Component', () => {
     expect(html).toContain('src="/assets/tree/rama_2.webp"');
     expect(html).toContain('src="/assets/tree/rama_3.webp"');
     expect(html).toContain('src="/assets/tree/rama_4.webp"');
-    expect(html).toContain('transform-origin:85% 20%');
-    expect(html).toContain('transform-origin:83% 56%');
+    expect(html).toContain('transform-origin:94% 8%');
+    expect(html).toContain('transform-origin:97% 52%');
   });
 });

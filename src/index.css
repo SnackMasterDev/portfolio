@@ -36,22 +36,22 @@ html, body, a, button, input, textarea, select, [role="button"], label, * {
 /* Brisas sutiles en las puntas de las ramas (base del leño fija con 0px de desplazamiento) */
 @keyframes branch-tip-sway-1 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(0.9deg); }
+  50% { transform: rotate(0.8deg); }
 }
 
 @keyframes branch-tip-sway-2 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-0.8deg); }
+  50% { transform: rotate(-0.75deg); }
 }
 
 @keyframes branch-tip-sway-3 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(1.1deg); }
+  50% { transform: rotate(0.85deg); }
 }
 
 @keyframes branch-tip-sway-4 {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-0.95deg); }
+  50% { transform: rotate(-0.8deg); }
 }
 
 .breeze-sway-1 {
@@ -73,28 +73,28 @@ html, body, a, button, input, textarea, select, [role="button"], label, * {
 /* Sacudida reactiva en las puntas al recibir corte de la katana */
 @keyframes branch-shudder-ccw {
   0% { transform: rotate(0deg); }
-  18% { transform: rotate(-2.2deg); }
-  38% { transform: rotate(1.6deg); }
-  58% { transform: rotate(-0.8deg); }
-  78% { transform: rotate(0.3deg); }
+  16% { transform: rotate(-1.4deg); }
+  36% { transform: rotate(1.0deg); }
+  58% { transform: rotate(-0.5deg); }
+  78% { transform: rotate(0.2deg); }
   100% { transform: rotate(0deg); }
 }
 
 @keyframes branch-shudder-cw {
   0% { transform: rotate(0deg); }
-  18% { transform: rotate(2.2deg); }
-  38% { transform: rotate(-1.6deg); }
-  58% { transform: rotate(0.8deg); }
-  78% { transform: rotate(-0.3deg); }
+  16% { transform: rotate(1.4deg); }
+  36% { transform: rotate(-1.0deg); }
+  58% { transform: rotate(0.5deg); }
+  78% { transform: rotate(-0.2deg); }
   100% { transform: rotate(0deg); }
 }
 
 .branch-shudder-ccw-a, .branch-shudder-ccw-b {
-  animation: branch-shudder-ccw 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation: branch-shudder-ccw 0.38s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 .branch-shudder-cw-a, .branch-shudder-cw-b {
-  animation: branch-shudder-cw 0.42s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation: branch-shudder-cw 0.38s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 html {
