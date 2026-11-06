@@ -4,93 +4,156 @@ export interface SakuraBranchesProps {
   isRecoiling: boolean;
 }
 
+interface BranchConfig {
+  id: string;
+  src: string;
+  left: number;
+  top: number;
+  width: number;
+  scale: number;
+  rot: number;
+  flipX: boolean;
+  z: number;
+  opacity: number;
+  breezeAnim: string;
+}
+
+// Configuración calibrada exacta enviada por el usuario
+const CALIBRATED_BRANCHES: BranchConfig[] = [
+  {
+    id: 'rama_1_7013',
+    src: 'rama_1',
+    left: 62.5,
+    top: 19.5,
+    width: 36,
+    scale: 0.66,
+    rot: 0,
+    flipX: false,
+    z: 15,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-1_5.5s_ease-in-out_infinite]',
+  },
+  {
+    id: 'rama_1_7946',
+    src: 'rama_1',
+    left: 33,
+    top: 17,
+    width: 36,
+    scale: 0.56,
+    rot: 0,
+    flipX: true,
+    z: 15,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-2_6.2s_ease-in-out_infinite_0.4s]',
+  },
+  {
+    id: 'rama_4_8968',
+    src: 'rama_4',
+    left: 12,
+    top: 12.5,
+    width: 52,
+    scale: 1,
+    rot: 0,
+    flipX: false,
+    z: 15,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-3_5.8s_ease-in-out_infinite_0.8s]',
+  },
+  {
+    id: 'rama_3_6132',
+    src: 'rama_3',
+    left: 22,
+    top: 14.5,
+    width: 32,
+    scale: 0.9,
+    rot: 4,
+    flipX: false,
+    z: 15,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-1_4.8s_ease-in-out_infinite_1.2s]',
+  },
+  {
+    id: 'rama_4_5896',
+    src: 'rama_4',
+    left: 10.5,
+    top: -10.5,
+    width: 52,
+    scale: 1,
+    rot: 35,
+    flipX: false,
+    z: 15,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-2_6.6s_ease-in-out_infinite_0.2s]',
+  },
+  {
+    id: 'rama_2_4776',
+    src: 'rama_2',
+    left: 40,
+    top: -4,
+    width: 18,
+    scale: 1,
+    rot: 91,
+    flipX: false,
+    z: 14,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-3_5.2s_ease-in-out_infinite_1.6s]',
+  },
+  {
+    id: 'rama_4_5438',
+    src: 'rama_4',
+    left: 54,
+    top: -22,
+    width: 52,
+    scale: 0.58,
+    rot: 55,
+    flipX: true,
+    z: 15,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-1_6.0s_ease-in-out_infinite_0.9s]',
+  },
+  {
+    id: 'rama_2_3918',
+    src: 'rama_2',
+    left: 50,
+    top: -8,
+    width: 18,
+    scale: 1,
+    rot: 80,
+    flipX: false,
+    z: 14,
+    opacity: 1,
+    breezeAnim: 'animate-[branch-breeze-2_4.9s_ease-in-out_infinite_1.1s]',
+  },
+];
+
 export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ isRecoiling }) => {
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-visible">
-      {/* CAPA TRASERA PROFUNDA: Da volumen, densidad y sombras al follaje */}
-      <img
-        src="/assets/tree/rama_4.webp"
-        alt=""
-        aria-hidden="true"
-        className={`absolute left-[40%] top-[-8%] w-[58%] max-w-none opacity-85 brightness-90 filter transition-transform ${
-          isRecoiling
-            ? 'animate-[branch-impact-shudder_0.55s_cubic-bezier(0.36,0.07,0.19,0.97)]'
-            : 'animate-[branch-breeze-2_7.2s_ease-in-out_infinite]'
-        }`}
-        style={{ transformOrigin: '70% 90%' }}
-      />
-      <img
-        src="/assets/tree/rama_1.webp"
-        alt=""
-        aria-hidden="true"
-        className={`absolute left-[30%] top-[10%] w-[38%] max-w-none -scale-x-100 opacity-80 brightness-95 filter transition-transform ${
-          isRecoiling
-            ? 'animate-[branch-impact-shudder_0.5s_cubic-bezier(0.36,0.07,0.19,0.97)_0.05s]'
-            : 'animate-[branch-breeze-1_5.8s_ease-in-out_infinite_1.2s]'
-        }`}
-        style={{ transformOrigin: '30% 85%' }}
-      />
-
-      {/* CAPA MEDIA FRONDOSA: Ramas principales conectadas a la copa del tronco */}
-      <img
-        src="/assets/tree/rama_4.webp"
-        alt=""
-        aria-hidden="true"
-        className={`absolute left-[44%] top-[-3%] w-[54%] max-w-none transition-transform ${
-          isRecoiling
-            ? 'animate-[branch-impact-shudder_0.52s_cubic-bezier(0.36,0.07,0.19,0.97)]'
-            : 'animate-[branch-breeze-1_5.2s_ease-in-out_infinite]'
-        }`}
-        style={{ transformOrigin: '65% 85%' }}
-      />
-      <img
-        src="/assets/tree/rama_1.webp"
-        alt=""
-        aria-hidden="true"
-        className={`absolute left-[48%] top-[14%] w-[36%] max-w-none transition-transform ${
-          isRecoiling
-            ? 'animate-[branch-impact-shudder_0.55s_cubic-bezier(0.36,0.07,0.19,0.97)_0.02s]'
-            : 'animate-[branch-breeze-3_6.4s_ease-in-out_infinite_0.5s]'
-        }`}
-        style={{ transformOrigin: '80% 80%' }}
-      />
-
-      {/* CAPA FRONTAL EXTENDIDA: Ramas que caen y se extienden lateralmente */}
-      <img
-        src="/assets/tree/rama_3.webp"
-        alt=""
-        aria-hidden="true"
-        className={`absolute left-[32%] top-[26%] w-[32%] max-w-none transition-transform ${
-          isRecoiling
-            ? 'animate-[branch-impact-shudder_0.58s_cubic-bezier(0.36,0.07,0.19,0.97)_0.04s]'
-            : 'animate-[branch-breeze-2_4.9s_ease-in-out_infinite_1.8s]'
-        }`}
-        style={{ transformOrigin: '90% 40%' }}
-      />
-      <img
-        src="/assets/tree/rama_2.webp"
-        alt=""
-        aria-hidden="true"
-        className={`absolute left-[70%] top-[19%] w-[16%] max-w-none transition-transform ${
-          isRecoiling
-            ? 'animate-[branch-impact-shudder_0.48s_cubic-bezier(0.36,0.07,0.19,0.97)]'
-            : 'animate-[branch-breeze-1_4.4s_ease-in-out_infinite_2.1s]'
-        }`}
-        style={{ transformOrigin: '20% 70%' }}
-      />
-
-      {/* RAMA EXTRA PENDIENTE: Cuelga delicadamente en primer plano sobre el sendero */}
-      <img
-        src="/assets/tree/rama_3.webp"
-        alt=""
-        aria-hidden="true"
-        className={`absolute left-[24%] top-[19%] w-[26%] max-w-none -scale-x-95 rotate-[12deg] opacity-95 transition-transform ${
-          isRecoiling
-            ? 'animate-[branch-impact-shudder_0.54s_cubic-bezier(0.36,0.07,0.19,0.97)_0.08s]'
-            : 'animate-[branch-breeze-3_5.9s_ease-in-out_infinite_1s]'
-        }`}
-        style={{ transformOrigin: '95% 30%' }}
-      />
+      {CALIBRATED_BRANCHES.map((b) => {
+        const flipScale = b.flipX ? -b.scale : b.scale;
+        return (
+          <img
+            key={b.id}
+            src={`/assets/tree/${b.src}.webp`}
+            alt=""
+            aria-hidden="true"
+            className={`absolute max-w-none transition-transform duration-300 ${
+              isRecoiling
+                ? 'animate-[branch-impact-shudder_0.52s_cubic-bezier(0.36,0.07,0.19,0.97)]'
+                : b.breezeAnim
+            }`}
+            style={{
+              left: `${b.left}%`,
+              top: `${b.top}%`,
+              width: `${b.width}%`,
+              zIndex: b.z,
+              opacity: b.opacity,
+              transform: `scale(${flipScale}, ${b.scale}) rotate(${b.rot}deg)`,
+              transformOrigin: 'center center',
+            }}
+          />
+        );
+      })}
     </div>
   );
 };

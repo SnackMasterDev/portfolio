@@ -76,9 +76,14 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
           id="sakura-tree-img"
           src="/assets/tree/tronco.webp"
           alt="Árbol de Cerezo Sakura Milenario"
-          className={`absolute left-[44%] top-[-8%] w-[60%] max-w-none object-contain pointer-events-none z-10 transition-transform duration-300 ${
-            isRecoiling ? 'scale-[1.008] -translate-x-0.5' : ''
-          }`}
+          className="absolute object-contain pointer-events-none z-10 transition-transform duration-300"
+          style={{
+            left: '33%',
+            top: '-19%',
+            width: '60%',
+            transform: `scale(${isRecoiling ? 0.528 : 0.52}) translate(${isRecoiling ? -2 : 0}px, 0)`,
+            transformOrigin: 'center center',
+          }}
           loading="eager"
         />
 
