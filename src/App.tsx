@@ -8,6 +8,7 @@ import { Header } from './components/navigation/Header';
 import { useLanguage } from './context/useLanguage';
 import { getTranslations } from './data/translations';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 const SAKURA_CONFIG = {
   prefersReducedMotion: false,
@@ -57,6 +58,7 @@ export default function App() {
         <p>{t.footer.text}</p>
       </footer>
       <SpeedInsights />
+      <Analytics />
     </div>
   );
 }
