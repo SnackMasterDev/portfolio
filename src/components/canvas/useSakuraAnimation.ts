@@ -1,28 +1,31 @@
 import { useEffect, type RefObject } from 'react';
-import type { SakuraConfig, Petal, CanvasDimensions, SlashEventDetail } from '../../engine/types';
+import type { SakuraConfig, CanvasDimensions, SlashEventDetail } from '../../engine/types';
 import {
-  createPetal,
-  applyWindSlash,
-  deflectPetals,
-  updatePetal,
-  drawPetal,
-  SAKURA_PALETTE,
-} from '../../engine/sakura/PetalSimulation';
-import { spawnBranchFlowerPetals } from '../../engine/sakura/branchFlowerPetals';
+  createRainPetals,
+  calculateAdaptivePetalSize,
+  getViewportScale,
+  type RainPetal,
+} from '../../engine/sakura/sakuraRainEngine';
+import { drawBladeSlashes, type ActiveBladeSlash } from './drawBladeSlash';
+import {
+  drawRainPetalItem,
+  updateAndRenderPetal,
+} from './petalLandingRenderer';
 
 export const DEFAULT_SAKURA_CONFIG: SakuraConfig = {
-  petalCount: 75,
-  minSpeedY: 120,
-  maxSpeedY: 210,
-  minSize: 10,
-  maxSize: 20,
-  wind: { x: 22, y: 0 },
-  colors: SAKURA_PALETTE,
+  petalCount: 32,
+  minSpeedY: 55,
+  maxSpeedY: 90,
+  minSize: 15,
+  maxSize: 25,
+  wind: { x: 18, y: 0 },
+  colors: ['#fff0f5', '#ffb8c8', '#e47294', '#f87595', '#fca5a5'],
   maxDeltaTime: 0.05,
 };
 
 /**
- * Initializes and orchestrates the canvas animation loop outside React's lifecycle.
+ * Orquesta la lluvia continua de 32 pétalos aerodinámicos Richard Williams
+ * con 5 variaciones cromáticas, desprendimiento en el árbol y acomodo fluido en el footer.
  */
 export function setupSakuraCanvas(
   canvas: HTMLCanvasElement,
@@ -52,50 +55,54 @@ export function setupSakuraCanvas(
   const initialDims = getViewportDimensions();
   canvas.width = initialDims.width;
   canvas.height = initialDims.height;
-
   const dimensions: CanvasDimensions = { ...initialDims };
 
-  const getDocHeight = (): number => {
-    if (typeof document === 'undefined') return 2500;
-    return Math.max(
-      document.documentElement?.scrollHeight || 0,
-      document.body?.scrollHeight || 0,
-      (typeof window !== 'undefined' ? window.innerHeight : 0) || 800
-    );
+  const getScrollY = (): number => {
+    if (typeof window === 'undefined') return 0;
+    const docScroll = typeof document !== 'undefined' ? document.documentElement?.scrollTop : 0;
+    return window.scrollY || window.pageYOffset || docScroll || 0;
   };
 
-  const pageDimensions: CanvasDimensions = {
-    width: dimensions.width,
-    height: getDocHeight(),
-  };
-
-  const updateEnvironment = () => {
-    if (typeof document === 'undefined') return;
-    pageDimensions.height = getDocHeight();
-    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-    const treeEl = document.getElementById('sakura-tree');
-    if (treeEl) {
-      const rect = treeEl.getBoundingClientRect();
-      config.treeBounds = {
-        x: rect.left,
-        y: rect.top + scrollY,
-        width: rect.width,
-        height: rect.height,
-      };
+  const getGroundY = (): number => {
+    const scrollY = getScrollY();
+    if (typeof document === 'undefined') return dimensions.height + 60 + scrollY;
+    const footerEl =
+      (typeof document.getElementById === 'function' ? document.getElementById('ground') : null) ||
+      (typeof document.querySelector === 'function' ? document.querySelector('footer') : null);
+    if (!footerEl || typeof footerEl.getBoundingClientRect !== 'function') {
+      const docHeight = document.documentElement?.scrollHeight || dimensions.height + 60;
+      return docHeight;
     }
-    const groundEl = document.getElementById('ground') || document.querySelector('footer');
-    if (groundEl) {
-      const gRect = groundEl.getBoundingClientRect();
-      config.groundY = gRect.top + scrollY + 30;
-    } else {
-      config.groundY = pageDimensions.height - 20;
-    }
+    const rect = footerEl.getBoundingClientRect();
+    // Coordenada absoluta Y en el documento (independiente del scroll del viewport)
+    return rect.top + scrollY + 28;
   };
-  updateEnvironment();
 
-  // Pre-populate petals throughout the full document height (not just viewport)
-  const petals: Petal[] = Array.from({ length: config.petalCount }, (_, i) =>
-    createPetal(pageDimensions, config, (i + Math.random()) / config.petalCount)
+  const getTreeBounds = (): { x: number; y: number; width: number; height: number } => {
+    const scrollY = getScrollY();
+    if (typeof document !== 'undefined') {
+      const treeEl = document.getElementById('sakura-tree');
+      if (treeEl && typeof treeEl.getBoundingClientRect === 'function') {
+        const rect = treeEl.getBoundingClientRect();
+        if (rect.width > 0) {
+          const height = rect.height > 0 ? rect.height : rect.width * (752 / 1392);
+          return { x: rect.left, y: rect.top + scrollY, width: rect.width, height };
+        }
+      }
+    }
+    const fallbackWidth = dimensions.width || 1200;
+    return { x: 0, y: 0, width: fallbackWidth, height: fallbackWidth * (752 / 1392) };
+  };
+
+  const initialTreeBounds = getTreeBounds();
+  const initialGroundY = getGroundY();
+
+  // Distribuir pétalos a lo largo de toda la altura del documento (desde el árbol hasta el footer)
+  const petals: RainPetal[] = createRainPetals(
+    config.petalCount ?? 32,
+    dimensions.width,
+    initialGroundY,
+    initialTreeBounds
   );
 
   const motionQuery =
@@ -104,48 +111,38 @@ export function setupSakuraCanvas(
       : null;
   let isReducedMotion = config.prefersReducedMotion ?? (motionQuery ? motionQuery.matches : false);
 
+  const activeSlashes: ActiveBladeSlash[] = [];
   let animationFrameId: number;
   let lastTime = performance.now();
-  let bladePos = { x: -1000, y: -1000, vx: 0, vy: 0 };
 
   const render = (currentTime: number) => {
     const dt = Math.min((currentTime - lastTime) / 1000, 0.05);
     lastTime = currentTime;
 
-    const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-
-    // Deflexión física continua cuando la katana roza o corta pétalos
-    if (bladePos.x > -500) {
-      deflectPetals(petals, bladePos.x, bladePos.y, bladePos.vx, bladePos.vy, currentScrollY);
-      bladePos.vx *= 0.5;
-      bladePos.vy *= 0.5;
-    }
-
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+    const scrollY = getScrollY();
+    const groundY = getGroundY();
+    const treeBounds = getTreeBounds();
+    const groundContext = { groundY, scrollY, dimensions, treeBounds };
 
-    for (let i = petals.length - 1; i >= 0; i--) {
-      updatePetal(petals[i], dt, pageDimensions, config);
-
-      const screenY = petals[i].y - currentScrollY;
-      if (screenY >= -petals[i].size * 2 && screenY <= dimensions.height + petals[i].size * 2) {
-        drawPetal(ctx, petals[i], screenY);
-      }
-
-      if (petals[i].isBurst && screenY > dimensions.height + 40) {
-        petals.splice(i, 1);
-      }
+    for (const p of petals) {
+      updateAndRenderPetal(ctx, p, dt, groundContext);
     }
 
+    drawBladeSlashes(ctx, activeSlashes, dt);
     animationFrameId = requestAnimationFrame(render);
   };
 
   const renderStaticFrame = () => {
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
-    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-    for (let i = 0; i < petals.length; i++) {
-      const screenY = petals[i].y - scrollY;
-      if (screenY >= -petals[i].size * 2 && screenY <= dimensions.height + petals[i].size * 2) {
-        drawPetal(ctx, petals[i], screenY);
+    const scrollY = getScrollY();
+    for (const p of petals) {
+      const renderY = p.y - scrollY;
+      if (renderY >= -60 && renderY <= dimensions.height + 60) {
+        const swingVelocity = Math.cos(p.phase);
+        const pitchScale = Math.sin(p.phase);
+        const absPitch = Math.abs(pitchScale);
+        drawRainPetalItem(ctx, p, swingVelocity, pitchScale, absPitch, 1, scrollY);
       }
     }
   };
@@ -169,6 +166,16 @@ export function setupSakuraCanvas(
 
   motionQuery?.addEventListener?.('change', handleMotionChange);
 
+  const adaptPetalsToViewport = (viewportWidth: number) => {
+    const scale = getViewportScale(viewportWidth);
+    for (const p of petals) {
+      p.baseSize = calculateAdaptivePetalSize(viewportWidth, p.z);
+      p.swingAmplitude = (38 + Math.random() * 24) * p.z * scale;
+      p.windDrift = (14 + Math.random() * 16) * p.z * scale;
+      p.baseVy = (52 + Math.random() * 32) * p.z * Math.max(0.75, scale);
+    }
+  };
+
   const handleResize = () => {
     const { width, height } = getViewportDimensions();
     if (width > 0 && height > 0) {
@@ -176,51 +183,64 @@ export function setupSakuraCanvas(
       canvas.height = height;
       dimensions.width = width;
       dimensions.height = height;
+      adaptPetalsToViewport(width);
     }
   };
 
   const handleTreeStrike = (e: Event) => {
     const customEvent = e as CustomEvent<{ count?: number }>;
-    const treeEl = typeof document !== 'undefined' ? document.getElementById('sakura-tree') : null;
-    const rect = treeEl?.getBoundingClientRect() ?? null;
-    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-    const count = customEvent.detail?.count ?? 50;
+    const count = customEvent.detail?.count ?? 16;
+    const treeBounds = getTreeBounds();
 
-    const flowerPetals = spawnBranchFlowerPetals(rect, scrollY, dimensions, count, config);
-    petals.push(...flowerPetals);
+    const burst = createRainPetals(count, dimensions.width, dimensions.height, treeBounds, { blossomsOnly: true });
+    petals.push(...burst);
 
-    // Buffer amplio (500 pétalos de ráfaga) para que golpes continuos no corten ni desvanezcan pétalos en el aire
-    const maxActiveBurst = 500;
-    if (petals.length > config.petalCount + maxActiveBurst) {
-      petals.splice(config.petalCount, petals.length - (config.petalCount + maxActiveBurst));
+    const maxPetals = (config.petalCount ?? 32) + 48;
+    if (petals.length > maxPetals) {
+      petals.splice(config.petalCount ?? 32, petals.length - maxPetals);
     }
   };
 
   const handleSlash = (e: Event) => {
     const customEvent = e as CustomEvent<SlashEventDetail>;
     if (customEvent.detail) {
-      const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
-      applyWindSlash(petals, customEvent.detail, scrollY);
+      const d = customEvent.detail;
+      const startX = d.startX ?? d.x;
+      const startY = d.startY ?? d.y;
+      const endX = d.x;
+      const endY = d.y;
+      const dx = endX - startX;
+      const dy = endY - startY;
+      const length = Math.hypot(dx, dy);
+
+      if (length >= 10) {
+        const angle =
+          typeof d.angle === 'number' && !isNaN(d.angle)
+            ? (d.angle * Math.PI) / 180
+            : Math.atan2(dy, dx);
+
+        activeSlashes.push({
+          startX,
+          startY,
+          endX,
+          endY,
+          length,
+          angle,
+          life: 0.25,
+          maxLife: 0.25,
+        });
+
+        if (activeSlashes.length > 4) {
+          activeSlashes.shift();
+        }
+      }
     }
-  };
-
-  const handlePointerMove = (e: MouseEvent) => {
-    const vx = bladePos.x > -500 ? e.clientX - bladePos.x : 0;
-    const vy = bladePos.y > -500 ? e.clientY - bladePos.y : 0;
-    bladePos = { x: e.clientX, y: e.clientY, vx, vy };
-  };
-
-  const handlePointerLeave = () => {
-    bladePos = { x: -1000, y: -1000, vx: 0, vy: 0 };
   };
 
   if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
     window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('scroll', updateEnvironment, { passive: true });
     window.addEventListener('sakura-tree-strike', handleTreeStrike);
     window.addEventListener('katana-slash', handleSlash);
-    window.addEventListener('mousemove', handlePointerMove, { passive: true });
-    window.addEventListener('mouseleave', handlePointerLeave);
   }
 
   let resizeObserver: ResizeObserver | null = null;
@@ -233,6 +253,7 @@ export function setupSakuraCanvas(
           canvas.height = height;
           dimensions.width = width;
           dimensions.height = height;
+          adaptPetalsToViewport(width);
         }
       }
     });
@@ -243,11 +264,8 @@ export function setupSakuraCanvas(
     cancelAnimationFrame(animationFrameId);
     if (typeof window !== 'undefined' && typeof window.removeEventListener === 'function') {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', updateEnvironment);
       window.removeEventListener('sakura-tree-strike', handleTreeStrike);
       window.removeEventListener('katana-slash', handleSlash);
-      window.removeEventListener('mousemove', handlePointerMove);
-      window.removeEventListener('mouseleave', handlePointerLeave);
     }
     resizeObserver?.disconnect();
     motionQuery?.removeEventListener?.('change', handleMotionChange);

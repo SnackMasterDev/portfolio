@@ -1,7 +1,9 @@
 import React from 'react';
 import { useContactForm, type UseContactFormOptions } from './useContactForm';
 import { ContactFormField } from './ContactFormField';
-import { ContactFeedback } from './ContactFeedback';
+import { ContactSubmitButton } from './ContactSubmitButton';
+import { useLanguage } from '../../context/useLanguage';
+import { getTranslations } from '../../data/translations';
 
 export interface ContactSectionProps extends UseContactFormOptions {
   className?: string;
@@ -11,6 +13,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   onSubmit,
   className = '',
 }) => {
+  const { language } = useLanguage();
+  const t = getTranslations(language).contact;
   const { formData, status, statusMessage, isSubmitting, handleChange, handleSubmit } =
     useContactForm({ onSubmit });
 
@@ -19,12 +23,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       id="contact"
       data-testid="contact-section"
       aria-labelledby="contact-heading"
-      className={`relative z-10 max-w-xl mx-auto px-6 py-16 text-[#f2f0ed] ${className}`}
+      className={`relative z-10 max-w-xl mx-auto px-6 py-16 text-[#1c1c1e] ${className}`}
     >
       <div className="text-center mb-8">
-        <h2 id="contact-heading" className="text-3xl font-bold tracking-tight">Hablemos</h2>
-        <p className="text-sm text-[#aaa7a3] mt-2">
-          ¿Tienes un proyecto en mente o quieres conectar? Envíame un mensaje.
+        <h2 id="contact-heading" className="font-rancho text-4xl md:text-5xl font-bold tracking-tight text-[#1c1c1e]">
+          {t.title}
+        </h2>
+        <p className="text-sm text-[#57534e] mt-2">
+          {t.subtitle}
         </p>
       </div>
 
@@ -45,27 +51,27 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
         <ContactFormField
           id="contact-name"
           name="name"
-          label="Nombre"
+          label={t.nameLabel}
           required
           value={formData.name}
           onChange={handleChange}
-          placeholder="Tu nombre"
+          placeholder={t.namePlaceholder}
         />
 
         <ContactFormField
           id="contact-email"
           name="email"
-          label="Correo Electrónico"
+          label={t.emailLabel}
           type="email"
           required
           value={formData.email}
           onChange={handleChange}
-          placeholder="tu@correo.com"
+          placeholder={t.emailPlaceholder}
         />
 
         <div>
-          <label htmlFor="contact-message" className="block text-xs font-medium text-[#aaa7a3] mb-1">
-            Mensaje
+          <label htmlFor="contact-message" className="block text-xs font-semibold text-[#1c1c1e] mb-1.5">
+            {t.messageLabel}
           </label>
           <textarea
             id="contact-message"
@@ -74,20 +80,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             rows={4}
             value={formData.message}
             onChange={handleChange}
-            placeholder="¿En qué te puedo ayudar?"
-            className="w-full px-4 py-2.5 rounded-lg bg-[#262628] border border-[#3c3b3d] text-[#f2f0ed] placeholder-[#71717a] focus:outline-none focus:border-[#f3a4c2] text-sm transition-colors resize-none"
+            placeholder={t.messagePlaceholder}
+            className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#d6cebf] text-[#1c1c1e] placeholder-[#78716c] focus:outline-none focus:border-[#1c1c1e] focus:ring-1 focus:ring-[#1c1c1e] text-sm shadow-xs transition-colors resize-none"
           />
         </div>
 
-        <ContactFeedback status={status} message={statusMessage} />
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full py-3 px-4 rounded-lg bg-[#f3a4c2] hover:bg-[#e089aa] disabled:opacity-50 text-[#1c1b1d] font-semibold text-sm transition-colors cursor-pointer disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
-        </button>
+        <ContactSubmitButton
+          isSubmitting={isSubmitting}
+          status={status}
+          statusMessage={statusMessage}
+        />
       </form>
     </section>
   );

@@ -6,6 +6,7 @@ import {
   getClosestBoundaryPoint,
   type Point2D,
 } from '../tree/trunkHitbox';
+import { getCollisionConfig, getCollisionPolygon } from '../tree/collisionBoxConfig';
 
 export interface CollisionManagerConfig {
   recoilImpulseDistance?: number;
@@ -53,15 +54,45 @@ export class TrunkCollisionManager {
   /**
    * Checks whether coordinates (rawX, rawY) are inside or grazing the trunk perimeter.
    */
-  public isNearTrunk(rawX: number, rawY: number, tolerancePx = 45): boolean {
+  public isNearTrunk(rawX: number, rawY: number, tolerancePx?: number): boolean {
     const treeEl = this.getTreeEl();
     if (!treeEl) return false;
     const rect = treeEl.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return false;
-    const screenPolygon = denormalizePolygon(DEFAULT_TRUNK_POLYGON, rect);
+
+    const config = getCollisionConfig();
+    const tolerance = tolerancePx ?? config.tolerancePx;
+    const activePolygon = config.enabled ? getCollisionPolygon() : DEFAULT_TRUNK_POLYGON;
+
+    const screenPolygon = denormalizePolygon(activePolygon, rect);
     if (isPointInPolygon({ x: rawX, y: rawY }, screenPolygon)) return true;
     const boundary = getClosestBoundaryPoint({ x: rawX, y: rawY }, screenPolygon);
-    return boundary.distance <= tolerancePx;
+    return boundary.distance <= tolerance;
+  }
+
+  /**
+   * Checks whether any point or segment along the motion stroke intersects the trunk hitbox.
+   * Interpolates points every stepPx (default 20px) to prevent tunneling on fast swings.
+   */
+  public isStrokeNearTrunk(samples: { x: number; y: number }[], tolerancePx?: number, stepPx = 20): boolean {
+    if (!samples || samples.length === 0) return false;
+    if (samples.length === 1) return this.isNearTrunk(samples[0].x, samples[0].y, tolerancePx);
+
+    for (let i = 1; i < samples.length; i++) {
+      const p1 = samples[i - 1];
+      const p2 = samples[i];
+      const segDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      const steps = Math.max(1, Math.ceil(segDist / stepPx));
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        const x = p1.x + (p2.x - p1.x) * t;
+        const y = p1.y + (p2.y - p1.y) * t;
+        if (this.isNearTrunk(x, y, tolerancePx)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -97,7 +128,9 @@ export class TrunkCollisionManager {
       };
     }
 
-    const screenPolygon = denormalizePolygon(DEFAULT_TRUNK_POLYGON, rect);
+    const config = getCollisionConfig();
+    const activePolygon = config.enabled ? getCollisionPolygon() : DEFAULT_TRUNK_POLYGON;
+    const screenPolygon = denormalizePolygon(activePolygon, rect);
     const collision = resolveTrunkCollision(rawX, rawY, screenPolygon, 6);
 
     const now = typeof performance !== 'undefined' ? performance.now() : Date.now();

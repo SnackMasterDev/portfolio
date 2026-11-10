@@ -39,4 +39,24 @@ describe('KatanaCursor component', () => {
     }>;
     expect(element.props.className).toContain('custom-katana');
   });
+
+  it('returns null on touch-only devices without pointer', () => {
+    vi.stubGlobal('window', {
+      matchMedia: vi.fn().mockImplementation((query: string) => ({
+        matches: query.includes('hover: none') || query.includes('pointer: coarse'),
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    const element = KatanaCursor({});
+    expect(element).toBeNull();
+
+    vi.unstubAllGlobals();
+  });
 });

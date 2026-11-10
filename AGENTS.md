@@ -50,6 +50,9 @@ Estos principios aplican a TODO el código que se escriba o modifique (Python, T
    - Prohibido silenciar excepciones con bloques `try/catch` o `try/except: pass` vacíos.
    - Errores tipados y controlados que comuniquen la causa exacta sin exponer datos sensibles ni trazas internas a usuarios finales.
    - Garantizar liberación de recursos (conexiones, archivos, streams) mediante gestores de contexto (`with`, `using`, `defer`, `finally`).
+7. **Rendimiento Innegociable a 60/120 FPS (Cero Tirones ni Lag) y Fórmulas Basadas en Viewport:**
+   - Todo efecto visual, estela, cursor, partícula o animación debe estar 100% acelerado por hardware y ejecutarse sin layout thrashing ni re-renders pesados en el hilo principal de React. Prohibido abusar de filtros CSS costosos (múltiples drop-shadow anidados) o mutaciones de estado reactivo en `mousemove`.
+   - Las fórmulas que involucren distancias, velocidades o desplazamientos espaciales deben calcularse SIEMPRE en relación a las unidades y dimensiones del viewport (ancho, alto o diagonal) en lugar de valores arbitrarios en píxeles fijos, garantizando paridad física y rendimiento idéntico en cualquier resolución (HD, 2K, 4K, móvil).
 
 ---
 

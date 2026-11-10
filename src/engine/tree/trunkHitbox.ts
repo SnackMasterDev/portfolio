@@ -21,18 +21,25 @@ export interface CollisionResolution {
  * of the cherry blossom tree in imagen-fondo.webp.
  */
 export const DEFAULT_TRUNK_POLYGON: Point2D[] = [
-  { x: 0.58, y: 0.36 }, // Bifurcación superior central
-  { x: 0.65, y: 0.38 }, // Bifurcación derecha superior
-  { x: 0.67, y: 0.48 }, // Borde derecho tronco medio-alto
-  { x: 0.69, y: 0.60 }, // Borde derecho tronco medio
-  { x: 0.72, y: 0.72 }, // Curvatura hacia raíz derecha
-  { x: 0.76, y: 0.84 }, // Base raíz derecha
-  { x: 0.79, y: 0.95 }, // Extremo inferior derecho en suelo
-  { x: 0.62, y: 0.95 }, // Extremo inferior izquierdo en suelo
-  { x: 0.63, y: 0.82 }, // Raíz izquierda
-  { x: 0.60, y: 0.68 }, // Borde izquierdo tronco medio
-  { x: 0.57, y: 0.54 }, // Borde izquierdo tronco medio-alto
-  { x: 0.55, y: 0.44 }, // Bifurcación izquierda
+  { x: 0.61, y: 0.40 },
+  { x: 0.58, y: 0.34 },
+  { x: 0.61, y: 0.34 },
+  { x: 0.64, y: 0.38 },
+  { x: 0.66, y: 0.35 },
+  { x: 0.68, y: 0.30 },
+  { x: 0.69, y: 0.34 },
+  { x: 0.65, y: 0.43 },
+  { x: 0.65, y: 0.51 },
+  { x: 0.71, y: 0.58 },
+  { x: 0.75, y: 0.68 },
+  { x: 0.77, y: 0.77 },
+  { x: 0.77, y: 0.84 },
+  { x: 0.70, y: 0.85 },
+  { x: 0.69, y: 0.79 },
+  { x: 0.68, y: 0.70 },
+  { x: 0.65, y: 0.62 },
+  { x: 0.61, y: 0.57 },
+  { x: 0.60, y: 0.51 },
 ];
 
 /**

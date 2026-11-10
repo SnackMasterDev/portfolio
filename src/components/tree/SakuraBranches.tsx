@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CALIBRATED_BRANCHES } from './branchConfig';
 
 export interface SakuraBranchesProps {
-  isRecoiling?: boolean;
+  className?: string;
 }
 
-export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ isRecoiling = false }) => {
+export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ className = '' }) => {
   const [strikeId, setStrikeId] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -29,19 +29,8 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ isRecoiling = fa
     };
   }, []);
 
-  useEffect(() => {
-    if (isRecoiling) {
-      setStrikeId((prev) => prev + 1);
-      setIsShaking(true);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        setIsShaking(false);
-      }, 420);
-    }
-  }, [isRecoiling]);
-
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 overflow-visible">
+    <div className={`pointer-events-none absolute inset-0 z-10 overflow-visible ${className}`.trim()}>
       {CALIBRATED_BRANCHES.map((b, idx) => {
         const flipScale = b.flipX ? -b.scale : b.scale;
         const shudderBase = idx % 2 === 0 ? 'branch-shudder-ccw' : 'branch-shudder-cw';

@@ -1,24 +1,23 @@
 import React from 'react';
-import { PORTFOLIO_PROFILE, type Profile } from '../../data/portfolioData';
+import { getPortfolioProfile, type Profile } from '../../data/portfolioData';
+import { useLanguage } from '../../context/useLanguage';
 
 interface HeroSectionProps {
   profile?: Profile;
 }
 
-export function HeroSection({
-  profile = PORTFOLIO_PROFILE,
-}: HeroSectionProps = {}): React.ReactElement {
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  profile: propProfile,
+}) => {
+  const { language } = useLanguage();
+  const profile = propProfile ?? getPortfolioProfile(language);
+
   return (
     <section
       data-testid="hero-section"
-      className="relative z-10 max-w-4xl mx-auto px-6 pt-6 pb-12 text-center flex flex-col items-center space-y-6"
+      className="relative z-10 max-w-4xl mx-auto px-6 pt-6 pb-10 text-center flex flex-col items-center space-y-6"
     >
-      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#e3dacd] bg-white/80 text-xs text-[#db2777] font-mono tracking-wide backdrop-blur-sm shadow-xs">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#db2777] animate-pulse" />
-        {profile.alias}
-      </div>
-
-      <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-[#1c1c1e]">
+      <h1 className="font-rancho text-5xl md:text-7xl font-bold tracking-normal text-[#1c1c1e]">
         {profile.name}
       </h1>
 
@@ -30,7 +29,7 @@ export function HeroSection({
         {profile.bio}
       </p>
 
-      <div className="flex flex-wrap justify-center gap-2 pt-2 max-w-xl">
+      <div className="flex flex-wrap justify-center gap-2 pt-1 max-w-xl">
         {profile.skills.map((skill) => (
           <span
             key={skill}
@@ -40,22 +39,8 @@ export function HeroSection({
           </span>
         ))}
       </div>
-
-      <div className="flex items-center gap-4 pt-4">
-        {profile.socialLinks.map((link) => (
-          <a
-            key={link.label}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2 rounded-lg bg-white hover:bg-[#f9f6f0] text-sm text-[#1c1c1e] font-medium transition-colors border border-[#e3dacd] shadow-xs"
-          >
-            {link.label}
-          </a>
-        ))}
-      </div>
     </section>
   );
-}
+};
 
 export default HeroSection;

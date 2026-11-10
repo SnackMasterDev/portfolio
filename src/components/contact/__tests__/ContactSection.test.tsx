@@ -32,6 +32,8 @@ describe('ContactSection Component', () => {
     expect(html).toContain('id="contact-email"');
     expect(html).toContain('id="contact-message"');
     expect(html).toContain('Enviar Mensaje');
+    // Notification banner removed, state is communicated in button
+    expect(html).not.toContain('role="status"');
   });
 });
 

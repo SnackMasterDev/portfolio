@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --font-rancho: "Rancho", cursive;
+}
+
 :root {
+  --font-rancho: "Rancho", cursive;
   --background: #f4eee5;
   --surface: #ffffff;
   --surface-light: #fdfbf7;
@@ -18,9 +23,23 @@
   box-sizing: border-box;
 }
 
-/* Ocultar completamente todos los punteros nativos en cualquier elemento interactivo */
-html, body, a, button, input, textarea, select, [role="button"], label, * {
-  cursor: none !important;
+/* Textura táctil de papel Washi japonés */
+.washi-pattern {
+  background-image: radial-gradient(rgba(120, 113, 108, 0.09) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Efecto de inclinación 3D en tarjetas bento */
+.card-tilt-container {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Ocultar punteros nativos solo en dispositivos de escritorio con puntero fino (preservando touch/mobile) */
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button, input, textarea, select, [role="button"], label, * {
+    cursor: none !important;
+  }
 }
 
 /* Animación de retroceso elástico al golpear el árbol de cerezo */
@@ -100,14 +119,18 @@ html, body, a, button, input, textarea, select, [role="button"], label, * {
 html {
   scroll-behavior: smooth;
   background-color: var(--background);
-  color: var(--white);
+  color: var(--ink);
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
   background-color: var(--background);
-  color: var(--white);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+.font-rancho {
+  font-family: var(--font-rancho), cursive, system-ui, sans-serif;
 }

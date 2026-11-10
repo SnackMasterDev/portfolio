@@ -1,60 +1,31 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import SakuraBranches from './SakuraBranches';
 
 export interface SakuraTreeProps {
   className?: string;
-  onStrike?: () => void;
 }
 
-export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike }) => {
-  const [strikeCount, setStrikeCount] = useState(0);
-
-  const triggerStrikeFeedback = useCallback(() => {
-    setStrikeCount((prev) => prev + 1);
-    onStrike?.();
-  }, [onStrike]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const handleStrikeEvent = () => triggerStrikeFeedback();
-    window.addEventListener('sakura-tree-strike', handleStrikeEvent);
-    return () => window.removeEventListener('sakura-tree-strike', handleStrikeEvent);
-  }, [triggerStrikeFeedback]);
-
-  const handleStrike = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const clickX = e.clientX || rect.left + rect.width * 0.5;
-      const clickY = e.clientY || rect.top + rect.height * 0.4;
-      triggerStrikeFeedback();
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(
-          new CustomEvent('sakura-tree-strike', { detail: { x: clickX, y: clickY, count: 50 } })
-        );
-      }
-    },
-    [triggerStrikeFeedback]
-  );
-
+export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '' }) => {
   return (
     <div
       id="sakura-tree"
       data-testid="sakura-tree"
-      onClick={handleStrike}
       className={`relative w-full max-w-none select-none overflow-hidden ${className}`}
-      role="button"
-      tabIndex={0}
-      aria-label="Árbol de cerezo sagrado. Haz clic o corta con la katana para desprender pétalos."
+      aria-label="Árbol de cerezo sagrado en floración."
     >
       <div className="relative w-full aspect-[1392/752] overflow-hidden">
         {/* Capa 0: Fondo cielo, montañas y pradera limpia */}
-        <img
-          src="/assets/tree/imagen-fondo.webp"
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-center filter brightness-100 contrast-100 pointer-events-none"
-          loading="eager"
-        />
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <img
+            src="/assets/tree/imagen-fondo.webp"
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover object-center filter brightness-100 contrast-100"
+            loading="eager"
+          />
+          {/* Degradado de fusión inferior ubicado exclusivamente sobre la imagen de fondo */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f4eee5] via-[#f4eee5]/60 to-transparent" />
+        </div>
 
         {/* Capa 1: Tronco y samurai (Base física del árbol 1:1 idéntica al calibrador) */}
         <img
@@ -76,19 +47,6 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '', onStrike
 
         {/* Capa 2: Follaje y ramas fijadas a la madera con brisa sutil en las puntas */}
         <SakuraBranches />
-
-        {/* Máscara de fundido inferior suave con el color pergamino washi (#f4eee5) */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 bg-gradient-to-t from-[#f4eee5] via-[#f4eee5]/60 to-transparent" />
-      </div>
-
-      <div className="mt-2 flex items-center justify-center gap-3 text-xs text-[#6b6966]">
-        <span className="flex items-center gap-1.5 font-mono text-[#db2777]">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#db2777] animate-ping" />
-          Árbol de Cerezo Milenario
-        </span>
-        <span className="text-[11px] text-[#6b6966]/80">
-          🌸 Golpea con la Katana ({strikeCount} cortes)
-        </span>
       </div>
     </div>
   );

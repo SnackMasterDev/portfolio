@@ -1,1 +1,294 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="46" fill="none" viewBox="0 0 48 46"><path fill="#863bff" d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z" style="fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1"/><mask id="a" width="48" height="46" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z" style="fill:#000;fill-opacity:1"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#ede6ff" rx="5.508" ry="14.704" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -4.47 31.516)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#ede6ff" rx="10.399" ry="29.851" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -39.328 7.883)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#7e14ff" rx="5.508" ry="30.487" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -25.913 -14.639)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -32.644 -3.334)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -34.34 30.47)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#ede6ff" rx="14.072" ry="22.078" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="rotate(93.35 24.506 48.493)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx=".387" cy="8.972" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(39.51 .387 8.972)"/></g><g filter="url(#k)"><ellipse cx="47.523" cy="-6.092" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 47.523 -6.092)"/></g><g filter="url(#l)"><ellipse cx="41.412" cy="6.333" fill="#47bfff" rx="5.971" ry="9.665" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 41.412 6.333)"/></g><g filter="url(#m)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#n)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#o)"><ellipse cx="35.651" cy="29.907" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 35.651 29.907)"/></g><g filter="url(#p)"><ellipse cx="38.418" cy="32.4" fill="#47bfff" rx="5.971" ry="15.297" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 38.418 32.4)"/></g></g><defs><filter id="b" width="60.045" height="41.654" x="-19.77" y="16.149" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-54.613" y="-7.533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-49.64" y="2.03" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-45.045" y="20.029" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-43.513" y="21.178" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="15.756" y="-17.901" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-27.636" y="-22.853" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="20.116" y="-38.415" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="24.641" y="-11.323" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="8.244" y="-2.416" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="18.713" y="10.588" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter></defs></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%">
+  <defs>
+    <!-- Background Radial Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="58%">
+      <stop offset="0%" stop-color="#141a27"/>
+      <stop offset="55%" stop-color="#0d1017"/>
+      <stop offset="100%" stop-color="#06080c"/>
+    </radialGradient>
+
+    <!-- Seamless Cyan-to-Orange Neon Gradient for Stroke -->
+    <linearGradient id="neonSplitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="48%" stop-color="#00e1ff"/>
+      <stop offset="52%" stop-color="#ff6a00"/>
+      <stop offset="100%" stop-color="#ff5500"/>
+    </linearGradient>
+
+    <!-- Cyan Neon Tube Gradient -->
+    <linearGradient id="cyanNeon" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a6f7ff"/>
+      <stop offset="40%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#0099ff"/>
+    </linearGradient>
+
+    <!-- Orange Neon Tube Gradient -->
+    <linearGradient id="orangeNeon" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd2a6"/>
+      <stop offset="40%" stop-color="#ff7b00"/>
+      <stop offset="100%" stop-color="#e64200"/>
+    </linearGradient>
+
+    <!-- Central S Fill Gradient -->
+    <linearGradient id="sFillGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00c8f0"/>
+      <stop offset="48%" stop-color="#00b0e0"/>
+      <stop offset="52%" stop-color="#e65c00"/>
+      <stop offset="100%" stop-color="#ff5500"/>
+    </linearGradient>
+
+    <!-- Master Glow Filter combining Cyan and Orange without hard-edge clipping -->
+    <filter id="glowCyan" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="blur1"/>
+      <feGaussianBlur stdDeviation="20" result="blur2"/>
+      <feGaussianBlur stdDeviation="38" result="blur3"/>
+      <feMerge>
+        <feMergeNode in="blur3"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glowOrange" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="blur1"/>
+      <feGaussianBlur stdDeviation="20" result="blur2"/>
+      <feGaussianBlur stdDeviation="38" result="blur3"/>
+      <feMerge>
+        <feMergeNode in="blur3"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="ambientBacklight" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+
+    <!-- Clip paths with soft overlap to avoid hard seam -->
+    <clipPath id="leftOverlap">
+      <rect x="0" y="0" width="516" height="1024"/>
+    </clipPath>
+    <clipPath id="rightOverlap">
+      <rect x="508" y="0" width="516" height="1024"/>
+    </clipPath>
+
+    <!-- Master Bitten Cookie Silhouette -->
+    <path id="cookieSilhouette" d="
+      M 808 356
+      A 328 328 0 1 1 620 202
+      C 610 226, 612 244, 638 258
+      C 620 274, 622 296, 652 316
+      C 638 334, 642 352, 674 368
+      C 716 384, 764 380, 808 356
+      Z
+    "/>
+
+    <!-- Unified S Path -->
+    <path id="letterS" d="
+      M 512 312
+      L 582 312
+      L 582 344
+      L 614 344
+      L 614 380
+      L 652 380
+      L 652 436
+      L 596 436
+      L 596 406
+      L 564 406
+      L 564 378
+      C 542 378, 528 378, 512 378
+      C 472 378, 444 404, 444 434
+      C 444 446, 456 460, 508 480
+      C 572 506, 654 536, 654 624
+      C 654 682, 594 712, 512 712
+      C 434 712, 370 660, 370 592
+      L 446 592
+      C 446 626, 474 646, 512 646
+      C 552 646, 578 626, 578 600
+      C 578 584, 564 570, 512 550
+      C 448 526, 370 494, 370 416
+      C 370 348, 432 312, 512 312
+      Z
+    "/>
+  </defs>
+
+  <!-- 1. Squircle Badge (Rounded Dark Square) -->
+  <rect x="24" y="24" width="976" height="976" rx="200" ry="200" fill="url(#bgGlow)" stroke="#182030" stroke-width="4"/>
+  <rect x="24" y="24" width="976" height="976" rx="200" ry="200" fill="none" stroke="#25324b" stroke-width="1.5" stroke-opacity="0.4"/>
+
+  <!-- 2. Ambient Underglow Behind Cookie -->
+  <g filter="url(#ambientBacklight)" opacity="0.38">
+    <circle cx="370" cy="512" r="230" fill="#00d5ff"/>
+    <circle cx="650" cy="512" r="230" fill="#ff6a00"/>
+  </g>
+
+  <!-- 3. Cookie Interior Disc -->
+  <use href="#cookieSilhouette" fill="#090c13" stroke="#131722" stroke-width="4"/>
+
+  <!-- Concentric Inner Thin Line -->
+  <circle cx="512" cy="512" r="306" fill="none" stroke="#1c2436" stroke-width="2.5" opacity="0.55"/>
+
+  <!-- 4. Circuit Board Traces -->
+  <!-- Left Cyan Circuits -->
+  <g stroke="#00f0ff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4" fill="none">
+    <path d="M 460 205 L 460 270 L 436 294 L 382 294" />
+    <circle cx="382" cy="294" r="5" fill="#00f0ff" />
+    <path d="M 488 202 L 488 250" />
+    <circle cx="488" cy="250" r="4.5" fill="#00f0ff" />
+
+    <path d="M 235 430 L 255 450 L 255 500" />
+    <circle cx="255" cy="500" r="4.5" fill="#00f0ff" />
+    <path d="M 225 560 L 252 560 L 268 576 L 268 605" />
+    <circle cx="268" cy="605" r="5" fill="#00f0ff" />
+
+    <path d="M 374 734 L 394 714 L 444 714 L 460 730 L 488 730" />
+    <circle cx="374" cy="734" r="5" fill="#00f0ff" />
+    <path d="M 488 775 L 488 820" />
+    <circle cx="488" cy="775" r="4.5" fill="#00f0ff" />
+    <path d="M 440 765 L 460 765 L 476 781 L 476 812" />
+  </g>
+
+  <!-- Right Orange Circuits -->
+  <g stroke="#ff7700" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4" fill="none">
+    <path d="M 536 202 L 536 260 L 560 284 L 590 284" />
+    <circle cx="590" cy="284" r="5" fill="#ff7700" />
+    <path d="M 564 205 L 564 246" />
+
+    <path d="M 785 435 L 765 455 L 765 505" />
+    <circle cx="765" cy="505" r="4.5" fill="#ff7700" />
+    <path d="M 788 550 L 762 550 L 748 564 L 748 600" />
+    <circle cx="748" cy="600" r="5" fill="#ff7700" />
+
+    <path d="M 646 720 L 624 720 L 602 742 L 540 742" />
+    <circle cx="646" cy="720" r="5" fill="#ff7700" />
+    <path d="M 536 775 L 536 820" />
+    <circle cx="536" cy="775" r="4.5" fill="#ff7700" />
+  </g>
+
+  <!-- 5. Cookie Outer Rim & Bite Outline with Soft Transition -->
+  <!-- Ambient Glow layer for the entire rim -->
+  <use href="#cookieSilhouette" fill="none" stroke="url(#neonSplitGrad)" stroke-width="30" opacity="0.3" filter="url(#glowCyan)"/>
+  <use href="#cookieSilhouette" fill="none" stroke="url(#neonSplitGrad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <use href="#cookieSilhouette" fill="none" stroke="#ffffff" stroke-width="3.5" opacity="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 6. Floating Pixel/Byte Crumbs -->
+  <!-- Orange Crumbs -->
+  <g filter="url(#glowOrange)">
+    <rect x="752" y="202" width="40" height="40" rx="7" transform="rotate(45, 772, 222)" fill="url(#orangeNeon)" stroke="#ffe8d1" stroke-width="2.5"/>
+    <rect x="764" y="295" width="22" height="22" rx="4" fill="url(#orangeNeon)" stroke="#ffd7b3" stroke-width="2"/>
+    <rect x="672" y="284" width="18" height="18" rx="3.5" fill="url(#orangeNeon)"/>
+  </g>
+
+  <!-- Cyan Crumbs -->
+  <g filter="url(#glowCyan)">
+    <rect x="670" y="214" width="28" height="28" rx="5" fill="url(#cyanNeon)" stroke="#ccf8ff" stroke-width="2.5"/>
+    <rect x="724" y="270" width="16" height="16" rx="3" fill="url(#cyanNeon)" stroke="#e6fcff" stroke-width="1.5"/>
+    <rect x="718" y="320" width="16" height="16" rx="3" fill="url(#cyanNeon)"/>
+  </g>
+
+  <!-- 7. Left Curly Bracket { in Neon Cyan -->
+  <g filter="url(#glowCyan)">
+    <path d="M 360 328 
+             C 318 328, 286 354, 284 394 
+             L 284 460 
+             C 284 488, 270 504, 250 512 
+             C 270 520, 284 536, 284 564 
+             L 284 630 
+             C 286 670, 318 696, 360 696" 
+          fill="none" 
+          stroke="#00f0ff" 
+          stroke-width="36" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          opacity="0.3"/>
+
+    <path d="M 360 328 
+             C 318 328, 286 354, 284 394 
+             L 284 460 
+             C 284 488, 270 504, 250 512 
+             C 270 520, 284 536, 284 564 
+             L 284 630 
+             C 286 670, 318 696, 360 696" 
+          fill="none" 
+          stroke="url(#cyanNeon)" 
+          stroke-width="20" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <path d="M 360 328 
+             C 318 328, 286 354, 284 394 
+             L 284 460 
+             C 284 488, 270 504, 250 512 
+             C 270 520, 284 536, 284 564 
+             L 284 630 
+             C 286 670, 318 696, 360 696" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          opacity="0.9"/>
+  </g>
+
+  <!-- 8. Right Curly Bracket } in Neon Orange -->
+  <g filter="url(#glowOrange)">
+    <path d="M 664 328 
+             C 706 328, 738 354, 740 394 
+             L 740 460 
+             C 740 488, 754 504, 774 512 
+             C 754 520, 740 536, 740 564 
+             L 740 630 
+             C 738 670, 706 696, 664 696" 
+          fill="none" 
+          stroke="#ff7300" 
+          stroke-width="36" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          opacity="0.3"/>
+
+    <path d="M 664 328 
+             C 706 328, 738 354, 740 394 
+             L 740 460 
+             C 740 488, 754 504, 774 512 
+             C 754 520, 740 536, 740 564 
+             L 740 630 
+             C 738 670, 706 696, 664 696" 
+          fill="none" 
+          stroke="url(#orangeNeon)" 
+          stroke-width="20" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <path d="M 664 328 
+             C 706 328, 738 354, 740 394 
+             L 740 460 
+             C 740 488, 754 504, 774 512 
+             C 754 520, 740 536, 740 564 
+             L 740 630 
+             C 738 670, 706 696, 664 696" 
+          fill="none" 
+          stroke="#ffffff" 
+          stroke-width="5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          opacity="0.9"/>
+  </g>
+
+  <!-- 9. Central Letter 'S' (Unified Body) -->
+  <!-- Fill with smooth cyan to orange blend -->
+  <use href="#letterS" fill="url(#sFillGrad)" fill-opacity="0.9"/>
+
+  <!-- Stroke around S with neon blend -->
+  <use href="#letterS" fill="none" stroke="url(#neonSplitGrad)" stroke-width="26" opacity="0.35" filter="url(#glowCyan)"/>
+  <use href="#letterS" fill="none" stroke="url(#neonSplitGrad)" stroke-width="12" stroke-linejoin="round"/>
+  <use href="#letterS" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.8" stroke-linejoin="round"/>
+
+  <!-- Attached Orange Pixel Nibbles on the S shoulder -->
+  <g filter="url(#glowOrange)">
+    <rect x="588" y="324" width="20" height="20" rx="3.5" fill="url(#orangeNeon)" stroke="#ffe4cc" stroke-width="2.5"/>
+    <rect x="618" y="356" width="20" height="20" rx="3.5" fill="url(#orangeNeon)" stroke="#ffe4cc" stroke-width="2.5"/>
+  </g>
+
+</svg>

@@ -25,7 +25,8 @@ export const FLOWER_BLOSSOM_ZONES: FlowerBlossomZone[] = [
 ];
 
 /**
- * Obtiene coordenadas aleatorias situadas sobre las flores de las ramas del cerezo.
+ * Obtiene coordenadas aleatorias situadas sobre las flores de las ramas del cerezo,
+ * adaptándose dinámicamente al tamaño y aspect ratio (1392/752) del contenedor del árbol en cualquier viewport.
  */
 export function sampleFlowerBlossomPosition(
   treeBounds?: { x: number; y: number; width: number; height: number },
@@ -34,17 +35,16 @@ export function sampleFlowerBlossomPosition(
   const zones = FLOWER_BLOSSOM_ZONES;
   const zone = zones[Math.floor(Math.random() * zones.length)];
 
-  if (treeBounds) {
-    return {
-      x: treeBounds.x + (zone.xMin + Math.random() * (zone.xMax - zone.xMin)) * treeBounds.width,
-      y: treeBounds.y + (zone.yMin + Math.random() * (zone.yMax - zone.yMin)) * treeBounds.height,
-    };
-  }
+  const hasValidTree = Boolean(treeBounds && treeBounds.width > 0);
+  const tWidth = hasValidTree ? (treeBounds?.width ?? 1200) : (defaultDimensions?.width || 1200);
+  const tHeight = hasValidTree && treeBounds?.height && treeBounds.height > 0
+    ? treeBounds.height
+    : tWidth * (752 / 1392);
+  const tX = hasValidTree ? (treeBounds?.x ?? 0) : 0;
+  const tY = hasValidTree ? (treeBounds?.y ?? 0) : 0;
 
-  const w = defaultDimensions?.width || 1200;
-  const h = defaultDimensions?.height || 800;
   return {
-    x: w * (zone.xMin + Math.random() * (zone.xMax - zone.xMin)),
-    y: h * (zone.yMin + Math.random() * (zone.yMax - zone.yMin)),
+    x: tX + (zone.xMin + Math.random() * (zone.xMax - zone.xMin)) * tWidth,
+    y: tY + (zone.yMin + Math.random() * (zone.yMax - zone.yMin)) * tHeight,
   };
 }

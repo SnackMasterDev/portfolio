@@ -8,30 +8,7 @@ export interface CanvasDimensions {
   height: number;
 }
 
-export interface Petal {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  speedY: number;
-  speedX: number;
-  rotation: number;
-  rotationSpeed: number;
-  flip: number;
-  flipSpeed: number;
-  oscillationPhase: number;
-  oscillationSpeed: number;
-  opacity: number;
-  color: string;
-  backColor?: string;
-  airResistance?: number;
-  isBurst?: boolean;
-  isResting?: boolean;
-  restingLife?: number;
-  slashImpulseX?: number;
-  slashImpulseY?: number;
-  baseSpeedY?: number;
-}
+export type { RainPetal } from './sakura/sakuraRainEngine';
 
 export interface TreeBounds {
   x: number;
@@ -47,6 +24,7 @@ export interface SlashEventDetail {
   speed: number;
   startX?: number;
   startY?: number;
+  distance?: number;
 }
 
 export interface SakuraConfig {

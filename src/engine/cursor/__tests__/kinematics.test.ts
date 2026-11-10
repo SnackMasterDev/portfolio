@@ -4,6 +4,7 @@ import {
   calculateAngleDegrees,
   calculateSpeed,
   calculateViewportSpeedFraction,
+  calculateWindowDistance,
   calculateWindowSpeed,
   lerp,
   lerpAngleDegrees,
@@ -113,6 +114,47 @@ describe('kinematics', () => {
       const result = calculateWindowSpeed([{ x: 10, y: 10, time: 100 }], 100);
       expect(result.speedFraction).toBe(0);
       expect(result.distance).toBe(0);
+    });
+  });
+
+  describe('calculateWindowDistance', () => {
+    it('calculates exact cumulative distance traveled in a calibrated window without px/s division', () => {
+      const samples = [
+        { x: 100, y: 100, time: 1000 },
+        { x: 150, y: 100, time: 1100 }, // +50px
+        { x: 220, y: 100, time: 1200 }, // +70px -> total 120px
+      ];
+
+      const result = calculateWindowDistance(samples, 1200, 350);
+      expect(result.distance).toBe(120);
+      expect(result.pathDistance).toBe(120);
+      expect(result.netDisplacement).toBe(120);
+      expect(result.dx).toBe(120);
+    });
+
+    it('prunes samples older than windowMs (e.g. 350ms or 500ms)', () => {
+      const samples = [
+        { x: 0, y: 0, time: 500 }, // expired (> 350ms before 1000)
+        { x: 100, y: 100, time: 700 },
+        { x: 180, y: 100, time: 1000 },
+      ];
+
+      const result = calculateWindowDistance(samples, 1000, 350);
+      expect(samples.some((s) => s.time === 500)).toBe(false);
+      expect(result.distance).toBe(80);
+    });
+
+    it('computes viewportDistanceFraction proportionally to viewport diagonal without dividing by dt', () => {
+      // 1200x800 viewport => diagonal ~1442.22
+      // Stroke travels 144.22px => exactly 0.10 (10% of viewport diagonal)
+      const samples = [
+        { x: 100, y: 100, time: 1000 },
+        { x: 244.22, y: 100, time: 1200 },
+      ];
+
+      const result = calculateWindowDistance(samples, 1200, 350, 1200, 800);
+      expect(result.distance).toBeCloseTo(144.22, 1);
+      expect(result.viewportDistanceFraction).toBeCloseTo(0.10, 2);
     });
   });
 });

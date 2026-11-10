@@ -29,6 +29,23 @@ describe('setupKatanaMotionListener', () => {
           contains: vi.fn((cls: string) => classList.has(cls)),
         },
       },
+      getElementById: vi.fn((id: string) => {
+        if (id === 'sakura-tree' || id === 'sakura-tree-img') {
+          return {
+            getBoundingClientRect: () => ({
+              left: 0,
+              top: 0,
+              width: 1000,
+              height: 1000,
+              right: 1000,
+              bottom: 1000,
+              x: 0,
+              y: 0,
+            }),
+          };
+        }
+        return null;
+      }),
     };
 
     const mockWindow = {
@@ -84,6 +101,27 @@ describe('setupKatanaMotionListener', () => {
 
     expect(document.body.classList.remove).toHaveBeenCalledWith('cursor-none');
     expect(document.body.classList.contains('cursor-none')).toBe(false);
+  });
+
+  it('does not add cursor-none nor attach listeners on touch-only devices', () => {
+    (window.matchMedia as any).mockImplementation((query: string) => ({
+      matches: query.includes('hover: none') || query.includes('pointer: coarse'),
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+
+    const onUpdate = vi.fn();
+    const cleanup = setupKatanaMotionListener(onUpdate);
+
+    expect(document.body.classList.add).not.toHaveBeenCalled();
+    expect(window.addEventListener).not.toHaveBeenCalled();
+
+    cleanup();
   });
 
   it('attaches and removes event listeners for mousemove, mouseleave, and mouseenter', () => {
@@ -237,5 +275,103 @@ describe('setupKatanaMotionListener', () => {
     const dispatchedEvents = dispatchSpy.mock.calls.map((c) => (c[0] as CustomEvent).type);
     expect(dispatchedEvents).not.toContain('katana-slash');
     expect(dispatchedEvents).not.toContain('sakura-tree-strike');
+  });
+
+  it('does NOT trigger slash on normal/moderate movement (< 50% of viewport)', () => {
+    const onUpdate = vi.fn();
+    setupKatanaMotionListener(onUpdate);
+
+    const dispatchSpy = vi.spyOn(window, 'dispatchEvent');
+    const mouseMoveHandler = listeners['mousemove'] as (e: any) => void;
+
+    // 400px move (~27.7% of 1442px viewport diagonal, under 50% threshold)
+    mockNow = 1000;
+    mouseMoveHandler({ clientX: 100, clientY: 100 });
+    flushRaf();
+
+    mockNow = 1150;
+    mouseMoveHandler({ clientX: 500, clientY: 100 });
+    flushRaf();
+
+    const dispatchedEvents = dispatchSpy.mock.calls.map((c) => (c[0] as CustomEvent).type);
+    expect(dispatchedEvents).not.toContain('katana-slash');
+    expect(dispatchedEvents).not.toContain('sakura-tree-strike');
+  });
+
+  it('triggers slash when stroke distance exceeds the 50% viewport threshold (easter egg)', () => {
+    const onUpdate = vi.fn();
+    setupKatanaMotionListener(onUpdate);
+
+    const dispatchSpy = vi.spyOn(window, 'dispatchEvent');
+    const mouseMoveHandler = listeners['mousemove'] as (e: any) => void;
+
+    // Start of stroke at 1000ms
+    mockNow = 1000;
+    mouseMoveHandler({ clientX: 100, clientY: 100 });
+    flushRaf();
+
+    // Bold stroke: 760px movement over 200ms (~52.7% of 1442px viewport diagonal)
+    mockNow = 1200;
+    mouseMoveHandler({ clientX: 860, clientY: 100 });
+    flushRaf();
+
+    const dispatchedEvents = dispatchSpy.mock.calls.map((c) => (c[0] as CustomEvent).type);
+    expect(dispatchedEvents).toContain('katana-slash');
+  });
+
+  it('triggers sakura-tree-strike when stroke crosses trunk with distance >= 50% viewport', () => {
+    const onUpdate = vi.fn();
+    setupKatanaMotionListener(onUpdate);
+
+    const dispatchSpy = vi.spyOn(window, 'dispatchEvent');
+    const mouseMoveHandler = listeners['mousemove'] as (e: any) => void;
+
+    // Start outside trunk at x: 100, y: 600
+    mockNow = 1000;
+    mouseMoveHandler({ clientX: 100, clientY: 600 });
+    flushRaf();
+
+    // Bold stroke crossing trunk to x: 860, y: 600 -> 760px in 200ms (~52.7% of viewport)
+    mockNow = 1200;
+    mouseMoveHandler({ clientX: 860, clientY: 600 });
+    flushRaf();
+
+    const dispatchedEvents = dispatchSpy.mock.calls.map((c) => (c[0] as CustomEvent).type);
+    expect(dispatchedEvents).toContain('katana-slash');
+    expect(dispatchedEvents).toContain('sakura-tree-strike');
+  });
+
+  it('triggers slash and tree strike exactly ONCE during a continuous stroke without multi-triggering', () => {
+    const onUpdate = vi.fn();
+    setupKatanaMotionListener(onUpdate);
+
+    const dispatchSpy = vi.spyOn(window, 'dispatchEvent');
+    const mouseMoveHandler = listeners['mousemove'] as (e: any) => void;
+
+    // Start of stroke
+    mockNow = 1000;
+    mouseMoveHandler({ clientX: 100, clientY: 600 });
+    flushRaf();
+
+    // Cross trunk with bold stroke >= 50% -> triggers slash #1
+    mockNow = 1150;
+    mouseMoveHandler({ clientX: 860, clientY: 600 });
+    flushRaf();
+
+    const slashEvents1 = dispatchSpy.mock.calls.filter((c) => (c[0] as CustomEvent).type === 'katana-slash');
+    const treeEvents1 = dispatchSpy.mock.calls.filter((c) => (c[0] as CustomEvent).type === 'sakura-tree-strike');
+    expect(slashEvents1.length).toBe(1);
+    expect(treeEvents1.length).toBe(1);
+
+    // Continue the same continuous stroke even further (another 760px in same gesture)
+    mockNow = 1250;
+    mouseMoveHandler({ clientX: 1620, clientY: 600 });
+    flushRaf();
+
+    // Must still be exactly 1 trigger, NOT 2 or 3
+    const slashEvents2 = dispatchSpy.mock.calls.filter((c) => (c[0] as CustomEvent).type === 'katana-slash');
+    const treeEvents2 = dispatchSpy.mock.calls.filter((c) => (c[0] as CustomEvent).type === 'sakura-tree-strike');
+    expect(slashEvents2.length).toBe(1);
+    expect(treeEvents2.length).toBe(1);
   });
 });

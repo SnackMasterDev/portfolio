@@ -107,4 +107,18 @@ describe('TrunkCollisionManager', () => {
     expect(recoil.x).toBeLessThan(0);
     expect(recoil.y).toBeLessThan(0);
   });
+
+  it('detects stroke crossing the trunk via interpolation even with fast jumps', () => {
+    const manager = new TrunkCollisionManager({
+      getTreeElement: () => fakeElement,
+    });
+
+    // Stroke jumping from left (x: 550, y: 600) to right (x: 800, y: 600), passing through trunk (x: 670, y: 600)
+    const samples = [
+      { x: 550, y: 600 },
+      { x: 800, y: 600 },
+    ];
+
+    expect(manager.isStrokeNearTrunk(samples)).toBe(true);
+  });
 });

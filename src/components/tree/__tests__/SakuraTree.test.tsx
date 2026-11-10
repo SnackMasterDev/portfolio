@@ -11,15 +11,7 @@ describe('SakuraTree Component', () => {
     expect(html).toContain('data-testid="sakura-tree"');
     expect(html).toContain('src="/assets/tree/imagen-fondo.webp"');
     expect(html).toContain('src="/assets/tree/tronco.webp"');
-    expect(html).toContain('Árbol de Cerezo Milenario');
-    expect(html).toContain('role="button"');
-  });
-
-  it('renders accessible label explaining interaction with katana', () => {
-    const html = renderToString(React.createElement(SakuraTree));
-
-    expect(html).toContain('aria-label="Árbol de cerezo sagrado. Haz clic o corta con la katana para desprender pétalos."');
-    expect(html).toContain('Golpea con la Katana');
+    expect(html).toContain('aria-label="Árbol de cerezo sagrado en floración."');
   });
 
   it('renders foliage layer with calibrated branches anchored to wood stems', () => {
