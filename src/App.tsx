@@ -7,6 +7,7 @@ import { SectionDivider } from './components/ui/SectionDivider';
 import { Header } from './components/navigation/Header';
 import { useLanguage } from './context/useLanguage';
 import { getTranslations } from './data/translations';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const SAKURA_CONFIG = {
   prefersReducedMotion: false,
@@ -55,6 +56,7 @@ export default function App() {
       <footer id="ground" data-testid="ground" className="relative z-10 border-t border-[#e3dacd] py-8 text-center text-xs text-[#6b6966]">
         <p>{t.footer.text}</p>
       </footer>
+      <SpeedInsights />
     </div>
   );
 }
