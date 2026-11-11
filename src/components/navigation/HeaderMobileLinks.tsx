@@ -28,28 +28,39 @@ export const HeaderMobileLinks: React.FC<HeaderMobileLinksProps> = ({
         <span>{t.downloadCv}</span>
       </a>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
+        <a
+          href="https://github.com/SnackMasterDev/portfolio"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClose}
+          className="flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-white/80 hover:bg-white text-[#1c1c1e] text-xs font-medium border border-[#d6cebf] hover:border-[#1c1c1e] shadow-2xs transition-colors"
+          title={t.portfolioRepoTitle}
+        >
+          <span>Portfolio</span>
+          <ExternalLink className="w-3 h-3 text-[#78716c]" aria-hidden="true" />
+        </a>
         <a
           href="https://github.com/SnackMasterDev"
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClose}
-          className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-white/80 hover:bg-white text-[#1c1c1e] text-xs font-medium border border-[#d6cebf] hover:border-[#1c1c1e] shadow-2xs transition-colors"
+          className="flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-white/80 hover:bg-white text-[#1c1c1e] text-xs font-medium border border-[#d6cebf] hover:border-[#1c1c1e] shadow-2xs transition-colors"
           title={t.gitHubTitle}
         >
           <span>GitHub</span>
-          <ExternalLink className="w-3.5 h-3.5 text-[#78716c]" aria-hidden="true" />
+          <ExternalLink className="w-3 h-3 text-[#78716c]" aria-hidden="true" />
         </a>
         <a
           href="https://linkedin.com/in/juan-camilo-garcia-"
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClose}
-          className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-white/80 hover:bg-white text-[#1c1c1e] text-xs font-medium border border-[#d6cebf] hover:border-[#1c1c1e] shadow-2xs transition-colors"
+          className="flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-white/80 hover:bg-white text-[#1c1c1e] text-xs font-medium border border-[#d6cebf] hover:border-[#1c1c1e] shadow-2xs transition-colors"
           title={t.linkedInTitle}
         >
           <span>LinkedIn</span>
-          <ExternalLink className="w-3.5 h-3.5 text-[#78716c]" aria-hidden="true" />
+          <ExternalLink className="w-3 h-3 text-[#78716c]" aria-hidden="true" />
         </a>
       </div>
     </>

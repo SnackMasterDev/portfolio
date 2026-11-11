@@ -19,6 +19,7 @@ describe('HeaderMobileLinks', () => {
 
     expect(html).toContain('href="/cv.pdf"');
     expect(html).toContain('download="CV_Juan_Camilo_Garcia_ES.pdf"');
+    expect(html).toContain('https://github.com/SnackMasterDev/portfolio');
     expect(html).toContain('https://github.com/SnackMasterDev');
     expect(html).toContain('https://linkedin.com/in/juan-camilo-garcia-');
   });

@@ -274,7 +274,8 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Líder Técnico Frontend & Diseñador de Sistema' : 'Frontend Tech Lead & System Designer'} | 
-        <strong>${isEs ? 'Despliegue en Vivo:' : 'Live Deployment:'}</strong> <a href="https://pricescope-frontend.vercel.app" target="_blank">pricescope-frontend.vercel.app</a>
+        <strong>${isEs ? 'Despliegue en Vivo:' : 'Live Deployment:'}</strong> <a href="https://pricescope-frontend.vercel.app" target="_blank">pricescope-frontend.vercel.app</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S10-26-EQUIPO-2-PriceScope" target="_blank">No-Country-simulation/S10-26-EQUIPO-2-PriceScope</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
@@ -297,8 +298,8 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Desarrollador Frontend & Diseñador UI/UX' : 'Frontend Developer & UI/UX Designer'} | 
-        <strong>Demo:</strong> <a href="https://service-flow-snack.vercel.app" target="_blank">service-flow-snack.vercel.app</a> | 
-        <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/service-flow" target="_blank">SnackMasterDev/service-flow</a>
+        <strong>Demo:</strong> <a href="https://s08-26-equipo-7.vercel.app" target="_blank">s08-26-equipo-7.vercel.app</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S08-26-equipo-7" target="_blank">No-Country-simulation/S08-26-equipo-7</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
@@ -333,23 +334,27 @@ function getCvHtml(lang) {
       </ul>
     </div>
 
-    <!-- PROYECTO 4: Sakura Interactive Canvas -->
+    <!-- PROYECTO 4: ReservApp -->
     <div class="item">
       <div class="item-top">
         <div>
-          <span class="item-name">Sakura Interactive Canvas</span>
-          <span class="item-badge">${isEs ? 'Motor Gráfico 2D & UI' : '2D Graphics Engine & UI'}</span>
+          <span class="item-name">ReservApp</span>
+          <span class="item-badge">${isEs ? 'Reservas & Disponibilidad Gastronómica' : 'Restaurant Booking & Availability'}</span>
         </div>
-        <div class="item-date">2026</div>
+        <div class="item-date">2024</div>
       </div>
       <div class="item-meta">
-        <strong>Web:</strong> <a href="https://portfolio-snackmaster.vercel.app" target="_blank">portfolio-snackmaster.vercel.app</a> | 
-        <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/Portfolio" target="_blank">github.com/SnackMasterDev/Portfolio</a>
+        <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Desarrollador Full Stack' : 'Full Stack Developer'} | 
+        <strong>Demo:</strong> <a href="https://develop--reserv-app.netlify.app" target="_blank">develop--reserv-app.netlify.app</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/s16-05-m-php-react" target="_blank">No-Country-simulation/s16-05-m-php-react</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
-          ? 'Motor gráfico Canvas 2D desacoplado de React ejecutando a 60/120 FPS estables con cinemática de espada, detección de colisión poligonal anti-tunneling, síntesis de audio zen procedural vía Web Audio API y arquitectura bilingüe.' 
-          : 'Canvas 2D graphics engine decoupled from React running at stable 60/120 FPS with sword kinematics, anti-tunneling polygon collision detection, procedural Web Audio API zen sound, and bilingual architecture.'}</li>
+          ? '<strong>Mapeo Dinámico y Disponibilidad en Tiempo Real:</strong> Simulación de distribución espacial de mesas en matriz 2D con cálculo reactivo de asientos y sincronización optimista con backend REST.' 
+          : '<strong>Dynamic Layout & Real-time Availability:</strong> Interactive 2D floor table map with reactive seat computation and optimistic UI synchronization with REST backend.'}</li>
+        <li>${isEs 
+          ? '<strong>Metodología Ágil:</strong> Trabajo en célula Scrum interdisciplinaria con integración continua y entregas incrementales en sprints de dos semanas.' 
+          : '<strong>Agile Methodology:</strong> Cross-functional Scrum squad collaboration with continuous integration and incremental 2-week sprint deliverables.'}</li>
       </ul>
     </div>
   </section>

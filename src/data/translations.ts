@@ -5,6 +5,7 @@ export interface Translations {
     availableForWork: string;
     downloadCv: string;
     cvFile: string;
+    portfolioRepoTitle: string;
     gitHubTitle: string;
     linkedInTitle: string;
     homeTitle: string;
@@ -64,6 +65,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       availableForWork: 'Disponible para Trabajar',
       downloadCv: 'Descargar CV',
       cvFile: 'CV_Juan_Camilo_Garcia_ES.pdf',
+      portfolioRepoTitle: 'Ver código de este Portfolio en GitHub',
       gitHubTitle: 'Perfil de GitHub',
       linkedInTitle: 'Perfil de LinkedIn',
       homeTitle: 'Ir al inicio - SnackMasterDev',
@@ -121,6 +123,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       availableForWork: 'Available for Work',
       downloadCv: 'Download CV',
       cvFile: 'CV_Juan_Camilo_Garcia_EN.pdf',
+      portfolioRepoTitle: 'View this Portfolio code on GitHub',
       gitHubTitle: 'GitHub Profile',
       linkedInTitle: 'LinkedIn Profile',
       homeTitle: 'Go to home - SnackMasterDev',

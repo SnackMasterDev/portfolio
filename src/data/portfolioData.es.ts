@@ -46,7 +46,7 @@ export const PORTFOLIO_PROJECTS_ES: Project[] = [
     ],
     metrics: ['Series temporales en tiempo real', 'Exportación CSV de solo adición', '100% tipado estricto'],
     link: 'https://pricescope-frontend.vercel.app',
-    github: 'https://github.com/SnackMasterDev',
+    github: 'https://github.com/No-Country-simulation/S10-26-EQUIPO-2-PriceScope',
     image: '/projects/pricescope.jpg',
     badge: 'En Producción',
     featured: true,
@@ -90,26 +90,6 @@ export const PORTFOLIO_PROJECTS_ES: Project[] = [
     github: 'https://github.com/SnackMasterDev/mizu-ecosystem',
     image: '/projects/mizu.png',
     badge: 'En Desarrollo · Grado SENA',
-    featured: true,
-  },
-  {
-    id: 'sakura-interactive',
-    title: 'Sakura Interactive Canvas',
-    tagline: 'Motor Gráfico 2D Acelerado por GPU y Audio Zen Procedural',
-    description:
-      'Simulación fluida de partículas a 60/120 FPS desacoplada de React, estela reactiva de Katana, aerodinámica de planeo y Web Audio API.',
-    longDescription:
-      'Motor de simulación matemática para la web que desacopla el ciclo rAF del DOM de React. Incluye cinemática inversa con interpolación lineal amortiguada, colisiones elásticas con interpolación anti-tunneling cada 20px contra el cerezo e integración con la Web Audio API procedural.',
-    tags: ['HTML5 Canvas', 'React 19', 'TypeScript', 'Web Audio API', 'Vitest'],
-    architecture: [
-      'Ciclo rAF independiente con cálculo estricto de delta-time (dt)',
-      'Renderizado multicapa con búfer fuera de pantalla para 120 FPS estables',
-      'Cinemática de katana con rotación tangente física garantizada',
-    ],
-    metrics: ['120 FPS estables', '<75KB comprimido', '117 Tests Vitest'],
-    github: 'https://github.com/SnackMasterDev/portfolio',
-    image: '/projects/sakura.png',
-    badge: 'Motor Gráfico & UI',
     featured: true,
   },
   {

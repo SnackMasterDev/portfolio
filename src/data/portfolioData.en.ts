@@ -46,7 +46,7 @@ export const PORTFOLIO_PROJECTS_EN: Project[] = [
     ],
     metrics: ['Real-time time series', 'Append-only CSV export', '100% strict typing'],
     link: 'https://pricescope-frontend.vercel.app',
-    github: 'https://github.com/SnackMasterDev',
+    github: 'https://github.com/No-Country-simulation/S10-26-EQUIPO-2-PriceScope',
     image: '/projects/pricescope.jpg',
     badge: 'Live in Production',
     featured: true,
@@ -90,26 +90,6 @@ export const PORTFOLIO_PROJECTS_EN: Project[] = [
     github: 'https://github.com/SnackMasterDev/mizu-ecosystem',
     image: '/projects/mizu.png',
     badge: 'In Development · Capstone Project',
-    featured: true,
-  },
-  {
-    id: 'sakura-interactive',
-    title: 'Sakura Interactive Canvas',
-    tagline: 'GPU-Accelerated 2D Graphics Engine & Procedural Zen Audio',
-    description:
-      'Fluid particle simulation at 60/120 FPS decoupled from React, reactive Katana trail, natural glide aerodynamics, and Web Audio API.',
-    longDescription:
-      'High-performance web mathematical simulation engine built from scratch for this portfolio. Features an independent rAF loop with strict delta-time (dt) calculation, hardware acceleration, interpolated anti-tunneling trunk collisions, and procedural zen audio synthesis.',
-    tags: ['HTML5 Canvas', 'React 19', 'TypeScript', 'Web Audio API', 'Vitest'],
-    architecture: [
-      'Independent rAF cycle with strict delta-time calculation (0ms layout thrashing)',
-      'Multi-layer rendering with offscreen buffer for solid 120 FPS',
-      'Katana kinematics with physically guaranteed tangent rotation',
-    ],
-    metrics: ['Solid 120 FPS', '<75KB compressed', '117 Vitest Tests'],
-    github: 'https://github.com/SnackMasterDev/portfolio',
-    image: '/projects/sakura.png',
-    badge: 'Interactive Engine & UI',
     featured: true,
   },
   {

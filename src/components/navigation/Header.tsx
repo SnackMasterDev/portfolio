@@ -23,15 +23,22 @@ export const Header: React.FC = () => {
           >
             SnackMasterDev
           </a>
-
-          {/* Estado de contratación claro y en 1 sola línea */}
           <div className="hidden lg:inline-flex items-center px-3 py-1 rounded-full bg-[#be185d]/10 border border-[#be185d]/25 text-[#be185d] text-[11px] font-mono font-medium whitespace-nowrap shrink-0">
             <span>{t.availableForWork}</span>
           </div>
         </div>
 
-        {/* Lado derecho en escritorio (>= sm): GitHub, LinkedIn, Descarga de CV, Audio Zen y Selector de idioma */}
+        {/* Lado derecho en escritorio (>= sm): Portfolio, GitHub, LinkedIn, Descarga de CV, Audio Zen y Selector de idioma */}
         <div className="hidden sm:flex items-center gap-2 shrink-0">
+          <a
+            href="https://github.com/SnackMasterDev/portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-2.5 py-1.5 rounded-full bg-white/70 hover:bg-white text-[#1c1c1e] text-xs font-medium border border-[#d6cebf] hover:border-[#1c1c1e] transition-colors whitespace-nowrap shadow-2xs"
+            title={t.portfolioRepoTitle}
+          >
+            Portfolio
+          </a>
           <a
             href="https://github.com/SnackMasterDev"
             target="_blank"
