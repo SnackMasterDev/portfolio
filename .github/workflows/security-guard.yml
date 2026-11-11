@@ -1,0 +1,56 @@
+name: DevSecOps Automated Security & Quality Guard
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Ejecución semanal automatizada (Lunes a las 00:00 UTC) para detectar nuevos CVEs en dependencias existentes
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  security-audit:
+    name: Security Scan & Vulnerability Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Detect if package.json exists)
+        if: hashFiles('package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26.x
+          cache: ${{ hashFiles('package-lock.json') != '' && 'npm' || '' }}
+
+      # 1. Auditoría de Dependencias (SCA)
+      - name: Run NPM Audit (Dependency Vulnerabilities)
+        if: hashFiles('package.json') != ''
+        run: |
+          npm audit --audit-level=high || echo "::warning title=Vulnerabilities Found::Se detectaron vulnerabilidades en dependencias. Revisa npm audit."
+
+      # 2. Análisis Estático de Código (SAST) con Semgrep (OWASP Top 10)
+      - name: Run Semgrep SAST Scan
+        run: |
+          npx --yes semgrep scan --config=auto --error
+
+      # 3. Verificación de Secretos y Credenciales (Gitleaks)
+      - name: Secret Leak Prevention
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: false
+
+      # 4. Ejecución de Tests del Proyecto (Garantizar que nada esté roto)
+      - name: Run Project Tests
+        if: hashFiles('package.json') != ''
+        run: |
+          if grep -q '"test"' package.json; then
+            npm test --if-present
+          fi
