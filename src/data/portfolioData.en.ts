@@ -3,8 +3,8 @@ import type { Profile, Project, Experience } from './portfolioData.types';
 export const PORTFOLIO_PROFILE_EN: Profile = {
   name: 'Juan Camilo García Gómez',
   alias: 'SnackMasterDev',
-  title: 'Junior Frontend Developer | React 19, Next.js 16, TypeScript',
-  bio: 'Junior Frontend Developer and Software Analysis and Development (ADSO) student at SENA. Hands-on experience building functional web interfaces using TypeScript, React, Next.js, Vite, Tailwind CSS, and REST API consumption under Scrum methodology.',
+  title: 'Frontend Developer & Software Developer | ADSO · SENA',
+  bio: 'Frontend Developer and Software Analysis and Development (ADSO) student at SENA. Hands-on experience building functional web interfaces using JavaScript (ES6+), React, Next.js, TypeScript, Vite, Tailwind CSS, and REST API consumption under Scrum methodology.',
   location: 'Lebrija, Santander, Colombia',
   email: 'jcgarcia1565@gmail.com',
   skills: [
@@ -59,7 +59,7 @@ export const PORTFOLIO_PROJECTS_EN: Project[] = [
       'Complete interface to centralize internal IT support requests with real-time status tracking and knowledge module with HTTP JSONB persistence.',
     longDescription:
       'ServiceFlow solves technical helpdesk bottlenecks. Integrates user authentication, incident categorization, SLA tracking, and dynamic in-memory filtering with React and Tailwind CSS under Scrum agile methodology.',
-    tags: ['React', 'Vite', 'Tailwind CSS', 'shadcn/ui', 'REST API', 'Scrum'],
+    tags: ['React 19', 'JavaScript (ES6+)', 'Vite', 'Tailwind CSS v4', 'shadcn/ui', 'REST API', 'Scrum'],
     architecture: [
       'Modular atomic components (<100 lines) under SOLID principles',
       'Decoupled consumption layer with HTTP schema validation',

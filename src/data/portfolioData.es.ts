@@ -3,8 +3,8 @@ import type { Profile, Project, Experience } from './portfolioData.types';
 export const PORTFOLIO_PROFILE_ES: Profile = {
   name: 'Juan Camilo García Gómez',
   alias: 'SnackMasterDev',
-  title: 'Desarrollador Frontend Junior | React 19, Next.js 16, TypeScript',
-  bio: 'Desarrollador Frontend Junior y estudiante de Tecnología en Análisis y Desarrollo de Software (ADSO) en el SENA. Experiencia práctica en construcción de interfaces web funcionales utilizando TypeScript, React, Next.js, Vite, Tailwind CSS y consumo de APIs REST bajo metodología Scrum.',
+  title: 'Desarrollador Frontend & Software Developer | ADSO · SENA',
+  bio: 'Desarrollador Frontend y estudiante de Tecnología en Análisis y Desarrollo de Software (ADSO) en el SENA. Experiencia práctica en construcción de interfaces web funcionales utilizando JavaScript (ES6+), React, Next.js, TypeScript, Vite, Tailwind CSS y consumo de APIs REST bajo metodología Scrum.',
   location: 'Lebrija, Santander, Colombia',
   email: 'jcgarcia1565@gmail.com',
   skills: [
@@ -59,7 +59,7 @@ export const PORTFOLIO_PROJECTS_ES: Project[] = [
       'Interfaz integral para centralizar solicitudes internas de soporte técnico con trazabilidad de estados en tiempo real y módulo de conocimiento con persistencia JSONB vía HTTP.',
     longDescription:
       'ServiceFlow resuelve el cuello de botella en mesas de ayuda técnica. Integra autenticación de usuarios, categorización de incidencias, seguimiento de acuerdos de nivel de servicio (SLA) y filtrado dinámico en memoria con React y Tailwind CSS bajo metodología ágil Scrum.',
-    tags: ['React', 'Vite', 'Tailwind CSS', 'shadcn/ui', 'API REST', 'Scrum'],
+    tags: ['React 19', 'JavaScript (ES6+)', 'Vite', 'Tailwind CSS v4', 'shadcn/ui', 'API REST', 'Scrum'],
     architecture: [
       'Componentes atómicos modulares (<100 líneas) bajo principios SOLID',
       'Capa de consumo desacoplada con validación de esquemas HTTP',

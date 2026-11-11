@@ -235,17 +235,17 @@ function getCvHtml(lang) {
   <!-- HEADER -->
   <header class="header">
     <h1 class="header-name">Juan Camilo García</h1>
-    <div class="header-title">${isEs ? 'Desarrollador Full Stack & Arquitecto de Software' : 'Full Stack Developer & Software Architect'}</div>
+    <div class="header-title">${isEs ? 'Desarrollador Frontend & Software Developer (ADSO · SENA)' : 'Frontend & Software Developer (ADSO · SENA)'}</div>
     <div class="header-contact">
       <span>Lebrija, Santander, Colombia</span>
       <span class="dot">•</span>
-      <span><a href="mailto:juancamilo.garcia.dev@gmail.com">juancamilo.garcia.dev@gmail.com</a></span>
+      <span><a href="mailto:jcgarcia1565@gmail.com">jcgarcia1565@gmail.com</a></span>
       <span class="dot">•</span>
-      <span><a href="https://linkedin.com/in/juan-camilo-garcia-" target="_blank">linkedin.com/in/juan-camilo-garcia-</a></span>
+      <span><a href="https://linkedin.com/in/juan-camilo-garcia-" target="_blank">LinkedIn</a></span>
       <span class="dot">•</span>
-      <span><a href="https://github.com/SnackMasterDev" target="_blank">github.com/SnackMasterDev</a></span>
+      <span><a href="https://github.com/SnackMasterDev" target="_blank">GitHub</a></span>
       <span class="dot">•</span>
-      <span><a href="https://portfolio-snackmaster.vercel.app" target="_blank">portfolio-snackmaster.vercel.app</a></span>
+      <span><a href="https://snackmaster.me" target="_blank">Portfolio</a></span>
     </div>
   </header>
 
@@ -274,8 +274,8 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Líder Técnico Frontend & Diseñador de Sistema' : 'Frontend Tech Lead & System Designer'} | 
-        <strong>${isEs ? 'Despliegue en Vivo:' : 'Live Deployment:'}</strong> <a href="https://pricescope-frontend.vercel.app" target="_blank">pricescope-frontend.vercel.app</a> | 
-        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S10-26-EQUIPO-2-PriceScope" target="_blank">No-Country-simulation/S10-26-EQUIPO-2-PriceScope</a>
+        <strong>${isEs ? 'Despliegue en Vivo:' : 'Live Deployment:'}</strong> <a href="https://pricescope-frontend.vercel.app" target="_blank">Demo</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S10-26-EQUIPO-2-PriceScope" target="_blank">Repositorio</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
@@ -298,16 +298,16 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Desarrollador Frontend & Diseñador UI/UX' : 'Frontend Developer & UI/UX Designer'} | 
-        <strong>Demo:</strong> <a href="https://s08-26-equipo-7.vercel.app" target="_blank">s08-26-equipo-7.vercel.app</a> | 
-        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S08-26-equipo-7" target="_blank">No-Country-simulation/S08-26-equipo-7</a>
+        <strong>Demo:</strong> <a href="https://s08-26-equipo-7.vercel.app" target="_blank">Demo</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S08-26-equipo-7" target="_blank">Repositorio</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
           ? '<strong>Motor de Tickets y Semáforo de SLAs:</strong> Plataforma corporativa de gestión de solicitudes internas con temporizadores reactivos, semáforo de cumplimiento de SLAs corporativos y flujo de aprobaciones.' 
           : '<strong>Ticketing Engine & SLA Timers:</strong> Corporate helpdesk platform with reactive SLA countdown timers, visual status tracking, and multi-tier approval workflows.'}</li>
         <li>${isEs 
-          ? '<strong>Stack Tecnológico:</strong> Construido con React 19, TypeScript, Tailwind CSS, componentes de shadcn/ui y arquitectura desacoplada por hooks y servicios puros.' 
-          : '<strong>Tech Stack:</strong> Built with React 19, TypeScript, Tailwind CSS, shadcn/ui components, and clean decoupled services and custom hooks.'}</li>
+          ? '<strong>Stack Tecnológico:</strong> Construido con React 19, JavaScript (ES6+), Vite, Tailwind CSS, componentes de shadcn/ui y arquitectura desacoplada por hooks y servicios puros.' 
+          : '<strong>Tech Stack:</strong> Built with React 19, JavaScript (ES6+), Vite, Tailwind CSS, shadcn/ui components, and clean decoupled services and custom hooks.'}</li>
       </ul>
     </div>
 
@@ -322,7 +322,7 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Arquitecto de Software Principal' : 'Lead Software Architect'} | 
-        <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/mizu-ecosystem" target="_blank">github.com/SnackMasterDev/mizu-ecosystem</a>
+        <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/mizu-ecosystem" target="_blank">Repositorio</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
@@ -345,8 +345,8 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Desarrollador Full Stack' : 'Full Stack Developer'} | 
-        <strong>Demo:</strong> <a href="https://develop--reserv-app.netlify.app" target="_blank">develop--reserv-app.netlify.app</a> | 
-        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/s16-05-m-php-react" target="_blank">No-Country-simulation/s16-05-m-php-react</a>
+        <strong>Demo:</strong> <a href="https://develop--reserv-app.netlify.app" target="_blank">Demo</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/s16-05-m-php-react" target="_blank">Repositorio</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
@@ -409,8 +409,8 @@ function getCvHtml(lang) {
           ? 'Desarrollo colaborativo en células de trabajo bajo metodología Scrum con sprints, entregas continuas y revisiones de código (PRs) en equipo multidisciplinar.' 
           : 'Collaborative development in agile Scrum squads with biweekly sprints, continuous integration, and peer pull request reviews.'}</li>
         <li>${isEs 
-          ? 'Construcción modular de la interfaz de usuario con React, Vite, Tailwind CSS y componentes de shadcn/ui con tipado estricto en TypeScript.' 
-          : 'Modular UI construction with React, Vite, Tailwind CSS, and shadcn/ui components with strict TypeScript typing.'}</li>
+          ? 'Construcción modular de la interfaz de usuario con React, JavaScript (ES6+), Vite, Tailwind CSS y componentes accesibles de shadcn/ui.' 
+          : 'Modular UI construction with React, JavaScript (ES6+), Vite, Tailwind CSS, and accessible shadcn/ui components.'}</li>
         <li>${isEs 
           ? 'Integración con endpoints de API REST para seguimiento de tickets en tiempo real y trazabilidad de responsables.' 
           : 'Integration with REST API endpoints for real-time ticket state tracking and assignee accountability.'}</li>

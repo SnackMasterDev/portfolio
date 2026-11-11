@@ -30,7 +30,7 @@ export const HeaderMobileLinks: React.FC<HeaderMobileLinksProps> = ({
 
       <div className="grid grid-cols-3 gap-2">
         <a
-          href="https://github.com/SnackMasterDev/portfolio"
+          href="https://snackmaster.me"
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClose}
