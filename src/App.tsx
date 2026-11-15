@@ -6,6 +6,7 @@ import { ContactSection } from './components/contact/ContactSection';
 import { SectionDivider } from './components/ui/SectionDivider';
 import { Header } from './components/navigation/Header';
 import { useLanguage } from './context/useLanguage';
+import { useBackendWarmer } from './hooks/useBackendWarmer';
 import { getTranslations } from './data/translations';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -23,6 +24,7 @@ const KATANA_CONFIG = { prefersReducedMotion: false, lerpFactor: 0.35 };
 export default function App() {
   const { language } = useLanguage();
   const t = getTranslations(language);
+  useBackendWarmer();
 
   return (
     <div className="relative min-h-screen bg-[#f4eee5] washi-pattern text-[#1c1c1e] selection:bg-[#fbcfe8] selection:text-[#1c1c1e]">
