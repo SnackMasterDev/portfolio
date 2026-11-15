@@ -28,17 +28,8 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Lado derecho en escritorio (>= sm): Portfolio, GitHub, LinkedIn, Descarga de CV, Audio Zen y Selector de idioma */}
+        {/* Lado derecho en escritorio (>= sm): GitHub, LinkedIn, Descarga de CV, Audio Zen y Selector de idioma */}
         <div className="hidden sm:flex items-center gap-2 shrink-0">
-          <a
-            href="https://snackmaster.me"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-2.5 py-1.5 rounded-full bg-white/70 hover:bg-white text-[#1c1c1e] text-xs font-medium border border-[#d6cebf] hover:border-[#1c1c1e] transition-colors whitespace-nowrap shadow-2xs"
-            title={t.portfolioRepoTitle}
-          >
-            Portfolio
-          </a>
           <a
             href="https://github.com/SnackMasterDev"
             target="_blank"

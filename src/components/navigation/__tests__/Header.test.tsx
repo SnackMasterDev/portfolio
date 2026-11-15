@@ -11,7 +11,6 @@ describe('Header Component', () => {
     expect(html).toContain('SnackMasterDev');
     expect(html).toContain('Disponible para Trabajar');
     expect(html).toContain('Descargar CV');
-    expect(html).toContain('Portfolio');
     expect(html).toContain('GitHub');
     expect(html).toContain('LinkedIn');
   });
@@ -38,7 +37,6 @@ describe('Header Component', () => {
     expect(html).toContain('id="mobile-navigation-menu"');
     expect(html).toContain('data-testid="mobile-menu-backdrop"');
     expect(html).toContain('Descargar CV');
-    expect(html).toContain('Portfolio');
     expect(html).toContain('GitHub');
     expect(html).toContain('LinkedIn');
     expect(html).toContain('Audio OFF');
