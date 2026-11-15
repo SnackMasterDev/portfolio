@@ -274,8 +274,8 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Líder Técnico Frontend & Diseñador de Sistema' : 'Frontend Tech Lead & System Designer'} | 
-        <strong>${isEs ? 'Despliegue en Vivo:' : 'Live Deployment:'}</strong> <a href="https://pricescope-frontend.vercel.app" target="_blank">Demo</a> | 
-        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S10-26-EQUIPO-2-PriceScope" target="_blank">Repositorio</a>
+        <strong>${isEs ? 'Despliegue en Vivo:' : 'Live Deployment:'}</strong> <a href="https://pricescope-client.vercel.app" target="_blank">Demo</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/S10-26-EQUIPO-2-PriceScope" target="_blank">Repositorio</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
@@ -298,8 +298,8 @@ function getCvHtml(lang) {
       </div>
       <div class="item-meta">
         <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Desarrollador Frontend & Diseñador UI/UX' : 'Frontend Developer & UI/UX Designer'} | 
-        <strong>Demo:</strong> <a href="https://s08-26-equipo-7.vercel.app" target="_blank">Demo</a> | 
-        <strong>GitHub:</strong> <a href="https://github.com/No-Country-simulation/S08-26-equipo-7" target="_blank">Repositorio</a>
+        <strong>Demo:</strong> <a href="https://serviceflow-frontend-virid.vercel.app" target="_blank">Demo</a> | 
+        <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/S08-26-equipo-7" target="_blank">Repositorio</a>
       </div>
       <ul class="bullets">
         <li>${isEs 
