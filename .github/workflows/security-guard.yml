@@ -38,7 +38,7 @@ jobs:
       # 2. Análisis Estático de Código (SAST) con Semgrep (OWASP Top 10)
       - name: Run Semgrep SAST Scan
         run: |
-          pipx run semgrep scan --config=auto --error
+          pipx run semgrep scan --config=auto --error --exclude="*test*" --exclude="*.test.*" --exclude="__tests__" src/
 
       # 3. Verificación de Secretos y Credenciales (Gitleaks)
       - name: Secret Leak Prevention

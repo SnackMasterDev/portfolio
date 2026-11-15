@@ -6,6 +6,8 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
 
   # 2. Actualizaciones automáticas de los workflows de GitHub Actions
   - package-ecosystem: "github-actions"
@@ -13,3 +15,5 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
