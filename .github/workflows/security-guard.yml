@@ -20,11 +20,11 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js (Detect if package.json exists)
         if: hashFiles('package.json') != ''
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 26.x
           cache: ${{ hashFiles('package-lock.json') != '' && 'npm' || '' }}
@@ -38,16 +38,21 @@ jobs:
       # 2. Análisis Estático de Código (SAST) con Semgrep (OWASP Top 10)
       - name: Run Semgrep SAST Scan
         run: |
-          npx --yes semgrep scan --config=auto --error
+          pipx run semgrep scan --config=auto --error
 
       # 3. Verificación de Secretos y Credenciales (Gitleaks)
       - name: Secret Leak Prevention
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: false
 
-      # 4. Ejecución de Tests del Proyecto (Garantizar que nada esté roto)
+      # 4. Instalación de Dependencias y Ejecución de Tests
+      - name: Install Dependencies
+        if: hashFiles('package.json') != ''
+        run: npm ci
+
+      # 5. Ejecución de Tests del Proyecto (Garantizar que nada esté roto)
       - name: Run Project Tests
         if: hashFiles('package.json') != ''
         run: |
