@@ -58,18 +58,21 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ className = '' }
               transformOrigin: 'center center',
             }}
           >
-            <img
-              src={`/assets/tree/${b.src}.webp`}
-              alt=""
-              aria-hidden="true"
-              width={BRANCH_DIMENSIONS[b.src]?.width ?? 470}
-              height={BRANCH_DIMENSIONS[b.src]?.height ?? 316}
-              className={`block h-auto w-full max-w-none object-contain ${animClass}`}
-              style={{
-                transformOrigin: b.stemOrigin,
-                willChange: 'transform',
-              }}
-            />
+            <picture>
+              <source media="(max-width: 768px)" srcSet={`/assets/tree/${b.src}-mobile.webp`} />
+              <img
+                src={`/assets/tree/${b.src}.webp`}
+                alt=""
+                aria-hidden="true"
+                width={BRANCH_DIMENSIONS[b.src]?.width ?? 470}
+                height={BRANCH_DIMENSIONS[b.src]?.height ?? 316}
+                className={`block h-auto w-full max-w-none object-contain ${animClass}`}
+                style={{
+                  transformOrigin: b.stemOrigin,
+                  willChange: 'transform',
+                }}
+              />
+            </picture>
           </div>
         );
       })}

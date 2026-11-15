@@ -25,13 +25,34 @@
     <meta name="twitter:description" content="Desarrollador Frontend especializado en React 19, Next.js 16, TypeScript y arquitectura limpia." />
     <meta name="twitter:image" content="https://snackmaster.me/apple-touch-icon.png" />
 
-    <!-- Preload LCP Background Image & Local Rancho Font -->
-    <link rel="preload" as="image" href="/assets/tree/imagen-fondo.webp" fetchpriority="high" type="image/webp" />
+    <!-- Preload LCP Background Image (Responsive) & Local Rancho Font -->
+    <link rel="preload" as="image" href="/assets/tree/imagen-fondo-mobile.webp" media="(max-width: 768px)" fetchpriority="high" type="image/webp" />
+    <link rel="preload" as="image" href="/assets/tree/imagen-fondo.webp" media="(min-width: 769px)" fetchpriority="high" type="image/webp" />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/rancho.woff2" crossorigin />
     <title>Juan Camilo García | Desarrollador Frontend</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="background-color: #f4eee5; min-height: 100vh;">
+        <div style="width: 100%; overflow: hidden; position: relative;">
+          <div style="position: relative; width: 100%; aspect-ratio: 1392 / 752; overflow: hidden;">
+            <picture>
+              <source media="(max-width: 768px)" srcset="/assets/tree/imagen-fondo-mobile.webp" />
+              <img
+                src="/assets/tree/imagen-fondo.webp"
+                alt=""
+                width="1392"
+                height="752"
+                fetchpriority="high"
+                loading="eager"
+                style="height: 100%; width: 100%; object-fit: cover; object-position: center;"
+              />
+            </picture>
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 8rem; background: linear-gradient(to top, #f4eee5, rgba(244, 238, 229, 0.6), transparent); pointer-events: none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
