@@ -17,7 +17,7 @@ describe('triggerBackendWarmup', () => {
     triggerBackendWarmup();
 
     expect(globalThis.fetch).toHaveBeenCalledTimes(2);
-    expect(globalThis.fetch).toHaveBeenCalledWith('https://serviceflow-api-y0df.onrender.com/', {
+    expect(globalThis.fetch).toHaveBeenCalledWith('https://serviceflow-api-y0df.onrender.com/api/v1/auth/csrf', {
       mode: 'no-cors',
     });
     expect(globalThis.fetch).toHaveBeenCalledWith('https://pricescope-api-i2dz.onrender.com/api/v1', {
@@ -44,7 +44,7 @@ describe('triggerBackendWarmup', () => {
   });
 
   it('exposes the configured endpoints', () => {
-    expect(WARMUP_ENDPOINTS).toContain('https://serviceflow-api-y0df.onrender.com/');
+    expect(WARMUP_ENDPOINTS).toContain('https://serviceflow-api-y0df.onrender.com/api/v1/auth/csrf');
     expect(WARMUP_ENDPOINTS).toContain('https://pricescope-api-i2dz.onrender.com/api/v1');
   });
 });

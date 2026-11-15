@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 export const WARMUP_ENDPOINTS = [
-  'https://serviceflow-api-y0df.onrender.com/',
+  'https://serviceflow-api-y0df.onrender.com/api/v1/auth/csrf',
   'https://pricescope-api-i2dz.onrender.com/api/v1',
 ];
 
@@ -18,10 +18,18 @@ export function triggerBackendWarmup(endpoints: readonly string[] = WARMUP_ENDPO
 
 /**
  * Pre-warms the free-tier Render backends upon portfolio landing.
- * Fires once when the visitor enters the portfolio.
+ * Defers execution to post-initial load (2s) to avoid competing with LCP/FCP on mobile devices.
  */
 export function useBackendWarmer(): void {
   useEffect(() => {
-    triggerBackendWarmup();
+    if (typeof window === 'undefined') return;
+
+    const timerId = window.setTimeout(() => {
+      triggerBackendWarmup();
+    }, 2000);
+
+    return () => {
+      window.clearTimeout(timerId);
+    };
   }, []);
 }
