@@ -78,7 +78,7 @@ export const ProjectShowcaseCard: React.FC<ProjectShowcaseCardProps> = ({
 
           <div className="flex flex-wrap gap-1.5">
             {project.tags.map((tag) => (
-              <span key={tag} className="px-2 py-0.5 text-[11px] font-mono rounded-md bg-white border border-[#d6cebf] text-[#78716c]">
+              <span key={tag} className="px-2 py-0.5 text-[11px] font-mono rounded-md bg-white border border-[#d6cebf] text-[#44403c]">
                 {tag}
               </span>
             ))}

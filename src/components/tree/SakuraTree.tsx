@@ -20,6 +20,9 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '' }) => {
             src="/assets/tree/imagen-fondo.webp"
             alt=""
             aria-hidden="true"
+            width={1392}
+            height={752}
+            fetchPriority="high"
             className="h-full w-full object-cover object-center filter brightness-100 contrast-100"
             loading="eager"
           />
@@ -32,6 +35,8 @@ export const SakuraTree: React.FC<SakuraTreeProps> = ({ className = '' }) => {
           id="sakura-tree-img"
           src="/assets/tree/tronco.webp"
           alt="Árbol de Cerezo Sakura Milenario"
+          width={877}
+          height={1215}
           className="pointer-events-none absolute block max-w-none object-contain"
           style={{
             left: '33%',

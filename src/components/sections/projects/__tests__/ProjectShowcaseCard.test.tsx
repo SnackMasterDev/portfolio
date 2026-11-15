@@ -19,7 +19,7 @@ describe('ProjectShowcaseCard', () => {
     expect(html).toContain(project.tagline);
     expect(html).toContain(project.description);
     expect(html).toContain('img');
-    expect(html).toContain('/projects/pricescope.jpg');
+    expect(html).toContain(project.image);
     expect(html).toContain('Ficha Técnica');
   });
 });

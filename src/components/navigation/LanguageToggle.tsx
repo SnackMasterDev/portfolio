@@ -23,7 +23,7 @@ export const LanguageToggle: React.FC = () => {
         className={`px-2 py-0.5 rounded-full transition-all cursor-pointer text-[11px] font-semibold ${
           language === 'es'
             ? 'bg-[#1c1c1e] text-[#f4eee5] shadow-xs'
-            : 'text-[#78716c] hover:text-[#1c1c1e]'
+            : 'text-[#44403c] hover:text-[#1c1c1e]'
         }`}
       >
         ES
@@ -35,7 +35,7 @@ export const LanguageToggle: React.FC = () => {
         className={`px-2 py-0.5 rounded-full transition-all cursor-pointer text-[11px] font-semibold ${
           language === 'en'
             ? 'bg-[#1c1c1e] text-[#f4eee5] shadow-xs'
-            : 'text-[#78716c] hover:text-[#1c1c1e]'
+            : 'text-[#44403c] hover:text-[#1c1c1e]'
         }`}
       >
         EN

@@ -18,7 +18,7 @@ export const ProjectCardPreview: React.FC<ProjectCardPreviewProps> = ({
           <span className="w-2.5 h-2.5 rounded-full bg-[#e3dacd] border border-[#d6cebf]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#e3dacd] border border-[#d6cebf]" />
           <span className="w-2.5 h-2.5 rounded-full bg-[#e3dacd] border border-[#d6cebf]" />
-          <span className="text-[10px] font-mono text-[#78716c] ml-2 truncate">
+          <span className="text-[10px] font-mono text-[#44403c] ml-2 truncate">
             {title.toLowerCase().replace(/\s+/g, '-')}.app
           </span>
         </div>
@@ -26,11 +26,13 @@ export const ProjectCardPreview: React.FC<ProjectCardPreviewProps> = ({
           <img
             src={image}
             alt={`Captura de pantalla de ${title}`}
+            width={640}
+            height={400}
             className="w-full aspect-[16/10] object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
             loading="lazy"
           />
         ) : (
-          <div className="w-full aspect-[16/10] bg-[#e3dacd]/40 flex items-center justify-center font-mono text-xs text-[#78716c]">
+          <div className="w-full aspect-[16/10] bg-[#e3dacd]/40 flex items-center justify-center font-mono text-xs text-[#44403c]">
             Vista previa
           </div>
         )}

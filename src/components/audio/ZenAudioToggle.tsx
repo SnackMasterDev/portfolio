@@ -52,7 +52,7 @@ export const ZenAudioToggle: React.FC<ZenAudioToggleProps> = ({ className = '' }
         className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono transition-colors cursor-pointer whitespace-nowrap select-none ${
           isPlaying
             ? 'bg-[#be185d]/10 text-[#be185d] font-semibold'
-            : 'text-[#78716c] hover:text-[#1c1c1e]'
+            : 'text-[#44403c] hover:text-[#1c1c1e]'
         }`}
       >
         {isPlaying ? (

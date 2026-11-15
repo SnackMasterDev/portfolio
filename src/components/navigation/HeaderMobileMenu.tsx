@@ -55,7 +55,7 @@ export const HeaderMobileMenu: React.FC<HeaderMobileMenuProps> = ({
         className="pointer-events-auto sm:hidden mt-2 w-full max-w-sm bg-[#fdfbf7]/98 backdrop-blur-xl border border-[#d6cebf] shadow-[0_16px_36px_rgba(28,28,30,0.14)] rounded-2xl p-4 flex flex-col gap-3 z-40 animate-in fade-in zoom-in-95 duration-150"
       >
         <div className="flex items-center justify-between pb-2.5 border-b border-[#e3dacd]">
-          <span className="text-[11px] font-mono uppercase tracking-wider text-[#78716c]">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-[#44403c]">
             {language === 'es' ? 'Navegación' : 'Navigation'}
           </span>
           <div className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#be185d]/10 border border-[#be185d]/25 text-[#be185d] text-[11px] font-mono font-medium">

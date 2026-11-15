@@ -5,6 +5,13 @@ export interface SakuraBranchesProps {
   className?: string;
 }
 
+const BRANCH_DIMENSIONS: Record<string, { width: number; height: number }> = {
+  rama_1: { width: 470, height: 316 },
+  rama_2: { width: 189, height: 208 },
+  rama_3: { width: 421, height: 176 },
+  rama_4: { width: 752, height: 527 },
+};
+
 export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ className = '' }) => {
   const [strikeId, setStrikeId] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
@@ -55,6 +62,8 @@ export const SakuraBranches: React.FC<SakuraBranchesProps> = ({ className = '' }
               src={`/assets/tree/${b.src}.webp`}
               alt=""
               aria-hidden="true"
+              width={BRANCH_DIMENSIONS[b.src]?.width ?? 470}
+              height={BRANCH_DIMENSIONS[b.src]?.height ?? 316}
               className={`block h-auto w-full max-w-none object-contain ${animClass}`}
               style={{
                 transformOrigin: b.stemOrigin,
