@@ -113,6 +113,8 @@ function getCvHtml(lang) {
   /* Items */
   .item {
     margin-bottom: 11px;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
   .item:last-child {
     margin-bottom: 0;
@@ -162,13 +164,11 @@ function getCvHtml(lang) {
 
   /* Bullets */
   ul.bullets {
-    list-style: none;
-    padding-left: 0;
+    list-style: disc;
+    padding-left: 16px;
     margin-top: 2px;
   }
   ul.bullets li {
-    position: relative;
-    padding-left: 13px;
     font-size: 9pt;
     color: #334155;
     line-height: 1.45;
@@ -177,13 +177,9 @@ function getCvHtml(lang) {
   ul.bullets li:last-child {
     margin-bottom: 0;
   }
-  ul.bullets li::before {
-    content: "•";
-    position: absolute;
-    left: 2px;
+  ul.bullets li::marker {
     color: #1d4ed8;
     font-weight: bold;
-    font-size: 9.5pt;
   }
   ul.bullets li strong {
     color: #0f172a;
@@ -199,10 +195,11 @@ function getCvHtml(lang) {
   }
   .skill-row {
     display: flex;
+    gap: 8px;
     line-height: 1.38;
   }
   .skill-category {
-    width: 170px;
+    width: 178px;
     font-weight: 700;
     color: #0f172a;
     flex-shrink: 0;
@@ -235,25 +232,25 @@ function getCvHtml(lang) {
   <!-- HEADER -->
   <header class="header">
     <h1 class="header-name">Juan Camilo García</h1>
-    <div class="header-title">${isEs ? 'Desarrollador Frontend & Software Developer (ADSO · SENA)' : 'Frontend & Software Developer (ADSO · SENA)'}</div>
+    <div class="header-title">${isEs ? 'Desarrollador Frontend Junior · React, TypeScript & Next.js' : 'Junior Frontend Developer · React, TypeScript & Next.js'}</div>
     <div class="header-contact">
       <span>Lebrija, Santander, Colombia</span>
       <span class="dot">•</span>
       <span><a href="mailto:jcgarcia1565@gmail.com">jcgarcia1565@gmail.com</a></span>
       <span class="dot">•</span>
+      <span><a href="https://snackmaster.me" target="_blank">snackmaster.me</a></span>
+      <span class="dot">•</span>
+      <span><a href="https://github.com/SnackMasterDev" target="_blank">github.com/SnackMasterDev</a></span>
+      <span class="dot">•</span>
       <span><a href="https://linkedin.com/in/juan-camilo-garcia-" target="_blank">LinkedIn</a></span>
-      <span class="dot">•</span>
-      <span><a href="https://github.com/SnackMasterDev" target="_blank">GitHub</a></span>
-      <span class="dot">•</span>
-      <span><a href="https://snackmaster.me" target="_blank">Portfolio</a></span>
     </div>
   </header>
 
   <!-- RESUMEN PROFESIONAL -->
   <section class="summary">
     ${isEs
-      ? '<strong>Desarrollador de Software y Tecnólogo en ADSO (SENA)</strong> con amplia trayectoria en simulaciones laborales aceleradas y proyectos de alto impacto. Especializado en el ecosistema <strong>TypeScript, React, Node.js y bases de datos relacionales / time-series (PostgreSQL, TimescaleDB)</strong>. Experiencia demostrada asumiendo roles de liderazgo técnico de frontend, diseño de sistemas, modelado relacional y autoría formal de especificaciones de ingeniería (SRS IEEE 830, contratos OpenAPI 3.0). Enfoque riguroso en Clean Architecture, SOLID, código limpio y rendimiento medible.'
-      : '<strong>Software Developer and ADSO Technologist (SENA)</strong> with substantial track record across accelerated agile work simulations and high-impact engineering projects. Specialized in the <strong>TypeScript, React, Node.js, and relational / time-series databases (PostgreSQL, TimescaleDB)</strong> ecosystem. Proven experience taking on frontend technical leadership, system architecture, relational modeling, and authoring formal engineering specifications (SRS under IEEE 830, OpenAPI 3.0 contracts). Committed to Clean Architecture, SOLID, clean code, and measurable performance.'}
+      ? 'Estudiante de <strong>Tecnología en Análisis y Desarrollo de Software (ADSO · SENA, etapa lectiva)</strong> con experiencia práctica en simulaciones ágiles multidisciplinarias construyendo interfaces web en <strong>TypeScript, React, Next.js y Tailwind CSS</strong>. Enfocado en componentes modulares, consumo de APIs REST, modelado en PostgreSQL y trabajo colaborativo con Git y Scrum.'
+      : '<strong>Software Analysis & Development (ADSO · SENA)</strong> student with hands-on experience in agile multidisciplinary simulations building web interfaces with <strong>TypeScript, React, Next.js, and Tailwind CSS</strong>. Focused on modular components, REST API integration, PostgreSQL modeling, and collaborative workflows with Git and Scrum.'}
   </section>
 
   <!-- PROYECTOS DESTACADOS DE INGENIERÍA -->
@@ -273,7 +270,7 @@ function getCvHtml(lang) {
         <div class="item-date">${isEs ? 'En Producción · 2026' : 'In Production · 2026'}</div>
       </div>
       <div class="item-meta">
-        <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Líder Técnico Frontend & Diseñador de Sistema' : 'Frontend Tech Lead & System Designer'} | 
+        <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Desarrollador Frontend (UI & Arquitectura de Componentes)' : 'Frontend Developer (UI & Component Architecture)'} | 
         <strong>${isEs ? 'Despliegue en Vivo:' : 'Live Deployment:'}</strong> <a href="https://pricescope-client.vercel.app" target="_blank">Demo</a> | 
         <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/S10-26-EQUIPO-2-PriceScope" target="_blank">Repositorio</a>
       </div>
@@ -321,7 +318,7 @@ function getCvHtml(lang) {
         <div class="item-date">${isEs ? 'En Desarrollo · 2026' : 'In Development · 2026'}</div>
       </div>
       <div class="item-meta">
-        <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Arquitecto de Software Principal' : 'Lead Software Architect'} | 
+        <strong>${isEs ? 'Rol:' : 'Role:'}</strong> ${isEs ? 'Desarrollador & Diseñador de Sistema (Proyecto de Grado)' : 'Developer & System Designer (Capstone Project)'} | 
         <strong>GitHub:</strong> <a href="https://github.com/SnackMasterDev/mizu-ecosystem" target="_blank">Repositorio</a>
       </div>
       <ul class="bullets">
@@ -373,7 +370,7 @@ function getCvHtml(lang) {
     <div class="item">
       <div class="item-top">
         <div>
-          <span class="item-name">${isEs ? 'Líder Técnico Frontend & Diseñador UX/UI' : 'Frontend Tech Lead & UX/UI Designer'}</span>
+          <span class="item-name">${isEs ? 'Desarrollador Frontend' : 'Frontend Developer'}</span>
           <span class="item-company">· No Country</span>
           <span class="item-badge">${isEs ? 'Simulación Ágil · PriceScope' : 'Agile Simulation · PriceScope'}</span>
         </div>
@@ -382,8 +379,8 @@ function getCvHtml(lang) {
       <div class="item-meta">${isEs ? 'Célula de Desarrollo Ágil · Remoto' : 'Agile Development Squad · Remote'}</div>
       <ul class="bullets">
         <li>${isEs 
-          ? 'Liderazgo técnico en la arquitectura de interfaz con Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Recharts y primitivos de Radix UI.' 
-          : 'Technical interface architecture leadership with Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Recharts, and Radix UI.'}</li>
+          ? 'Coordinación de la arquitectura de interfaz con Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Recharts y primitivos de Radix UI.' 
+          : 'Interface architecture coordination with Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Recharts, and Radix UI.'}</li>
         <li>${isEs 
           ? 'Configuración del entorno de persistencia y análisis de datos en PostgreSQL 16 + TimescaleDB utilizando Docker Compose.' 
           : 'Data environment and persistence configuration on PostgreSQL 16 + TimescaleDB using Docker Compose.'}</li>
@@ -470,7 +467,7 @@ function getCvHtml(lang) {
           <span class="item-name">${isEs ? 'Tecnólogo en Análisis y Desarrollo de Software (ADSO)' : 'Technologist in Software Analysis and Development (ADSO)'}</span>
           <span class="item-company">· SENA</span>
         </div>
-        <div class="item-date">${isEs ? '2024 – 2026 (En Curso / Etapa Práctica)' : '2024 – 2026 (In Progress / Practical Stage)'}</div>
+        <div class="item-date">${isEs ? '2024 – 2026 (En Curso · Etapa Lectiva)' : '2024 – 2026 (In Progress · Coursework Stage)'}</div>
       </div>
       <div class="item-meta">
         ${isEs 
@@ -500,7 +497,7 @@ function getCvHtml(lang) {
       </div>
       <div class="skill-row">
         <span class="skill-category">${isEs ? 'Arquitectura & Metodologías:' : 'Architecture & Methodologies:'}</span>
-        <span class="skill-list">Clean Architecture, SOLID, DDD, IEEE 830 SRS, Modelo C4, Scrum, Git / GitHub, Vercel</span>
+        <span class="skill-list">Arquitectura Modular, Principios SOLID, Scrum, Git / GitHub, Docker, Vercel</span>
       </div>
       <div class="skill-row">
         <span class="skill-category">${isEs ? 'Idiomas:' : 'Languages:'}</span>

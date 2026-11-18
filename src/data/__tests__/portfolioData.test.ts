@@ -65,7 +65,7 @@ describe('portfolioData', () => {
     const expEs = getPortfolioExperiences('es');
     const expEn = getPortfolioExperiences('en');
     expect(expEs.length).toBe(expEn.length);
-    expect(expEn[0].role).toContain('Frontend Tech Lead');
-    expect(expEs[0].role).toContain('Líder Técnico Frontend');
+    expect(expEn[0].role).toContain('Frontend Developer');
+    expect(expEs[0].role).toContain('Desarrollador Frontend');
   });
 });

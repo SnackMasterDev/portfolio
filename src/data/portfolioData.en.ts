@@ -116,13 +116,13 @@ export const PORTFOLIO_PROJECTS_EN: Project[] = [
 export const PORTFOLIO_EXPERIENCES_EN: Experience[] = [
   {
     id: 'exp-nocountry-lead',
-    role: 'Frontend Tech Lead & UX/UI Designer (Agile Simulation)',
+    role: 'Frontend Developer & UX/UI Designer (Agile Simulation)',
     company: 'No Country',
     period: '10/2026 — 11/2026',
     description:
-      'Led the web client architecture and development for PriceScope using Next.js 16, React 19, TypeScript, Tailwind CSS v4, and Recharts 3.10 under Scrum methodology.',
+      'Coordinated the web client interface architecture and development for PriceScope using Next.js 16, React 19, TypeScript, Tailwind CSS v4, and Recharts 3.10 under Scrum methodology.',
     highlights: [
-      'Technical interface architecture leadership with Next.js 16 (App Router), React 19, and Radix UI.',
+      'Interface architecture coordination with Next.js 16 (App Router), React 19, and Radix UI.',
       'Data environment setup on PostgreSQL 16 + TimescaleDB using Docker Compose.',
       'Co-authored technical engineering documentation (SRS, OpenAPI 3.0, relational schema, and risk matrix).',
     ],
