@@ -249,7 +249,7 @@ function getCvHtml(lang) {
   <!-- RESUMEN PROFESIONAL -->
   <section class="summary">
     ${isEs
-      ? 'Estudiante de <strong>Tecnología en Análisis y Desarrollo de Software (ADSO · SENA, etapa lectiva)</strong> con experiencia práctica en simulaciones ágiles multidisciplinarias construyendo interfaces web en <strong>TypeScript, React, Next.js y Tailwind CSS</strong>. Enfocado en componentes modulares, consumo de APIs REST, modelado en PostgreSQL y trabajo colaborativo con Git y Scrum.'
+      ? 'Estudiante de <strong>Tecnología en Análisis y Desarrollo de Software (ADSO · SENA)</strong> con experiencia práctica en simulaciones ágiles multidisciplinarias construyendo interfaces web en <strong>TypeScript, React, Next.js y Tailwind CSS</strong>. Enfocado en componentes modulares, consumo de APIs REST, modelado en PostgreSQL y trabajo colaborativo con Git y Scrum.'
       : '<strong>Software Analysis & Development (ADSO · SENA)</strong> student with hands-on experience in agile multidisciplinary simulations building web interfaces with <strong>TypeScript, React, Next.js, and Tailwind CSS</strong>. Focused on modular components, REST API integration, PostgreSQL modeling, and collaborative workflows with Git and Scrum.'}
   </section>
 
@@ -439,19 +439,19 @@ function getCvHtml(lang) {
     <div class="item">
       <div class="item-top">
         <div>
-          <span class="item-name">${isEs ? 'Representante de Servicio al Cliente y Soporte Técnico' : 'Customer Service & Technical Support Representative'}</span>
+          <span class="item-name">${isEs ? 'Representante de Servicio al Cliente' : 'Customer Service Representative'}</span>
           <span class="item-company">· Atento</span>
         </div>
-        <div class="item-date">08/2022 — 02/2023</div>
+        <div class="item-date">08/2022 - 02/2023</div>
       </div>
       <div class="item-meta">${isEs ? 'Sector Telecomunicaciones' : 'Telecommunications Sector'}</div>
       <ul class="bullets">
         <li>${isEs 
-          ? 'Atención y resolución metódica de incidencias técnicas y de facturación bajo estrictos estándares de calidad y cumplimiento de SLAs corporativos.' 
-          : 'Methodical troubleshooting and resolution of technical and billing incidents adhering to corporate SLA benchmarks and QA metrics.'}</li>
+          ? 'Atención telefónica a clientes de telecomunicaciones (España), resolviendo dudas de facturación, consultas generales y orientación básica sobre servicios de televisión.' 
+          : 'Handled inbound phone support for telecommunications customers (Spain), resolving billing inquiries, account questions, and basic TV service consultations.'}</li>
         <li>${isEs 
-          ? 'Escalamiento documentado a áreas especializadas con comunicación asertiva y alta orientación a resultados bajo presión.' 
-          : 'Documented escalation to specialized departments with assertive communication and strong problem-solving under pressure.'}</li>
+          ? 'Gestión en el área de bajas/retención y ventas cruzadas, cumpliendo metas de calidad, tiempos de respuesta y comunicación clara con el cliente.' 
+          : 'Worked in customer retention/cancellations and cross-selling, meeting quality metrics, response times, and clear customer communication.'}</li>
       </ul>
     </div>
   </section>
@@ -467,7 +467,7 @@ function getCvHtml(lang) {
           <span class="item-name">${isEs ? 'Tecnólogo en Análisis y Desarrollo de Software (ADSO)' : 'Technologist in Software Analysis and Development (ADSO)'}</span>
           <span class="item-company">· SENA</span>
         </div>
-        <div class="item-date">${isEs ? '2024 – 2026 (En Curso · Etapa Lectiva)' : '2024 – 2026 (In Progress · Coursework Stage)'}</div>
+        <div class="item-date">${isEs ? '2024 - Actualidad (En curso)' : '2024 - Present (In Progress)'}</div>
       </div>
       <div class="item-meta">
         ${isEs 
@@ -485,7 +485,7 @@ function getCvHtml(lang) {
     <div class="skills-grid">
       <div class="skill-row">
         <span class="skill-category">${isEs ? 'Lenguajes de Programación:' : 'Programming Languages:'}</span>
-        <span class="skill-list">TypeScript, JavaScript (ES6+), SQL, HTML5, CSS3, Python (Básico)</span>
+        <span class="skill-list">TypeScript, JavaScript (ES6+), SQL, HTML5, CSS3</span>
       </div>
       <div class="skill-row">
         <span class="skill-category">Frontend:</span>
@@ -511,7 +511,9 @@ function getCvHtml(lang) {
 }
 
 async function generate() {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch()
+    .catch(() => chromium.launch({ channel: 'chrome' }))
+    .catch(() => chromium.launch({ channel: 'msedge' }));
   
   for (const lang of ['es', 'en']) {
     const html = getCvHtml(lang);
